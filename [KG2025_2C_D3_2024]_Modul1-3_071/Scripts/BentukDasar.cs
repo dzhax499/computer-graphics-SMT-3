@@ -88,16 +88,105 @@ public partial class BentukDasar: RefCounted, IDisposable
 		}
 	}
 	// TASK 1 | MODUL 2 : MENAMBAHKAN FUNGSI EKSPONEN & LIMIT
-	public List<Vector2> FungsiEksponen(float titikAwalx, float titikAkhirx, float step = 1f)
+	public List<Vector2> FungsiAbsolut(float titikAwalx, float titikAkhirx, float step = 1f)
 	{
 		List<Vector2> res = new List<Vector2>();
-		for (float x = titikAwalx ; x <= titikAkhirx ; x = x+step ){
-			float y = x * x; //f(x) = x^2
-
-			// Convert ke koordinat layar (supaya sesuai dengan Godot)
-			Vector2 screenPoint = ScreenUtils.toScreenCoordinate(x,y);
+		for (float x = titikAwalx; x <= titikAkhirx; x = x + step)
+		{
+			float y = Math.Abs(x - 30); // f(x) = |x - 30|
+			Vector2 screenPoint = _primitif.ToScreenCoordinate(x, y);
 			res.Add(screenPoint);
 		}
 		return res;
 	}
+
+	public List<Vector2> FungsiEksponensial(float titikAwalx, float titikAkhirx, float step = 0.5f)
+	{
+		List<Vector2> res = new List<Vector2>();
+		for (float x = titikAwalx; x <= titikAkhirx; x = x + step)
+		{
+			float y = (float)Math.Pow(2, x / 10); // f(x) = 2^(x/10)
+			Vector2 screenPoint = _primitif.ToScreenCoordinate(x, y);
+			res.Add(screenPoint);
+		}
+		return res;
+	}
+
+	public List<Vector2> FungsiLogaritma(float titikAwalx, float titikAkhirx, float step = 1f)
+	{
+		List<Vector2> res = new List<Vector2>();
+		for (float x = titikAwalx; x <= titikAkhirx; x = x + step)
+		{
+			if (x > 0) // Logaritma hanya untuk x > 0
+			{
+				float y = (float)Math.Log(x) * 10; // f(x) = ln(x) * 10
+				Vector2 screenPoint = _primitif.ToScreenCoordinate(x, y);
+				res.Add(screenPoint);
+			}
+		}
+		return res;
+	}
+	public List<Vector2> SumbuX(float panjang = 400)
+	{
+		List<Vector2> res = new List<Vector2>();
+		// Sumbu X horizontal dari kiri ke kanan
+		float startX = -panjang / 2;
+		float endX = panjang / 2;
+		
+		for (float x = startX; x <= endX; x += 1f)
+		{
+			Vector2 point = _primitif.ToScreenCoordinate(x, 0); // y = 0 untuk sumbu X
+			res.Add(point);
+		}
+		return res;
+	}
+
+	public List<Vector2> SumbuY(float tinggi = 300)
+	{
+		List<Vector2> res = new List<Vector2>();
+		// Sumbu Y vertikal dari bawah ke atas
+		float startY = -tinggi / 2;
+		float endY = tinggi / 2;
+		
+		for (float y = startY; y <= endY; y += 1f)
+		{
+			Vector2 point = _primitif.ToScreenCoordinate(0, y); // x = 0 untuk sumbu Y
+			res.Add(point);
+		}
+		return res;
+	}
+
+	public List<Vector2> GridLines(float step = 50, float maxRange = 200)
+	{
+		List<Vector2> res = new List<Vector2>();
+		
+		// Grid vertikal (garis sejajar sumbu Y)
+		for (float x = -maxRange; x <= maxRange; x += step)
+		{
+			if (x != 0) // Skip sumbu utama
+			{
+				for (float y = -maxRange; y <= maxRange; y += 10f)
+				{
+					Vector2 point = _primitif.ToScreenCoordinate(x, y);
+					res.Add(point);
+				}
+			}
+		}
+		
+		// Grid horizontal (garis sejajar sumbu X)
+		for (float y = -maxRange; y <= maxRange; y += step)
+		{
+			if (y != 0) // Skip sumbu utama
+			{
+				for (float x = -maxRange; x <= maxRange; x += 10f)
+				{
+					Vector2 point = _primitif.ToScreenCoordinate(x, y);
+					res.Add(point);
+				}
+			}
+		}
+		
+		return res;
+	}
+
 }

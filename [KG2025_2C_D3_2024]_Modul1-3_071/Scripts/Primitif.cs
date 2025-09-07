@@ -77,19 +77,24 @@ public partial class Primitif: RefCounted
 		res.AddRange(LineBresenham(ScreenUtils.MarginRight, ScreenUtils.MarginTop, ScreenUtils.MarginRight, ScreenUtils.MarginBottom));
 		return res;
 	}
-	// TASK 1 | MODUL 2 : MENAMBAHKAN FUNGSI EKSPONEN & LIMIT
-	public List<Vector2> FungsiEksponen(float titikAwalx, float titikAkhirx, float step = 1f)
-	{
-		List<Vector2> res = new List<Vector2>();
-		for (float x = titikAwalx ; x <= titikAkhirx ; x = x+step ){
-			float y = x * x; //f(x) = x^2
+	// KOORDINAT CONVERSION FUNCTIONS
 
-			// Convert ke koordinat layar (supaya sesuai dengan Godot)
-			Vector2 screenPoint = ScreenUtils.toScreenCoordinate(x,y);
-			res.Add(screenPoint);
-		}
-		return res;
-	}
+    /// Konversi dari koordinat kartesian ke screen coordinate
+    public Vector2 ToScreenCoordinate(float x, float y)
+    {
+        float screenX = ScreenUtils.MarginLeft + x;
+        float screenY = ScreenUtils.MarginBottom - y;
+        return new Vector2(screenX, screenY);
+    }
+
+    /// Konversi dari screen coordinate ke koordinat kartesian
+    public Vector2 ToWorldCoordinate(float screenX, float screenY)
+    {
+        float worldX = screenX - ScreenUtils.MarginLeft;
+        float worldY = ScreenUtils.MarginBottom - screenY;
+        return new Vector2(worldX, worldY);
+    }
+
 
 	public List<Vector2> Persegi(float x, float y, float ukuran)
 	{
@@ -122,8 +127,19 @@ public partial class Primitif: RefCounted
 
 	public List<Vector2> TrapesiumSiku(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
 	{
-		List<Vector2> res = new List<Vector2>();
-		return res;
+		List<Vector2> points = new List<Vector2>();
+        
+        Vector2 p1 = ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+        Vector2 p2 = ToScreenCoordinate(titikAwal.X + panjangBawah, titikAwal.Y); // Kanan bawah
+        Vector2 p3 = ToScreenCoordinate(titikAwal.X + panjangAtas, titikAwal.Y + tinggi); // Kanan atas
+        Vector2 p4 = ToScreenCoordinate(titikAwal.X, titikAwal.Y + tinggi); // Kiri atas
+        
+        points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas
+        points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan miring
+        points.AddRange(LineBresenham(p3.X, p3.Y, p4.X, p4.Y)); // Atas
+        points.AddRange(LineBresenham(p4.X, p4.Y, p1.X, p1.Y)); // Sisi kiri
+        
+        return points;
 	}
 
 	public List<Vector2> TrapesiumSamaKaki(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
@@ -134,8 +150,19 @@ public partial class Primitif: RefCounted
 
 	public List<Vector2> JajarGenjang(Vector2 titikAwal, int alas, int tinggi, int jarakBeda)
 	{
-		List<Vector2> res = new List<Vector2>();
-		return res;
+		List<Vector2> points = new List<Vector2>();
+		
+		Vector2 p1 = ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+		Vector2 p2 = ToScreenCoordinate(titikAwal.X + alas, titikAwal.Y); // Kanan bawah
+		Vector2 p3 = ToScreenCoordinate(titikAwal.X + alas + jarakBeda, titikAwal.Y + tinggi); // Kanan atas
+		Vector2 p4 = ToScreenCoordinate(titikAwal.X + jarakBeda, titikAwal.Y + tinggi); // Kiri atas
+		
+		points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas bawah
+		points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan
+		points.AddRange(LineBresenham(p3.X, p3.Y, p4.X, p4.Y)); // Alas atas
+		points.AddRange(LineBresenham(p4.X, p4.Y, p1.X, p1.Y)); // Sisi kiri
+		
+		return points;
 	}
 
 	public List<Vector2> CircleMidPoint(int xCenter, int yCenter, int radius)
