@@ -87,4 +87,17 @@ public partial class BentukDasar: RefCounted, IDisposable
 			NodeUtils.DisposeAndNull(_primitif, "_primitif");
 		}
 	}
+	// TASK 1 | MODUL 2 : MENAMBAHKAN FUNGSI EKSPONEN & LIMIT
+	public List<Vector2> FungsiEksponen(float titikAwalx, float titikAkhirx, float step = 1f)
+	{
+		List<Vector2> res = new List<Vector2>();
+		for (float x = titikAwalx ; x <= titikAkhirx ; x = x+step ){
+			float y = x * x; //f(x) = x^2
+
+			// Convert ke koordinat layar (supaya sesuai dengan Godot)
+			Vector2 screenPoint = ScreenUtils.toScreenCoordinate(x,y);
+			res.Add(screenPoint);
+		}
+		return res;
+	}
 }

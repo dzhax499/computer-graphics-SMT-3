@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public partial class Primitif: RefCounted
 {
+	// MODUL 2 - LINE DRAWING ALGORITHMS
 	public List<Vector2> LineDDA(float xa, float ya, float xb, float yb)
 	{
 		float dx = xb - xa;
@@ -77,11 +78,18 @@ public partial class Primitif: RefCounted
 		return res;
 	}
 	// TASK 1 | MODUL 2 : MENAMBAHKAN FUNGSI EKSPONEN & LIMIT
-	// public List<Vector2> FungsiEksponen(float x, float y)
-	// {
-	// 	List<Vector2> res = new List<Vector2>();
-		
-	// }
+	public List<Vector2> FungsiEksponen(float titikAwalx, float titikAkhirx, float step = 1f)
+	{
+		List<Vector2> res = new List<Vector2>();
+		for (float x = titikAwalx ; x <= titikAkhirx ; x = x+step ){
+			float y = x * x; //f(x) = x^2
+
+			// Convert ke koordinat layar (supaya sesuai dengan Godot)
+			Vector2 screenPoint = ScreenUtils.toScreenCoordinate(x,y);
+			res.Add(screenPoint);
+		}
+		return res;
+	}
 
 	public List<Vector2> Persegi(float x, float y, float ukuran)
 	{
