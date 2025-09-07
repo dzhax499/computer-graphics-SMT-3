@@ -76,6 +76,12 @@ public partial class Primitif: RefCounted
 		res.AddRange(LineBresenham(ScreenUtils.MarginRight, ScreenUtils.MarginTop, ScreenUtils.MarginRight, ScreenUtils.MarginBottom));
 		return res;
 	}
+	// TASK 1 | MODUL 2 : MENAMBAHKAN FUNGSI EKSPONEN & LIMIT
+	public List<Vector2> FungsiEksponen(float x, float y)
+	{
+		List<Vector2> = res = new List<Vector2>();
+		
+	}
 
 	public List<Vector2> Persegi(float x, float y, float ukuran)
 	{

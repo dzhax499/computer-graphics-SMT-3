@@ -155,8 +155,13 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="btnkarya1" type="Button" parent="Main -Vbox/Karya -Vbox"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main -Vbox/Karya -Vbox"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="btnkarya1" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("6_ooh06")
 theme_override_font_sizes/font_size = 20
@@ -164,8 +169,9 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
 theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
 text = "KARYA 1"
 
-[node name="btnkarya2" type="Button" parent="Main -Vbox/Karya -Vbox"]
+[node name="btnkarya2" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("6_ooh06")
 theme_override_font_sizes/font_size = 20
@@ -173,14 +179,53 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
 theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
 text = "KARYA 2"
 
-[node name="btnkarya3" type="Button" parent="Main -Vbox/Karya -Vbox"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Main -Vbox/Karya -Vbox"]
 layout_mode = 2
+size_flags_vertical = 3
+
+[node name="btnkarya3" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("6_ooh06")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
 theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
 text = "KARYA 3"
+
+[node name="btnkarya4" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "KARYA 4"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Main -Vbox/Karya -Vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="btnkarya5" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "KARYA 5"
+
+[node name="btnkarya6" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "KARYA 6"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Main -Vbox"]
 custom_minimum_size = Vector2(10, 40)
@@ -221,9 +266,12 @@ text = "EXIT"
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BtnAbout" to="." method="_on_BtnAbout_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BtnGuide" to="." method="_on_BtnGuide_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/BtnExit" to="." method="_on_BtnExit_pressed"]
-[connection signal="pressed" from="Main -Vbox/Karya -Vbox/btnkarya1" to="." method="_on_btnkarya1_pressed"]
-[connection signal="pressed" from="Main -Vbox/Karya -Vbox/btnkarya2" to="." method="_on_btnkarya2_pressed"]
-[connection signal="pressed" from="Main -Vbox/Karya -Vbox/btnkarya3" to="." method="_on_btnkarya3_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer/btnkarya1" to="." method="_on_btnkarya1_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer/btnkarya2" to="." method="_on_btnkarya2_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer2/btnkarya3" to="." method="_on_btnkarya3_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer2/btnkarya4" to="." method="_on_btnkarya3_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer3/btnkarya5" to="." method="_on_btnkarya3_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer3/btnkarya6" to="." method="_on_btnkarya3_pressed"]
 [connection signal="pressed" from="Main -Vbox/HBoxContainer/btn-about" to="." method="_on_btnabout_pressed"]
 [connection signal="pressed" from="Main -Vbox/HBoxContainer/btn-guide" to="." method="_on_btnguide_pressed"]
 [connection signal="pressed" from="Main -Vbox/btn-exit" to="." method="_on_btnexit_pressed"]

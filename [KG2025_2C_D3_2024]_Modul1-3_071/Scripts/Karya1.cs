@@ -1,5 +1,5 @@
 namespace Godot;
-
+// Task 1 Modul 2 menambahkan fungsi Eksponen/limit/Absolute
 using Godot;
 using System;
 using System.Collections.Generic;
