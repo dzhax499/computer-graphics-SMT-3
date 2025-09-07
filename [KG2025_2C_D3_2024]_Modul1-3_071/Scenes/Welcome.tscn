@@ -1,0 +1,219 @@
+[gd_scene load_steps=11 format=3 uid="uid://2jnayay8fv7m"]
+
+[ext_resource type="Script" uid="uid://bwhv6bfrygl1h" path="res://Scripts/Welcome.cs" id="1_058be"]
+[ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_30id6"]
+[ext_resource type="FontFile" uid="uid://4coyytbu8b0s" path="res://Assets/font/Apex Regular.otf" id="4_a8035"]
+[ext_resource type="FontFile" uid="uid://sh64ru0vfjeb" path="res://Assets/font/Gunken.otf" id="5_eda0n"]
+[ext_resource type="FontFile" uid="uid://bbyw1yc2qvqy0" path="res://Assets/font/AndreaNeat-Demo.otf" id="6_ooh06"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pf1lu"]
+texture = ExtResource("2_30id6")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_30id6"]
+bg_color = Color(0.761877, 0.276571, 0.143476, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ooh06"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 25
+border_width_top = 15
+border_width_right = 20
+border_width_bottom = 10
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8035"]
+bg_color = Color(0.155514, 0.727785, 0.841932, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eda0n"]
+bg_color = Color(0.10748, 0.10748, 0.10748, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[node name="Welcome" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_058be")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1288.0
+offset_bottom = 720.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_pf1lu")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 667.0
+offset_top = -351.0
+offset_right = 1506.0
+offset_bottom = 351.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+visible = false
+layout_mode = 2
+alignment = 1
+
+[node name="BtnKarya1" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.0
+theme_override_fonts/font = ExtResource("5_eda0n")
+theme_override_font_sizes/font_size = 46
+theme_override_styles/hover = SubResource("StyleBoxFlat_30id6")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ooh06")
+text = "Karya 1"
+
+[node name="BtnKarya2" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("5_eda0n")
+theme_override_font_sizes/font_size = 46
+text = "Karya 2"
+icon_alignment = 1
+
+[node name="BtnKarya3" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Karya 3"
+
+[node name="BtnAbout" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "About"
+
+[node name="BtnGuide" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Guide"
+
+[node name="BtnExit" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Exit"
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Menu"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -278.5
+offset_top = -219.5
+offset_right = 278.5
+offset_bottom = 219.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("4_a8035")
+theme_override_font_sizes/font_size = 72
+text = "GREETINGS !"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="btnkarya1" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "KARYA 1"
+
+[node name="btnkarya2" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "KARYA 2"
+
+[node name="btnkarya3" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "KARYA 3"
+
+[node name="btn-about" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "ABOUT"
+
+[node name="btn-guide" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "GUIDE"
+
+[node name="btn-exit" type="Button" parent="VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "EXIT"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnKarya1" to="." method="_on_BtnKarya1_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnKarya2" to="." method="_on_BtnKarya2_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnKarya3" to="." method="_on_BtnKarya3_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnAbout" to="." method="_on_BtnAbout_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnGuide" to="." method="_on_BtnGuide_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnExit" to="." method="_on_BtnExit_pressed"]
+[connection signal="pressed" from="VBoxContainer2/btnkarya1" to="." method="_on_btnkarya1_pressed"]
+[connection signal="pressed" from="VBoxContainer2/btnkarya2" to="." method="_on_btnkarya2_pressed"]
+[connection signal="pressed" from="VBoxContainer2/btnkarya3" to="." method="_on_btnkarya3_pressed"]
+[connection signal="pressed" from="VBoxContainer2/btn-about" to="." method="_on_btnabout_pressed"]
+[connection signal="pressed" from="VBoxContainer2/btn-guide" to="." method="_on_btnguide_pressed"]
+[connection signal="pressed" from="VBoxContainer2/btn-exit" to="." method="_on_btnexit_pressed"]
