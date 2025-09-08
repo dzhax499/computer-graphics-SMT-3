@@ -50,10 +50,10 @@ public static class ScreenUtils
     }
 
     /// Konversi dari screen coordinate ke koordinat kartesian
-    public Vector2 ToWorldCoordinate(float screenX, float screenY)
-    {
-        float worldX = screenX - ScreenUtils.MarginLeft;
-        float worldY = ScreenUtils.MarginBottom - screenY;
-        return new Vector2(worldX, worldY);
-    }
+    // public Vector2 ToWorldCoordinate(float screenX, float screenY)
+    // {
+    //     float worldX = screenX - ScreenUtils.MarginLeft;
+    //     float worldY = ScreenUtils.MarginBottom - screenY;
+    //     return new Vector2(worldX, worldY);
+    // }
 }

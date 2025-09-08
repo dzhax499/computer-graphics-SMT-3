@@ -77,23 +77,7 @@ public partial class Primitif: RefCounted
 		res.AddRange(LineBresenham(ScreenUtils.MarginRight, ScreenUtils.MarginTop, ScreenUtils.MarginRight, ScreenUtils.MarginBottom));
 		return res;
 	}
-	// KOORDINAT CONVERSION FUNCTIONS
 
-    /// Konversi dari koordinat kartesian ke screen coordinate
-	// public Vector2 ScreenUtils.ToScreenCoordinate(float x, float y) 
-	// { 
-	// 	float screenX = ScreenUtils.MarginLeft + x; 
-	// 	float screenY = ScreenUtils.MarginBottom - y; 
-	// 	return new Vector2(screenX, screenY); 
-	// }
-
-    /// Konversi dari screen coordinate ke koordinat kartesian
-    public Vector2 ToWorldCoordinate(float screenX, float screenY)
-    {
-        float worldX = screenX - ScreenUtils.MarginLeft;
-        float worldY = ScreenUtils.MarginBottom - screenY;
-        return new Vector2(worldX, worldY);
-    }
 
 
 	public List<Vector2> Persegi(float x, float y, float ukuran)
@@ -119,10 +103,14 @@ public partial class Primitif: RefCounted
 	public List<Vector2> SegitigaSiku(Vector2 titikAwal, int alas, int tinggi)
 	{
 		List<Vector2> res = new List<Vector2>();
-		res.AddRange(LineBresenham(titikAwal.X, titikAwal.Y, titikAwal.X + alas, titikAwal.Y)); // Alas
-		res.AddRange(LineBresenham(titikAwal.X, titikAwal.Y, titikAwal.X, titikAwal.Y - tinggi)); // Tinggi
-		res.AddRange(LineBresenham(titikAwal.X, titikAwal.Y - tinggi, titikAwal.X + alas, titikAwal.Y)); // Miring
-		return res;
+
+		Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y);              // titik awal (kanan bawah)
+		Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + alas, titikAwal.Y);       // alas ke kanan
+		Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y + tinggi);     // tinggi ke atas
+
+		res.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // alas
+		res.AddRange(LineBresenham(p1.X, p1.Y, p3.X, p3.Y)); // tinggi
+		res.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // sisi miring
 	}
 
 	public List<Vector2> TrapesiumSiku(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
