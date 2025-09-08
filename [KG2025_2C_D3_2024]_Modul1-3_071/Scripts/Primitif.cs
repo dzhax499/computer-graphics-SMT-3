@@ -111,7 +111,25 @@ public partial class Primitif: RefCounted
 		res.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // alas
 		res.AddRange(LineBresenham(p1.X, p1.Y, p3.X, p3.Y)); // tinggi
 		res.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // sisi miring
+		return res;
 	}
+
+	public List<Vector2> SegitigaSamaKaki(Vector2 titikAwal, int alas, int tinggi)
+	{
+		List<Vector2> points = new List<Vector2>();
+		
+		// Titik puncak di tengah atas
+		float puncakX = titikAwal.X + alas / 2f;
+		float puncakY = titikAwal.Y + tinggi;
+		
+		// Tiga sisi segitiga
+		points.AddRange(LineBresenham(titikAwal.X, titikAwal.Y, titikAwal.X + alas, titikAwal.Y)); // Alas
+		points.AddRange(LineBresenham(titikAwal.X, titikAwal.Y, puncakX, puncakY)); // Sisi kiri
+		points.AddRange(LineBresenham(titikAwal.X + alas, titikAwal.Y, puncakX, puncakY)); // Sisi kanan
+		
+		return points;
+	}
+
 
 	public List<Vector2> TrapesiumSiku(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
 	{

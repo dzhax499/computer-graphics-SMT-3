@@ -42,6 +42,11 @@ public partial class BentukDasar: RefCounted, IDisposable
 		return CheckPrimitifAndCall(() => _primitif.JajarGenjang(titikAwal, alas, tinggi, jarakBeda));
 	}
 
+	public List<Vector2> SegitigaSamaKaki(Vector2 titikAwal, int alas, int tinggi)
+	{
+		return CheckPrimitifAndCall(() => _primitif.SegitigaSamaKaki(titikAwal, alas, tinggi));
+	}
+	
 		// New Circle and Ellipse Methods
 	public List<Vector2> Lingkaran(Vector2 titikAwal, int radius)
 	{
