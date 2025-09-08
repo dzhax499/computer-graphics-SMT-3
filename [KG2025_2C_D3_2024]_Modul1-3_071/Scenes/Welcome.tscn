@@ -131,10 +131,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -278.5
-offset_top = -219.5
-offset_right = 278.5
-offset_bottom = 219.5
+offset_left = -278.0
+offset_top = -219.0
+offset_right = 279.0
+offset_bottom = 272.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -227,6 +227,30 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
 theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
 text = "KARYA 6"
 
+[node name="HBoxContainer4" type="HBoxContainer" parent="Main -Vbox/Karya -Vbox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="btnquiz_2" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "QUIZ 1"
+
+[node name="btnquiz_1" type="Button" parent="Main -Vbox/Karya -Vbox/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("6_ooh06")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_a8035")
+theme_override_styles/normal = SubResource("StyleBoxFlat_eda0n")
+text = "QUIZ 3"
+
 [node name="btn-about" type="Button" parent="Main -Vbox"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -268,6 +292,8 @@ text = "EXIT"
 [connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer2/btnkarya4" to="." method="_on_btnkarya_4_pressed"]
 [connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer3/btnkarya5" to="." method="_on_btnkarya_5_pressed"]
 [connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer3/btnkarya6" to="." method="_on_btnkarya_6_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer4/btnquiz_2" to="." method="_on_btnquiz_1_pressed"]
+[connection signal="pressed" from="Main -Vbox/Karya -Vbox/HBoxContainer4/btnquiz_1" to="." method="_on_btnquiz_1_pressed"]
 [connection signal="pressed" from="Main -Vbox/btn-about" to="." method="_on_btnabout_pressed"]
 [connection signal="pressed" from="Main -Vbox/btn-guide" to="." method="_on_btnguide_pressed"]
 [connection signal="pressed" from="Main -Vbox/btn-exit" to="." method="_on_btnexit_pressed"]

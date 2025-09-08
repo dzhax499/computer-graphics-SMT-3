@@ -23,7 +23,7 @@ public static class ColorUtils
 			case 7:
 				return new Color("#ff7f00"); // Orange
 			case 8:
-				return new Color("#ff007f"); // Rose / Bright Pink
+				return new Color("#ff0008ff"); // Rose / Bright Pink
 			case 9:
 				return new Color("#7f00ff"); // Violet
 			case 10:

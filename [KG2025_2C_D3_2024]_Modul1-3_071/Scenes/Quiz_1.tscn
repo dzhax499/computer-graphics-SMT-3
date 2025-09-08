@@ -1,3 +1,13 @@
-[gd_scene format=3 uid="uid://cenf8100odknh"]
+[gd_scene load_steps=3 format=3 uid="uid://cenf8100odknh"]
+
+[ext_resource type="Script" uid="uid://bklwsith6gnab" path="res://Scripts/Quiz_1.cs" id="1_rwmfl"]
+[ext_resource type="Script" uid="uid://bhg1bv1wlw0n0" path="res://Scripts/BackBtn.cs" id="2_0wkxq"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_rwmfl")
+
+[node name="BtnBack" type="Button" parent="."]
+text = "Back"
+script = ExtResource("2_0wkxq")
+
+[connection signal="pressed" from="BtnBack" to="BtnBack" method="_on_BtnBack_pressed"]
