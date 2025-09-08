@@ -63,6 +63,20 @@ public static class GraphicsUtils
                     break;
 
                             case DrawStyle.CircleDot:
+            case DrawStyle.DotDash:
+                    // Titik, strip, titik, gap, dst
+                    if (i % (stripLength + gap + 2) == 0)
+                    {
+                        // Titik
+                        PutPixel(targetNode, x, y, color);
+                    }
+                    else if ((i % (stripLength + gap + 2)) > 0 && (i % (stripLength + gap + 2)) <= stripLength)
+                    {
+                        // Garis/strip setelah titik
+                        PutPixel(targetNode, x, y, color);
+                    }
+                    // Sisanya adalah gap (tidak digambar)
+                    break;
             case DrawStyle.CircleStrip:
             case DrawStyle.CircleDotStrip:
                 // Apply gap logic based on the original index (i) divided by 8 (for 8-way symmetry)
