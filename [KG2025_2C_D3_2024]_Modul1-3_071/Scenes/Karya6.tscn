@@ -1,3 +1,6 @@
-[gd_scene format=3 uid="uid://c0dlmvbeki21q"]
+[gd_scene load_steps=2 format=3 uid="uid://c0dlmvbeki21q"]
+
+[ext_resource type="Script" uid="uid://dwvumt7tr62hn" path="res://Scripts/Karya6.cs" id="1_ijmm0"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_ijmm0")
