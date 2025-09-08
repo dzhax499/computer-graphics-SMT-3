@@ -187,18 +187,114 @@ public partial class Primitif: RefCounted
 	public List<Vector2> CircleMidPoint(int xCenter, int yCenter, int radius)
 	{
 		List<Vector2> points = new List<Vector2>();
+		int x = 0;
+		int y = radius;
+		int d = 1 -radius;
+
+		//convert koordinat layar
+		Vector2 centerScreen = ScreenUtils.ToScreenCoordinate(xCenter,yCenter);
+
+		void PlotCirclePoints(int xc,int yc,int px, int py)
+		{
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc - py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc - py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + py, yc + px));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - py, yc + px));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + py, yc - px));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - py, yc - px));
+		}
+
+		PlotCirclePoints(xCenter,yCenter,x,y);
+
+		while(x<y)
+		{
+			x++;
+			if (d < 0)
+			{
+				d = d + 2 * x+1;
+			}
+			else 
+			{
+				y--;
+				d = d + 2 * (x-y) + 1;
+			}
+			PlotCirclePoints(xCenter,yCenter,x,y);
+		}
+
+		return points;
+	}
+
+	public List<Vector2> EllipseMidpoint(int xCenter, int yCenter, int rx, int ry)
+	{
+		List<Vector2> points = new List<Vector2>();
+		int x = 0;
+		int y = ry;
+
+		int rxSq = rx * rx;
+		int rySq = ry * ry;
+		int twoRxSq = 2 * rxSq;
+		int twoRySq = 2 * rySq;
+
+		int px = 0;
+		int py = twoRxSq * y;
+
+		// Konversi ke koordinat layar
+		Vector2 centerScreen = ScreenUtils.ToScreenCoordinate(xCenter, yCenter);
+
+		void PlotEllipsePoints(int xc, int yc, int px, int py)
+		{
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc - py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc - py));
+		}
+
+		// Region 1
+		int p1 = (int)(rySq - (rxSq * ry) + (0.25 * rxSq));
+		while (px < py)
+		{
+			PlotEllipsePoints(xCenter, yCenter, x, y);
+			x++;
+			px += twoRySq;
+			if (p1 < 0)
+			{
+				p1 += rySq + px;
+			}
+			else
+			{
+				y--;
+				py -= twoRxSq;
+				p1 += rySq + px - py;
+			}
+		}
+
+		// Region 2
+		int p2 = (int)(rySq * (x + 0.5) * (x + 0.5) + rxSq * (y - 1) * (y - 1) - rxSq * rySq);
+		while (y >= 0)
+		{
+			PlotEllipsePoints(xCenter, yCenter, x, y);
+			y--;
+			py -= twoRxSq;
+			if (p2 > 0)
+			{
+				p2 += rxSq - py;
+			}
+			else
+			{
+				x++;
+				px += twoRySq;
+				p2 += rxSq - py + px;
+			}
+		}
+
 		return points;
 	}
 
 	private void CirclePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
 	{
 
-	}
-
-	public List<Vector2> EllipseMidpoint(int xCenter, int yCenter, int rx, int ry)
-	{
-		List<Vector2> points = new List<Vector2>();
-		return points;
 	}
 
 	private void EllipsePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
