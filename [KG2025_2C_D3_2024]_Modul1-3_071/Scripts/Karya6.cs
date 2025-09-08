@@ -1,11 +1,13 @@
+namespace Godot;
+
 using Godot;
 using System;
+using System.Collections.Generic;
 
-// Karya6.cs - 4 Scene berbeda dengan style garis berbeda
 public partial class Karya6 : Node2D
 {
+    private Primitif _primitif = new Primitif();
     private BentukDasar _bentukDasar = new BentukDasar();
-    private int currentScene = 0; // 0=Normal, 1=Titik-titik, 2=Titik-garis-titik, 3=Garis-garis
 
     public override void _Ready()
     {
@@ -13,117 +15,201 @@ public partial class Karya6 : Node2D
         QueueRedraw();
     }
 
-    // public override void _Input(InputEvent @event)
-    // {
-    //     // Tekan Space untuk ganti scene
-    //     if (@event is InputEventKey keyEvent && keyEvent.Pressed && keyEvent.Keycode == Key.Space)
-    //     {
-    //         currentScene = (currentScene + 1) % 4;
-    //         QueueRedraw();
-    //     }
-    // }
-
     public override void _Draw()
     {
         MarginPixel();
-        // Kuadran I - Normal
-        var persegi1 = _bentukDasar.Persegi(100, 100, 80);
-        GraphicsUtils.PutPixelAll(this, persegi1, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(1));
+        ScreenUtils.DrawAxes(this, _primitif);
 
-        // Kuadran II - Titik-titik
-        var persegi2 = _bentukDasar.Persegi(-200, 100, 80);
-        GraphicsUtils.PutPixelAll(this, persegi2, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(2), 3, 4);
-
-        // Kuadran III - Titik-garis-titik
-        var persegi3 = _bentukDasar.Persegi(-200, -100, 80);
-        GraphicsUtils.PutPixelAll(this, persegi3, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(3));
-
-        // Kuadran IV - Garis-garis
-        var persegi4 = _bentukDasar.Persegi(100, -100, 80);
-        GraphicsUtils.PutPixelAll(this, persegi4, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(4));
+        MyGaris();
+        MyPersegi();
+        MyPersegiPanjang();
+        MySegitigaSiku();
+        MyTrapesiumSiku();
+        MyLingkaran();
+        MyElips();
     }
-
-    // private void DrawCurrentScene()
-    // {
-    //     GraphicsUtils.DrawStyle style;
-    //     int gap = 2;
-        
-    //     switch (currentScene)
-    //     {
-    //         case 0: style = GraphicsUtils.DrawStyle.DotDot; break;
-    //         case 1: style = GraphicsUtils.DrawStyle.DotDot; gap = 3; break; // Titik-titik dengan gap
-    //         case 2: style = GraphicsUtils.DrawStyle.DotStripDot; gap = 2; break;
-    //         case 3: style = GraphicsUtils.DrawStyle.StripStrip; gap = 1; break;
-    //         default: style = GraphicsUtils.DrawStyle.DotDot; break;
-    //     }
-
-    //     // Gambar semua bentuk dengan style yang sama
-    //     DrawAllShapesWithStyle(style, gap);
-    // }
-
-    // private void DrawAllShapesWithStyle(GraphicsUtils.DrawStyle style, int gap)
-    // {
-    //     // Persegi
-    //     var persegi = _bentukDasar.Persegi(50, 50, 80);
-    //     GraphicsUtils.PutPixelAll(this, persegi, style, ColorUtils.ColorStorage(1), 3, gap);
-
-    //     // Persegi Panjang
-    //     var persegiPanjang = _bentukDasar.PersegiPanjang(-200, 50, 100, 60);
-    //     GraphicsUtils.PutPixelAll(this, persegiPanjang, style, ColorUtils.ColorStorage(2), 3, gap);
-
-    //     // Segitiga Siku-siku
-    //     var segitiga = _bentukDasar.SegitigaSiku(new Vector2(50, -100), 80, 60);
-    //     GraphicsUtils.PutPixelAll(this, segitiga, style, ColorUtils.ColorStorage(3), 3, gap);
-
-    //     // Trapesium Siku
-    //     var trapesium = _bentukDasar.TrapesiumSiku(new Vector2(-200, -100), 40, 80, 60);
-    //     GraphicsUtils.PutPixelAll(this, trapesium, style, ColorUtils.ColorStorage(4), 3, gap);
-
-    //     // Lingkaran - dengan style khusus circle
-    //     var lingkaran = _bentukDasar.Lingkaran(new Vector2(250, 100), 40);
-    //     var circleStyle = GetCircleStyle(style);
-    //     GraphicsUtils.PutPixelAll(this, lingkaran, circleStyle, ColorUtils.ColorStorage(5), 3, gap);
-
-    //     // Ellips - dengan style khusus ellipse
-    //     var ellips = _bentukDasar.Elips(new Vector2(-50, 200), 60, 35);
-    //     var ellipseStyle = GetEllipseStyle(style);
-    //     GraphicsUtils.PutPixelAll(this, ellips, ellipseStyle, ColorUtils.ColorStorage(6), 3, gap);
-    // }
-
-    // private GraphicsUtils.DrawStyle GetCircleStyle(GraphicsUtils.DrawStyle baseStyle)
-    // {
-    //     switch (baseStyle)
-    //     {
-    //         case GraphicsUtils.DrawStyle.DotDot: return GraphicsUtils.DrawStyle.CircleDot;
-    //         case GraphicsUtils.DrawStyle.DotStripDot: return GraphicsUtils.DrawStyle.CircleDotStrip;
-    //         case GraphicsUtils.DrawStyle.StripStrip: return GraphicsUtils.DrawStyle.CircleStrip;
-    //         default: return GraphicsUtils.DrawStyle.CircleDot;
-    //     }
-    // }
-
-    // private GraphicsUtils.DrawStyle GetEllipseStyle(GraphicsUtils.DrawStyle baseStyle)
-    // {
-    //     switch (baseStyle)
-    //     {
-    //         case GraphicsUtils.DrawStyle.DotDot: return GraphicsUtils.DrawStyle.EllipseDot;
-    //         case GraphicsUtils.DrawStyle.DotStripDot: return GraphicsUtils.DrawStyle.EllipseDotStrip;
-    //         case GraphicsUtils.DrawStyle.StripStrip: return GraphicsUtils.DrawStyle.EllipseStrip;
-    //         default: return GraphicsUtils.DrawStyle.EllipseDot;
-    //     }
-    // }
-
-    // private void DrawInstructions()
-    // {
-    //     string[] sceneNames = { "Normal (DotDot)", "Titik-titik (Gap)", "Titik-Garis-Titik", "Garis-garis" };
-    //     // Gunakan DrawString jika tersedia, atau buat text node
-    //     // DrawString($"Scene {currentScene + 1}: {sceneNames[currentScene]} - Tekan SPACE untuk ganti", 
-    //     //     new Vector2(10, 30), ColorUtils.ColorStorage(0));
-    // }
 
     private void MarginPixel()
     {
         var margin = _bentukDasar.Margin();
-        GraphicsUtils.PutPixelAll(this, margin, color: ColorUtils.ColorStorage(0));
+        GraphicsUtils.PutPixelAll(this, margin, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(6));
+    }
+
+    private void MyGaris()
+    {
+        // Kuadran I (garis-garis)
+        var garis1 = _primitif.LineBresenham(
+            ScreenUtils.ToScreenCoordinate(100, 250).X,
+            ScreenUtils.ToScreenCoordinate(100, 250).Y,
+            ScreenUtils.ToScreenCoordinate(500, 50).X,
+            ScreenUtils.ToScreenCoordinate(500, 50).Y
+        );
+        GraphicsUtils.PutPixelAll(this, garis1, GraphicsUtils.DrawStyle.CircleStrip, Colors.Red, gap: 1);
+
+        // Kuadran II (garis normal)
+        var garis2 = _primitif.LineBresenham(
+            ScreenUtils.ToScreenCoordinate(-100, 250).X,
+            ScreenUtils.ToScreenCoordinate(-100, 250).Y,
+            ScreenUtils.ToScreenCoordinate(-500, 50).X,
+            ScreenUtils.ToScreenCoordinate(-500, 50).Y
+        );
+        GraphicsUtils.PutPixelAll(this, garis2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var garis3 = _primitif.LineBresenham(
+            ScreenUtils.ToScreenCoordinate(-100, -250).X,
+            ScreenUtils.ToScreenCoordinate(-100, -250).Y,
+            ScreenUtils.ToScreenCoordinate(-500, -50).X,
+            ScreenUtils.ToScreenCoordinate(-500, -50).Y
+        );
+        GraphicsUtils.PutPixelAll(this, garis3, GraphicsUtils.DrawStyle.StripStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var garis4 = _primitif.LineBresenham(
+            ScreenUtils.ToScreenCoordinate(100, -250).X,
+            ScreenUtils.ToScreenCoordinate(100, -250).Y,
+            ScreenUtils.ToScreenCoordinate(500, -50).X,
+            ScreenUtils.ToScreenCoordinate(500, -50).Y
+        );
+        GraphicsUtils.PutPixelAll(this, garis4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 10, gap: 5);
+    }
+
+    private void MyPersegi()
+    {
+        // Kuadran I (garis-garis)
+        var titik1 = ScreenUtils.ToScreenCoordinate(200, 200);
+        var persegi1 = _primitif.Persegi(titik1.X, titik1.Y, 100);
+        GraphicsUtils.PutPixelAll(this, persegi1, GraphicsUtils.DrawStyle.CircleStrip, Colors.Red, gap: 1);
+
+        // Kuadran II (garis normal)
+        var titik2 = ScreenUtils.ToScreenCoordinate(-300, 200);
+        var persegi2 = _primitif.Persegi(titik2.X, titik2.Y, 100);
+        GraphicsUtils.PutPixelAll(this, persegi2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var titik3 = ScreenUtils.ToScreenCoordinate(-300, -100);
+        var persegi3 = _primitif.Persegi(titik3.X, titik3.Y, 100);
+        GraphicsUtils.PutPixelAll(this, persegi3, GraphicsUtils.DrawStyle.StripStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var titik4 = ScreenUtils.ToScreenCoordinate(200, -100);
+        var persegi4 = _primitif.Persegi(titik4.X, titik4.Y, 100);
+        GraphicsUtils.PutPixelAll(this, persegi4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 10, gap: 5);
+    }
+
+    private void MyPersegiPanjang()
+    {
+        // Kuadran I (garis-garis)
+        var titik1 = ScreenUtils.ToScreenCoordinate(200, 200);
+        var persegiPanjang1 = _primitif.PersegiPanjang(titik1.X, titik1.Y, 200, 100);
+        GraphicsUtils.PutPixelAll(this, persegiPanjang1, GraphicsUtils.DrawStyle.CircleStrip, Colors.Red, gap: 1);
+
+        // Kuadran II (garis normal)
+        var titik2 = ScreenUtils.ToScreenCoordinate(-400, 200);
+        var persegiPanjang2 = _primitif.PersegiPanjang(titik2.X, titik2.Y, 200, 100);
+        GraphicsUtils.PutPixelAll(this, persegiPanjang2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var titik3 = ScreenUtils.ToScreenCoordinate(-400, -100);
+        var persegiPanjang3 = _primitif.PersegiPanjang(titik3.X, titik3.Y, 200, 100);
+        GraphicsUtils.PutPixelAll(this, persegiPanjang3, GraphicsUtils.DrawStyle.StripStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var titik4 = ScreenUtils.ToScreenCoordinate(200, -100);
+        var persegiPanjang4 = _primitif.PersegiPanjang(titik4.X, titik4.Y, 200, 100);
+        GraphicsUtils.PutPixelAll(this, persegiPanjang4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 10, gap: 5);
+    }
+
+    private void MySegitigaSiku()
+    {
+        // Kuadran I (garis-garis)
+        var titik1 = new Vector2(200, 100);
+        var segitiga1 = _bentukDasar.SegitigaSiku(titik1, 200, 100);
+        GraphicsUtils.PutPixelAll(this, segitiga1, GraphicsUtils.DrawStyle.CircleStrip, Colors.Red, gap: 1);
+
+        // Kuadran II (garis normal)
+        var titik2 = new Vector2(-400, 100);
+        var segitiga2 = _bentukDasar.SegitigaSiku(titik2, 200, 100);
+        GraphicsUtils.PutPixelAll(this, segitiga2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var titik3 = new Vector2(-400, -200);
+        var segitiga3 = _bentukDasar.SegitigaSiku(titik3, 200, 100);
+        GraphicsUtils.PutPixelAll(this, segitiga3, GraphicsUtils.DrawStyle.StripStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var titik4 = new Vector2(200, -200);
+        var segitiga4 = _bentukDasar.SegitigaSiku(titik4, 200, 100);
+        GraphicsUtils.PutPixelAll(this, segitiga4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 10, gap: 5);
+    }
+
+    private void MyTrapesiumSiku()
+    {
+        // Kuadran I (garis-garis)
+        var titik1 = new Vector2(200, 100);
+        var trapesium1 = _bentukDasar.TrapesiumSiku(titik1, 150, 200, 100);
+        GraphicsUtils.PutPixelAll(this, trapesium1, GraphicsUtils.DrawStyle.CircleStrip, Colors.Red, gap: 1);
+
+        // Kuadran II (garis normal)
+        var titik2 = new Vector2(-400, 100);
+        var trapesium2 = _bentukDasar.TrapesiumSiku(titik2, 150, 200, 100);
+        GraphicsUtils.PutPixelAll(this, trapesium2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var titik3 = new Vector2(-400, -200);
+        var trapesium3 = _bentukDasar.TrapesiumSiku(titik3, 200, 150, 100);
+        GraphicsUtils.PutPixelAll(this, trapesium3, GraphicsUtils.DrawStyle.StripStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var titik4 = new Vector2(200, -200);
+        var trapesium4 = _bentukDasar.TrapesiumSiku(titik4, 200, 150, 100);
+        GraphicsUtils.PutPixelAll(this, trapesium4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 10, gap: 5);
+    }
+
+    private void MyLingkaran()
+    {
+        // Kuadran I (garis-garis)
+        var titik1 = new Vector2(300, 200);
+        var lingkaran1 = _bentukDasar.Lingkaran(titik1, 40);
+        GraphicsUtils.PutPixelAll(this, lingkaran1, GraphicsUtils.DrawStyle.CircleDotStrip, Colors.Red, stripLength: 5, gap: 5);
+
+        // Kuadran II (garis normal)
+        var titik2 = new Vector2(-320, 220);
+        var lingkaran2 = _bentukDasar.Lingkaran(titik2, 40);
+        GraphicsUtils.PutPixelAll(this, lingkaran2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var titik3 = new Vector2(-320, -220);
+        var lingkaran3 = _bentukDasar.Lingkaran(titik3, 40);
+        GraphicsUtils.PutPixelAll(this, lingkaran3, GraphicsUtils.DrawStyle.CircleStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var titik4 = new Vector2(300, -200);
+        var lingkaran4 = _bentukDasar.Lingkaran(titik4, 40);
+        GraphicsUtils.PutPixelAll(this, lingkaran4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 20, gap: 5);
+    }
+
+    private void MyElips()
+    {
+        // Kuadran I (garis-garis)
+        var titik1 = new Vector2(300, 200);
+        var elips1 = _bentukDasar.Elips(titik1, 60, 30);
+        GraphicsUtils.PutPixelAll(this, elips1, GraphicsUtils.DrawStyle.CircleStrip, Colors.Red, gap: 2);
+
+        // Kuadran II (garis normal)
+        var titik2 = new Vector2(-320, 220);
+        var elips2 = _bentukDasar.Elips(titik2, 60, 30);
+        GraphicsUtils.PutPixelAll(this, elips2, GraphicsUtils.DrawStyle.DotDot, Colors.Blue);
+
+        // Kuadran III (titik-titik)
+        var titik3 = new Vector2(-320, -220);
+        var elips3 = _bentukDasar.Elips(titik3, 60, 30);
+        GraphicsUtils.PutPixelAll(this, elips3, GraphicsUtils.DrawStyle.EllipseStrip, Colors.Green, stripLength: 1, gap: 3);
+
+        // Kuadran IV (titik-garis-titik)
+        var titik4 = new Vector2(300, -200);
+        var elips4 = _bentukDasar.Elips(titik4, 60, 30);
+        GraphicsUtils.PutPixelAll(this, elips4, GraphicsUtils.DrawStyle.DotDash, Colors.Yellow, stripLength: 10, gap: 5);
     }
 
     public override void _ExitTree()

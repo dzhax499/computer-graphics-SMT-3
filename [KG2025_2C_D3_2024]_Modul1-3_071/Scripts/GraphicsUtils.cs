@@ -9,6 +9,7 @@ public static class GraphicsUtils
     {
         DotDot,
         DotStripDot,
+        DotDash,
         StripStrip,
         CircleDot,          // Dotted circle
         CircleStrip,        // Circle with a continuous strip
