@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public partial class Karya4 : Node2D
 {
-	private BentukDasar _bentukDasar = new BentukDasar();
+	private Primitif _bentukDasar = new Primitif();
 	private Transformasi _transformasi = new Transformasi();
 
 	public override void _Ready()
@@ -18,19 +18,56 @@ public partial class Karya4 : Node2D
 	public override void _Draw()
 	{
 		MarginPixel();
+		ScreenUtils.DrawAxes(this, _bentukDasar);
 		MyPersegi();
 	}
-
 	private void MyPersegi(){
-		var persegi1 = _bentukDasar.Persegi(100, 100, 50); // Gambar persegi di posisi (100, 100) dengan ukuran 50
-		GraphicsUtils.PutPixelAll(this, persegi1, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(4), 3, 2);
+		// === KUADRAN I (Kanan Atas) x > 0, y > 0 ===
+		var pos1 = ScreenUtils.ToScreenCoordinate(50, 50);
+		var persegi1 = _bentukDasar.Persegi(pos1.X, pos1.Y, 40);
+		GraphicsUtils.PutPixelAll(this, persegi1, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(1));
 
-    	var persegipanjang1 = _bentukDasar.PersegiPanjang(200, 150, 80, 40); // Gambar persegi panjang
-		GraphicsUtils.PutPixelAll(this, persegipanjang1, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(3), 3, 2);
+		// === KUADRAN II (Kiri Atas) x < 0, y > 0 ===
+		var pos2 = ScreenUtils.ToScreenCoordinate(-90, 50);
+		var persegi2 = _bentukDasar.Persegi(pos2.X, pos2.Y, 40);
+		GraphicsUtils.PutPixelAll(this, persegi2, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(3));
 
-		var segitiga1 = _bentukDasar.SegitigaSiku(new Vector2(300, 300), 60, 40); // Gambar segitiga siku-siku
-		GraphicsUtils.PutPixelAll(this, segitiga1, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(5), 3, 2);
+		// === KUADRAN III (Kiri Bawah) x < 0, y < 0 ===
+		var pos3 = ScreenUtils.ToScreenCoordinate(-90, -90);
+		var persegi3 = _bentukDasar.Persegi(pos3.X, pos3.Y, 40);
+		GraphicsUtils.PutPixelAll(this, persegi3, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(5));
+
+		// === KUADRAN IV (Kanan Bawah) x > 0, y < 0 ===
+		var pos4 = ScreenUtils.ToScreenCoordinate(50, -90);
+		var persegi4 = _bentukDasar.Persegi(pos4.X, pos4.Y, 40);
+		GraphicsUtils.PutPixelAll(this, persegi4, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(1));
 	}
+
+	// private void MyPersegiPanjang(){
+	// 	//KI
+	// 	var persegiPanjang1 = _bentukDasar.PersegiPanjang(120, 80, 60, 30);
+	// 	GraphicsUtils.PutPixelAll(this, persegiPanjang1, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(2));
+		
+	// 	//KIV
+	// 	var persegiPanjang2 = _bentukDasar.PersegiPanjang(120, -120, 60, 30);
+	// 	GraphicsUtils.PutPixelAll(this, persegiPanjang2, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(2));
+
+	// }
+
+	// private void MySegitiga(){
+	// 	//KII
+	// 	var segitiga1 = _bentukDasar.SegitigaSiku(new Vector2(-180, 100), 50, 35);
+	// 	GraphicsUtils.PutPixelAll(this, segitiga1, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(4));
+
+	// 	//KIII
+
+	// }
+
+	// private void MyTrapesiumSiku(){
+	// 	//KIII
+	// 	var trapesiumSiku1 = _bentukDasar.TrapesiumSiku(new Vector2(-200, -50), 30, 50, 40);
+	// 	GraphicsUtils.PutPixelAll(this, trapesiumSiku1, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(6));
+	// }
 
 	private void MarginPixel(){
 		var margin = _bentukDasar.Margin();
@@ -43,5 +80,4 @@ public partial class Karya4 : Node2D
         NodeUtils.DisposeAndNull(_transformasi, "_transformasi");
         base._ExitTree();
     }
-	
 }	

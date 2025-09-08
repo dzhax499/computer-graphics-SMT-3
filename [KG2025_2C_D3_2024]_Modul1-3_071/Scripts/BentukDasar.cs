@@ -94,7 +94,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 		for (float x = titikAwalx; x <= titikAkhirx; x = x + step)
 		{
 			float y = Math.Abs(x - 30); // f(x) = |x - 30|
-			Vector2 screenPoint = _primitif.ToScreenCoordinate(x, y);
+			Vector2 screenPoint = ScreenUtils.ToScreenCoordinate(x, y);
 			res.Add(screenPoint);
 		}
 		return res;
@@ -106,7 +106,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 		for (float x = titikAwalx; x <= titikAkhirx; x = x + step)
 		{
 			float y = (float)Math.Pow(2, x / 10); // f(x) = 2^(x/10)
-			Vector2 screenPoint = _primitif.ToScreenCoordinate(x, y);
+			Vector2 screenPoint = ScreenUtils.ToScreenCoordinate(x, y);
 			res.Add(screenPoint);
 		}
 		return res;
@@ -120,7 +120,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 			if (x > 0) // Logaritma hanya untuk x > 0
 			{
 				float y = (float)Math.Log(x) * 10; // f(x) = ln(x) * 10
-				Vector2 screenPoint = _primitif.ToScreenCoordinate(x, y);
+				Vector2 screenPoint = ScreenUtils.ToScreenCoordinate(x, y);
 				res.Add(screenPoint);
 			}
 		}
@@ -135,7 +135,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 		
 		for (float x = startX; x <= endX; x += 1f)
 		{
-			Vector2 point = _primitif.ToScreenCoordinate(x, 0); // y = 0 untuk sumbu X
+			Vector2 point = ScreenUtils.ToScreenCoordinate(x, 0); // y = 0 untuk sumbu X
 			res.Add(point);
 		}
 		return res;
@@ -150,7 +150,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 		
 		for (float y = startY; y <= endY; y += 1f)
 		{
-			Vector2 point = _primitif.ToScreenCoordinate(0, y); // x = 0 untuk sumbu Y
+			Vector2 point = ScreenUtils.ToScreenCoordinate(0, y); // x = 0 untuk sumbu Y
 			res.Add(point);
 		}
 		return res;
@@ -167,7 +167,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 			{
 				for (float y = -maxRange; y <= maxRange; y += 10f)
 				{
-					Vector2 point = _primitif.ToScreenCoordinate(x, y);
+					Vector2 point = ScreenUtils.ToScreenCoordinate(x, y);
 					res.Add(point);
 				}
 			}
@@ -180,7 +180,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 			{
 				for (float x = -maxRange; x <= maxRange; x += 10f)
 				{
-					Vector2 point = _primitif.ToScreenCoordinate(x, y);
+					Vector2 point = ScreenUtils.ToScreenCoordinate(x, y);
 					res.Add(point);
 				}
 			}

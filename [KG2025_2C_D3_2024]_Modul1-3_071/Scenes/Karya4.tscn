@@ -1,6 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://bygl2akahwvs5"]
+[gd_scene load_steps=3 format=3 uid="uid://cyeoxubipc74f"]
 
-[ext_resource type="Script" path="res://Scenes/Karya4.cs" id="1_2q0da"]
+[ext_resource type="Script" uid="uid://bagx1larp0h3q" path="res://Scripts/Karya4.cs" id="1_mdocn"]
+[ext_resource type="Script" uid="uid://bhg1bv1wlw0n0" path="res://Scripts/BackBtn.cs" id="2_mdocn"]
 
 [node name="Node2D" type="Node2D"]
-script = ExtResource("1_2q0da")
+script = ExtResource("1_mdocn")
+
+[node name="BtnBack" type="Button" parent="."]
+text = "Back"
+script = ExtResource("2_mdocn")
+
+[connection signal="pressed" from="BtnBack" to="BtnBack" method="_on_BtnBack_pressed"]

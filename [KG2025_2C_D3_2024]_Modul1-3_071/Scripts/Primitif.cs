@@ -80,12 +80,12 @@ public partial class Primitif: RefCounted
 	// KOORDINAT CONVERSION FUNCTIONS
 
     /// Konversi dari koordinat kartesian ke screen coordinate
-    public Vector2 ToScreenCoordinate(float x, float y)
-    {
-        float screenX = ScreenUtils.MarginLeft + x;
-        float screenY = ScreenUtils.MarginBottom - y;
-        return new Vector2(screenX, screenY);
-    }
+	// public Vector2 ScreenUtils.ToScreenCoordinate(float x, float y) 
+	// { 
+	// 	float screenX = ScreenUtils.MarginLeft + x; 
+	// 	float screenY = ScreenUtils.MarginBottom - y; 
+	// 	return new Vector2(screenX, screenY); 
+	// }
 
     /// Konversi dari screen coordinate ke koordinat kartesian
     public Vector2 ToWorldCoordinate(float screenX, float screenY)
@@ -129,10 +129,10 @@ public partial class Primitif: RefCounted
 	{
 		List<Vector2> points = new List<Vector2>();
         
-        Vector2 p1 = ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
-        Vector2 p2 = ToScreenCoordinate(titikAwal.X + panjangBawah, titikAwal.Y); // Kanan bawah
-        Vector2 p3 = ToScreenCoordinate(titikAwal.X + panjangAtas, titikAwal.Y + tinggi); // Kanan atas
-        Vector2 p4 = ToScreenCoordinate(titikAwal.X, titikAwal.Y + tinggi); // Kiri atas
+        Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+        Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + panjangBawah, titikAwal.Y); // Kanan bawah
+        Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X + panjangAtas, titikAwal.Y + tinggi); // Kanan atas
+        Vector2 p4 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y + tinggi); // Kiri atas
         
         points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas
         points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan miring
@@ -144,18 +144,31 @@ public partial class Primitif: RefCounted
 
 	public List<Vector2> TrapesiumSamaKaki(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
 	{
-		List<Vector2> res = new List<Vector2>();
-		return res;
+		List<Vector2> points = new List<Vector2>();
+        
+        float offset = (panjangBawah - panjangAtas) / 2f;
+        
+        Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+        Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + panjangBawah, titikAwal.Y); // Kanan bawah
+        Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X + offset + panjangAtas, titikAwal.Y + tinggi); // Kanan atas
+        Vector2 p4 = ScreenUtils.ToScreenCoordinate(titikAwal.X + offset, titikAwal.Y + tinggi); // Kiri atas
+        
+        points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas
+        points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan
+        points.AddRange(LineBresenham(p3.X, p3.Y, p4.X, p4.Y)); // Atas
+        points.AddRange(LineBresenham(p4.X, p4.Y, p1.X, p1.Y)); // Sisi kiri
+        
+        return points;
 	}
 
 	public List<Vector2> JajarGenjang(Vector2 titikAwal, int alas, int tinggi, int jarakBeda)
 	{
 		List<Vector2> points = new List<Vector2>();
 		
-		Vector2 p1 = ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
-		Vector2 p2 = ToScreenCoordinate(titikAwal.X + alas, titikAwal.Y); // Kanan bawah
-		Vector2 p3 = ToScreenCoordinate(titikAwal.X + alas + jarakBeda, titikAwal.Y + tinggi); // Kanan atas
-		Vector2 p4 = ToScreenCoordinate(titikAwal.X + jarakBeda, titikAwal.Y + tinggi); // Kiri atas
+		Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+		Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + alas, titikAwal.Y); // Kanan bawah
+		Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X + alas + jarakBeda, titikAwal.Y + tinggi); // Kanan atas
+		Vector2 p4 = ScreenUtils.ToScreenCoordinate(titikAwal.X + jarakBeda, titikAwal.Y + tinggi); // Kiri atas
 		
 		points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas bawah
 		points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan
