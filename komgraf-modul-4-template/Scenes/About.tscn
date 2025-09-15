@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dxn4pvqq76s1n"]
 
 [ext_resource type="Texture2D" uid="uid://bt6btbdd86jsm" path="res://Assets/si_juki_boleh_juga.png" id="1"]
-[ext_resource type="Script" path="res://Scripts/About.cs" id="1_6oxj2"]
+[ext_resource type="Script" uid="uid://7g6y7l45afk7" path="res://Scripts/About.cs" id="1_6oxj2"]
 
 [node name="About" type="Control"]
 layout_mode = 3
