@@ -21,16 +21,16 @@ public partial class Transformasi : RefCounted
     }
 
     // Matrix Addition (Modifies 'b' in place)
-    public static void Matrix3x3Summation(float[,] a, float[,] b)
-    {
-        for (int i = 0; i < 3; i++)
+        public static void Matrix3x3Summation(float[,] a, float[,] b)
         {
-            for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 3; i++)
             {
-                b[i, j] = a[i, j] + b[i, j];
+                for (int j = 0; j < 3; j++)
+                {
+                    b[i, j] = a[i, j] + b[i, j];
+                }
             }
         }
-    }
 
     // Matrix Subtraction (Modifies 'b' in place)
     public static void Matrix3x3Subtraction(float[,] a, float[,] b)
