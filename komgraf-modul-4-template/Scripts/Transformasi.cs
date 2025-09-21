@@ -68,7 +68,6 @@ public partial class Transformasi : RefCounted
         }
     }
 
-    //####################################################################################################
     // Geometric Transformations
 
     // Get Transformed Points (Modifies 'res' in place)
