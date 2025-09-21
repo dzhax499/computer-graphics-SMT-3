@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public partial class Primitif: RefCounted
 {
+	// MODUL 2 - LINE DRAWING ALGORITHMS
 	public List<Vector2> LineDDA(float xa, float ya, float xb, float yb)
 	{
 		float dx = xb - xa;
@@ -45,29 +46,29 @@ public partial class Primitif: RefCounted
 	public List<Vector2> LineBresenham(float xa, float ya, float xb, float yb)
 	{
 		List<Vector2> res = new List<Vector2>();
-        int x1 = (int)xa;
-        int y1 = (int)ya;
-        int x2 = (int)xb;
-        int y2 = (int)yb;
+		int x1 = (int)xa;
+		int y1 = (int)ya;
+		int x2 = (int)xb;
+		int y2 = (int)yb;
 
-        int dx = Math.Abs(x2 - x1);
-        int dy = Math.Abs(y2 - y1);
-        int sx = (x1 < x2) ? 1 : -1;
-        int sy = (y1 < y2) ? 1 : -1;
-        int err = dx - dy;
+		int dx = Math.Abs(x2 - x1);
+		int dy = Math.Abs(y2 - y1);
+		int sx = (x1 < x2) ? 1 : -1;
+		int sy = (y1 < y2) ? 1 : -1;
+		int err = dx - dy;
 
-        while (true)
-        {
-            res.Add(new Vector2(x1, y1));
-            if (x1 == x2 && y1 == y2) break;
-            int e2 = 2 * err;
-            if (e2 > -dy) { err -= dy; x1 += sx; }
-            if (e2 < dx) { err += dx; y1 += sy; }
-        }
-        return res;
+		while (true)
+		{
+			res.Add(new Vector2(x1, y1));
+			if (x1 == x2 && y1 == y2) break;
+			int e2 = 2 * err;
+			if (e2 > -dy) { err -= dy; x1 += sx; }
+			if (e2 < dx) { err += dx; y1 += sy; }
+		}
+		return res;
 	}
 
-    public List<Vector2> Margin()
+	public List<Vector2> Margin()
 	{
 		List<Vector2> res = new List<Vector2>();
 		res.AddRange(LineBresenham(ScreenUtils.MarginLeft, ScreenUtils.MarginTop, ScreenUtils.MarginRight, ScreenUtils.MarginTop));
@@ -77,165 +78,228 @@ public partial class Primitif: RefCounted
 		return res;
 	}
 
+
+
 	public List<Vector2> Persegi(float x, float y, float ukuran)
 	{
-        List<Vector2> res = new List<Vector2>();
-        res.AddRange(LineBresenham(x, y, x + ukuran, y));
-        res.AddRange(LineBresenham(x + ukuran, y + 1, x + ukuran, y + ukuran)); // Start from y + 1
-        res.AddRange(LineBresenham(x + ukuran - 1, y + ukuran, x, y + ukuran)); // Start from x + ukuran - 1
-        res.AddRange(LineBresenham(x, y + ukuran - 1, x, y + 1)); // Start from y + ukuran - 1 and end at y + 1
-        return res;
+		List<Vector2> res = new List<Vector2>();
+		res.AddRange(LineBresenham(x, y, x + ukuran, y));
+		res.AddRange(LineBresenham(x + ukuran, y + 1, x + ukuran, y + ukuran)); // Start from y + 1
+		res.AddRange(LineBresenham(x + ukuran - 1, y + ukuran, x, y + ukuran)); // Start from x + ukuran - 1
+		res.AddRange(LineBresenham(x, y + ukuran - 1, x, y + 1)); // Start from y + ukuran - 1 and end at y + 1
+		return res;
 	}
 
 	public List<Vector2> PersegiPanjang(float x, float y, float panjang, float lebar)
 	{
-        List<Vector2> res = new List<Vector2>();
-        res.AddRange(LineBresenham(x, y, x + panjang, y));
-        res.AddRange(LineBresenham(x + panjang, y + 1, x + panjang, y + lebar)); // Start from y + 1
-        res.AddRange(LineBresenham(x + panjang - 1, y + lebar, x, y + lebar)); // Start from x + panjang - 1
-        res.AddRange(LineBresenham(x, y + lebar - 1, x, y + 1)); // Start from y + lebar - 1 and end at y + 1
-        return res;
+		List<Vector2> res = new List<Vector2>();
+		res.AddRange(LineBresenham(x, y, x + panjang, y));
+		res.AddRange(LineBresenham(x + panjang, y + 1, x + panjang, y + lebar)); // Start from y + 1
+		res.AddRange(LineBresenham(x + panjang - 2, y + lebar, x, y + lebar)); // Start from x + panjang - 1
+		res.AddRange(LineBresenham(x, y + lebar - 1, x, y + 1));
+		return res;
 	}
 
 	public List<Vector2> SegitigaSiku(Vector2 titikAwal, int alas, int tinggi)
 	{
 		List<Vector2> res = new List<Vector2>();
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X, titikAwal.Y + tinggi)); // sisi tinggi
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y + tinggi, titikAwal.X + alas, titikAwal.Y + tinggi)); // sisi alas
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X + alas, titikAwal.Y + tinggi)); // sisi miring
+
+		Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y);              // titik awal (kanan bawah)
+		Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + alas, titikAwal.Y);       // alas ke kanan
+		Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y + tinggi);     // tinggi ke atas
+
+		res.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // alas
+		res.AddRange(LineBresenham(p1.X, p1.Y, p3.X, p3.Y)); // tinggi
+		res.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // sisi miring
 		return res;
 	}
 
+	public List<Vector2> SegitigaSamaKaki(Vector2 titikAwal, int alas, int tinggi)
+	{
+		List<Vector2> points = new List<Vector2>();
+		
+		// Titik puncak di tengah atas
+		float puncakX = titikAwal.X + alas / 2f;
+		float puncakY = titikAwal.Y + tinggi;
+		
+		// Tiga sisi segitiga
+		points.AddRange(LineBresenham(titikAwal.X, titikAwal.Y, titikAwal.X + alas, titikAwal.Y)); // Alas
+		points.AddRange(LineBresenham(titikAwal.X, titikAwal.Y, puncakX, puncakY)); // Sisi kiri
+		points.AddRange(LineBresenham(titikAwal.X + alas, titikAwal.Y, puncakX, puncakY)); // Sisi kanan
+		
+		return points;
+	}
+
+
 	public List<Vector2> TrapesiumSiku(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
 	{
-		List<Vector2> res = new List<Vector2>();
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X + panjangAtas, titikAwal.Y)); // sisi atas
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X, titikAwal.Y + tinggi)); // sisi kiri
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y + tinggi, titikAwal.X + panjangBawah, titikAwal.Y + tinggi)); // sisi bawah
-		res.AddRange(LineDDA(titikAwal.X + panjangAtas, titikAwal.Y, titikAwal.X + panjangBawah, titikAwal.Y + tinggi)); // sisi miring
-		return res;
+		List<Vector2> points = new List<Vector2>();
+        
+        Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+        Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + panjangBawah, titikAwal.Y); // Kanan bawah
+        Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X + panjangAtas, titikAwal.Y + tinggi); // Kanan atas
+        Vector2 p4 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y + tinggi); // Kiri atas
+        
+        points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas
+        points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan miring
+        points.AddRange(LineBresenham(p3.X, p3.Y, p4.X, p4.Y)); // Atas
+        points.AddRange(LineBresenham(p4.X, p4.Y, p1.X, p1.Y)); // Sisi kiri
+        
+        return points;
 	}
 
 	public List<Vector2> TrapesiumSamaKaki(Vector2 titikAwal, int panjangAtas, int panjangBawah, int tinggi)
 	{
-        List<Vector2> res = new List<Vector2>();
-        int selisih = (panjangBawah - panjangAtas) / 2;
-        int awalBawahX = Mathf.FloorToInt(titikAwal.X - selisih); // Use Mathf.FloorToInt for clarity
-        res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X + panjangAtas, titikAwal.Y)); // sisi atas
-        res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, awalBawahX, titikAwal.Y + tinggi)); // sisi kiri
-        res.AddRange(LineDDA(awalBawahX, titikAwal.Y + tinggi, awalBawahX + panjangBawah, titikAwal.Y + tinggi)); // sisi bawah
-        res.AddRange(LineDDA(titikAwal.X + panjangAtas, titikAwal.Y, awalBawahX + panjangBawah, titikAwal.Y + tinggi)); // sisi kanan
-        return res;
+		List<Vector2> points = new List<Vector2>();
+        
+        float offset = (panjangBawah - panjangAtas) / 2f;
+        
+        Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+        Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + panjangBawah, titikAwal.Y); // Kanan bawah
+        Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X + offset + panjangAtas, titikAwal.Y + tinggi); // Kanan atas
+        Vector2 p4 = ScreenUtils.ToScreenCoordinate(titikAwal.X + offset, titikAwal.Y + tinggi); // Kiri atas
+        
+        points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas
+        points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan
+        points.AddRange(LineBresenham(p3.X, p3.Y, p4.X, p4.Y)); // Atas
+        points.AddRange(LineBresenham(p4.X, p4.Y, p1.X, p1.Y)); // Sisi kiri
+        
+        return points;
 	}
 
 	public List<Vector2> JajarGenjang(Vector2 titikAwal, int alas, int tinggi, int jarakBeda)
 	{
-		List<Vector2> res = new List<Vector2>();
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X + alas, titikAwal.Y)); // sisi atas
-		res.AddRange(LineDDA(titikAwal.X, titikAwal.Y, titikAwal.X - jarakBeda, titikAwal.Y + tinggi)); // sisi kiri
-		res.AddRange(LineDDA(titikAwal.X + alas, titikAwal.Y, titikAwal.X - jarakBeda + alas, titikAwal.Y + tinggi)); // sisi kanan
-		res.AddRange(LineDDA(titikAwal.X - jarakBeda, titikAwal.Y + tinggi, titikAwal.X - jarakBeda + alas, titikAwal.Y + tinggi)); // sisi bawah
-		return res;
+		List<Vector2> points = new List<Vector2>();
+		
+		Vector2 p1 = ScreenUtils.ToScreenCoordinate(titikAwal.X, titikAwal.Y); // Kiri bawah
+		Vector2 p2 = ScreenUtils.ToScreenCoordinate(titikAwal.X + alas, titikAwal.Y); // Kanan bawah
+		Vector2 p3 = ScreenUtils.ToScreenCoordinate(titikAwal.X + alas + jarakBeda, titikAwal.Y + tinggi); // Kanan atas
+		Vector2 p4 = ScreenUtils.ToScreenCoordinate(titikAwal.X + jarakBeda, titikAwal.Y + tinggi); // Kiri atas
+		
+		points.AddRange(LineBresenham(p1.X, p1.Y, p2.X, p2.Y)); // Alas bawah
+		points.AddRange(LineBresenham(p2.X, p2.Y, p3.X, p3.Y)); // Sisi kanan
+		points.AddRange(LineBresenham(p3.X, p3.Y, p4.X, p4.Y)); // Alas atas
+		points.AddRange(LineBresenham(p4.X, p4.Y, p1.X, p1.Y)); // Sisi kiri
+		
+		return points;
 	}
 
 	public List<Vector2> CircleMidPoint(int xCenter, int yCenter, int radius)
-    {
-        List<Vector2> points = new List<Vector2>();
-        int x = 0;
-        int y = radius;
-        int p = 1 - radius;
+	{
+		List<Vector2> points = new List<Vector2>();
+		int x = 0;
+		int y = radius;
+		int d = 1 -radius;
 
-        CirclePlotPoints(xCenter, yCenter, x, y, points);
+		//convert koordinat layar
+		Vector2 centerScreen = ScreenUtils.ToScreenCoordinate(xCenter,yCenter);
 
-        while (x < y)
-        {
-            x++;
-            if (p < 0)
-            {
-                p += 2 * x + 1;
-            }
-            else
-            {
-                y--;
-                p += 2 * (x - y) + 1;
-            }
-            CirclePlotPoints(xCenter, yCenter, x, y, points);
-        }
-        return points;
-    }
+		void PlotCirclePoints(int xc,int yc,int px, int py)
+		{
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc - py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc - py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + py, yc + px));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - py, yc + px));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + py, yc - px));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - py, yc - px));
+		}
 
-    private void CirclePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
-    {
-        points.Add(new Vector2(xCenter + x, yCenter + y));
-        points.Add(new Vector2(xCenter - x, yCenter + y));
-        points.Add(new Vector2(xCenter + x, yCenter - y));
-        points.Add(new Vector2(xCenter - x, yCenter - y));
-        points.Add(new Vector2(xCenter + y, yCenter + x));
-        points.Add(new Vector2(xCenter - y, yCenter + x));
-        points.Add(new Vector2(xCenter + y, yCenter - x));
-        points.Add(new Vector2(xCenter - y, yCenter - x));
-    }
+		PlotCirclePoints(xCenter,yCenter,x,y);
 
-    public List<Vector2> EllipseMidpoint(int xCenter, int yCenter, int rx, int ry)
-    {
-        List<Vector2> points = new List<Vector2>();
+		while(x<y)
+		{
+			x++;
+			if (d < 0)
+			{
+				d = d + 2 * x+1;
+			}
+			else 
+			{
+				y--;
+				d = d + 2 * (x-y) + 1;
+			}
+			PlotCirclePoints(xCenter,yCenter,x,y);
+		}
 
-        int rx2 = rx * rx;
-        int ry2 = ry * ry;
-        int twoRx2 = 2 * rx2;
-        int twoRy2 = 2 * ry2;
-        int x = 0;
-        int y = ry;
-        int p;
-        int px = 0;
-        int py = twoRx2 * y;
+		return points;
+	}
 
-        // Region 1
-        p = (int)(ry2 - (rx2 * ry) + (0.25 * rx2));
-        while (px < py)
-        {
-            EllipsePlotPoints(xCenter, yCenter, x, y, points);
-            x++;
-            px += twoRy2;
-            if (p < 0)
-            {
-                p += ry2 + px;
-            }
-            else
-            {
-                y--;
-                py -= twoRx2;
-                p += ry2 + px - py;
-            }
-        }
+	public List<Vector2> EllipseMidpoint(int xCenter, int yCenter, int rx, int ry)
+	{
+		List<Vector2> points = new List<Vector2>();
+		int x = 0;
+		int y = ry;
 
-        // Region 2
-        p = (int)(ry2 * (x + 0.5) * (x + 0.5) + rx2 * (y - 1) * (y - 1) - rx2 * ry2);
-        while (y >= 0)
-        {
-            EllipsePlotPoints(xCenter, yCenter, x, y, points);
-            y--;
-            py -= twoRx2;
-            if (p > 0)
-            {
-                p += rx2 - py;
-            }
-            else
-            {
-                x++;
-                px += twoRy2;
-                p += rx2 - py + px;
-            }
-        }
-        return points;
-    }
+		int rxSq = rx * rx;
+		int rySq = ry * ry;
+		int twoRxSq = 2 * rxSq;
+		int twoRySq = 2 * rySq;
 
-    private void EllipsePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
-    {
-        points.Add(new Vector2(xCenter + x, yCenter + y));
-        points.Add(new Vector2(xCenter - x, yCenter + y));
-        points.Add(new Vector2(xCenter + x, yCenter - y));
-        points.Add(new Vector2(xCenter - x, yCenter - y));
-    }
-    
+		int px = 0;
+		int py = twoRxSq * y;
+
+		// Konversi ke koordinat layar
+		Vector2 centerScreen = ScreenUtils.ToScreenCoordinate(xCenter, yCenter);
+
+		void PlotEllipsePoints(int xc, int yc, int px, int py)
+		{
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc + py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc + px, yc - py));
+			points.Add(ScreenUtils.ToScreenCoordinate(xc - px, yc - py));
+		}
+
+		// Region 1
+		int p1 = (int)(rySq - (rxSq * ry) + (0.25 * rxSq));
+		while (px < py)
+		{
+			PlotEllipsePoints(xCenter, yCenter, x, y);
+			x++;
+			px += twoRySq;
+			if (p1 < 0)
+			{
+				p1 += rySq + px;
+			}
+			else
+			{
+				y--;
+				py -= twoRxSq;
+				p1 += rySq + px - py;
+			}
+		}
+
+		// Region 2
+		int p2 = (int)(rySq * (x + 0.5) * (x + 0.5) + rxSq * (y - 1) * (y - 1) - rxSq * rySq);
+		while (y >= 0)
+		{
+			PlotEllipsePoints(xCenter, yCenter, x, y);
+			y--;
+			py -= twoRxSq;
+			if (p2 > 0)
+			{
+				p2 += rxSq - py;
+			}
+			else
+			{
+				x++;
+				px += twoRySq;
+				p2 += rxSq - py + px;
+			}
+		}
+
+		return points;
+	}
+
+	private void CirclePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
+	{
+
+	}
+
+	private void EllipsePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
+	{
+
+	}
+	
 }

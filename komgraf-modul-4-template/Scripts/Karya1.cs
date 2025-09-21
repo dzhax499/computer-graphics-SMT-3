@@ -1,69 +1,117 @@
-namespace Godot;
-
-using Godot;
 using System;
 using System.Collections.Generic;
+using Godot;
 
 public partial class Karya1 : Node2D
 {
-	private BentukDasar _bentukDasar = new BentukDasar();
-	private Transformasi _transformasi = new Transformasi();
+    private Primitif _primitif = new Primitif();
+    private BentukDasar _bentukDasar = new BentukDasar();
+    private Transformasi _tf = new Transformasi();
 
-	public override void _Ready()
+    public override void _Ready()
     {
-		ScreenUtils.Initialize(GetViewport()); // Initialize ScreenUtils
-		QueueRedraw();
+        ScreenUtils.Initialize(GetViewport());
+        QueueRedraw();
     }
 
-	public override void _Draw()
-	{
-		MarginPixel();
-		MyPersegi();
-		MyLingkaranDanElips();
-		MyTransformation();
-	}
-
-	private void MyTransformation()
-	{
-		Vector2 myPoint = new Vector2(50, 50);
-		float[,] myMatrix = new float[3, 3];
-		Transformasi.Matrix3x3Identity(myMatrix); // Corrected line
-		_transformasi.Translation(myMatrix, 10, 20, ref myPoint);
-		List<Vector2> points = new List<Vector2>() { myPoint };
-		PrintUtils.PrintVector2List(points, "Koordinat Awal");
-		var transformedPoints = _transformasi.GetTransformPoint(myMatrix, points);
-		PrintUtils.PrintVector2List(transformedPoints, "Koordinat Transformasi");
-	}
-
-	private void MyPersegi(){
-		var persegi1 = _bentukDasar.Persegi(100, 100, 50); // Gambar persegi di posisi (100, 100) dengan ukuran 50
-		GraphicsUtils.PutPixelAll(this, persegi1, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(4), 3, 2);
-
-    	var persegipanjang1 = _bentukDasar.PersegiPanjang(200, 150, 80, 40); // Gambar persegi panjang
-		GraphicsUtils.PutPixelAll(this, persegipanjang1, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(3), 3, 2);
-	}
-
-	private void MyLingkaranDanElips()
+    public override void _Draw()
     {
-        // Draw a circle
-        var lingkaranPoints = _bentukDasar.Lingkaran(new Vector2(400, 100), 40);
-        GraphicsUtils.PutPixelAll(this, lingkaranPoints, GraphicsUtils.DrawStyle.CircleDot, ColorUtils.ColorStorage(2), gap: 2);
+        MarginPixel();
+        GambarKordinat();
 
-        // Draw an ellipse
-        var elipsPoints = _bentukDasar.Elips(new Vector2(550, 250), 60, 30);
-        GraphicsUtils.PutPixelAll(this, elipsPoints, GraphicsUtils.DrawStyle.EllipseStrip, ColorUtils.ColorStorage(1), gap: 2);
+        // --- BENTUK AWAL ---
+        var persegi = _bentukDasar.Persegi(250,300,50); // bentuk dasar persegi
+        GraphicsUtils.PutPixelAll(this, persegi, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(7));
+
+        // --- DEMO TRANSFORMASI ---
+        DemoTranslasi(persegi);
+        DemoScaling(persegi);
+        DemoRotasi(persegi);
+        DemoTranslasiScaling(persegi);
+        DemoScalingTranslasi(persegi);
     }
 
-	private void MarginPixel(){
-		var margin = _bentukDasar.Margin();
-		GraphicsUtils.PutPixelAll(this, margin, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(6));
-	}
-
-	public override void _ExitTree()
+    private void GambarKordinat()
     {
-		NodeUtils.DisposeAndNull(_bentukDasar, "_bentukDasar");
-        NodeUtils.DisposeAndNull(_transformasi, "_transformasi");
+        var sumbuX = _bentukDasar.SumbuX(1000);
+        GraphicsUtils.PutPixelAll(this, sumbuX, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(1));
+
+        var sumbuY = _bentukDasar.SumbuY(1000);
+        GraphicsUtils.PutPixelAll(this, sumbuY, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(2));
+    }
+
+    private void MarginPixel()
+    {
+        var margin = _bentukDasar.Margin();
+        GraphicsUtils.PutPixelAll(this, margin, color: ColorUtils.ColorStorage(0));
+    }
+
+
+    private void DemoTranslasi(List<Vector2> bentuk)
+    {
+        float[,] matrix = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix);
+
+        Vector2 pivot = new Vector2(0, 0);
+        _tf.Translation(matrix, 100, 50, ref pivot);
+
+        var hasil = _tf.GetTransformPoint(matrix, bentuk);
+        GraphicsUtils.PutPixelAll(this, hasil, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(3));
+    }
+
+    private void DemoScaling(List<Vector2> bentuk)
+    {
+        float[,] matrix = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix);
+
+        Vector2 pivot = new Vector2(50, 50); // titik pusat scaling
+        _tf.Scaling(matrix, 1.5f, 1.5f, pivot);
+
+        var hasil = _tf.GetTransformPoint(matrix, bentuk);
+        GraphicsUtils.PutPixelAll(this, hasil, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(4));
+    }
+
+    private void DemoRotasi(List<Vector2> bentuk)
+    {
+        float[,] matrix = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix);
+
+        Vector2 pivot = new Vector2(50, 50);
+        _tf.RotationClockwise(matrix, 45, pivot);
+
+        var hasil = _tf.GetTransformPoint(matrix, bentuk);
+        GraphicsUtils.PutPixelAll(this, hasil, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(5));
+    }
+
+    private void DemoTranslasiScaling(List<Vector2> bentuk)
+    {
+        float[,] matrix = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix);
+
+        Vector2 pivot = new Vector2(0, 0);
+        _tf.Translation(matrix, 80, 30, ref pivot);
+        _tf.Scaling(matrix, 2f, 2f, pivot);
+
+        var hasil = _tf.GetTransformPoint(matrix, bentuk);
+        GraphicsUtils.PutPixelAll(this, hasil, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(6));
+    }
+
+    private void DemoScalingTranslasi(List<Vector2> bentuk)
+    {
+        float[,] matrix = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix);
+
+        Vector2 pivot = new Vector2(0, 0);
+        _tf.Scaling(matrix, 2f, 2f, pivot);
+        _tf.Translation(matrix, 80, 30, ref pivot);
+
+        var hasil = _tf.GetTransformPoint(matrix, bentuk);
+        GraphicsUtils.PutPixelAll(this, hasil, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(8));
+    }
+
+    public override void _ExitTree()
+    {
+        NodeUtils.DisposeAndNull(_bentukDasar, "_bentukDasar");
         base._ExitTree();
     }
-	
-}	
+}
