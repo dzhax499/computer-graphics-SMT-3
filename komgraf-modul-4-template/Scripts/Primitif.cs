@@ -82,11 +82,12 @@ public partial class Primitif: RefCounted
 
 	public List<Vector2> Persegi(float x, float y, float ukuran)
 	{
+		// Mengembalikan 4 titik sudut saja, bukan semua piksel di garis
 		List<Vector2> res = new List<Vector2>();
-		res.AddRange(LineBresenham(x, y, x + ukuran, y));
-		res.AddRange(LineBresenham(x + ukuran, y + 1, x + ukuran, y + ukuran)); // Start from y + 1
-		res.AddRange(LineBresenham(x + ukuran - 1, y + ukuran, x, y + ukuran)); // Start from x + ukuran - 1
-		res.AddRange(LineBresenham(x, y + ukuran - 1, x, y + 1)); // Start from y + ukuran - 1 and end at y + 1
+		res.Add(new Vector2(x, y));
+		res.Add(new Vector2(x + ukuran, y));
+		res.Add(new Vector2(x + ukuran, y + ukuran));
+		res.Add(new Vector2(x, y + ukuran));
 		return res;
 	}
 
@@ -287,6 +288,40 @@ public partial class Primitif: RefCounted
 				px += twoRySq;
 				p2 += rxSq - py + px;
 			}
+		}
+
+		return points;
+	}
+
+	public List<Vector2> SegienamBeraturan(Vector2 center, int radius)
+	{
+		List<Vector2> points = new List<Vector2>();
+		List<Vector2> vertices = new List<Vector2>();
+
+		// Hitung 6 titik sudut (vertices) menggunakan trigonometri
+		// Sudut awal 90 derajat (π/2 radian) agar puncak di atas
+		float startAngle = Mathf.DegToRad(90.0f);
+		// Sudut antar titik adalah 360 / 6 = 60 derajat
+		float angleStep = Mathf.DegToRad(360.0f / 6.0f);
+
+		for (int i = 0; i < 6; i++)
+		{
+			float angle = startAngle + i * angleStep;
+			float x = center.X + radius * Mathf.Cos(angle);
+			float y = center.Y + radius * Mathf.Sin(angle);
+
+			// Konversi koordinat dunia ke koordinat layar sebelum disimpan
+			vertices.Add(ScreenUtils.ToScreenCoordinate(x, y));
+		}
+
+		// Hubungkan setiap titik ke titik berikutnya untuk membentuk poligon tertutup
+		for (int i = 0; i < vertices.Count; i++)
+		{
+			int nextIndex = (i + 1) % vertices.Count; // Kembali ke titik awal untuk menutup bentuk
+			points.AddRange(LineBresenham(
+				vertices[i].X, vertices[i].Y,
+				vertices[nextIndex].X, vertices[nextIndex].Y
+			));
 		}
 
 		return points;

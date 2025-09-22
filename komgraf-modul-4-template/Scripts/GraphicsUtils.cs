@@ -1,6 +1,7 @@
 namespace Godot;
 
 using Godot;
+using System;
 using System.Collections.Generic;
 
 public static class GraphicsUtils
@@ -62,65 +63,68 @@ public static class GraphicsUtils
                     }
                     break;
 
-                            case DrawStyle.CircleDot:
-            case DrawStyle.DotDash:
-                    // Titik, strip, titik, gap, dst
-                    if (i % (stripLength + gap + 2) == 0)
+                case DrawStyle.CircleDot:
+                case DrawStyle.CircleStrip:
+                case DrawStyle.CircleDotStrip:
+                    // Apply gap logic based on the original index (i) divided by 8 (for 8-way symmetry)
+                    if ((i / 8) % (gap + 1) == 0)
                     {
-                        // Titik
                         PutPixel(targetNode, x, y, color);
+
+                        if (style == DrawStyle.CircleStrip)
+                        {
+                            // No need for additional drawing for continuous strip
+                        }
+                        else if (style == DrawStyle.CircleDotStrip)
+                        {
+                            int halfLength = stripLength / 2;
+                            for (int j = -halfLength; j <= halfLength; j += gap + 1)
+                            {
+                                PutPixel(targetNode, x + j, y, color);
+                            }
+                        }
                     }
-                    else if ((i % (stripLength + gap + 2)) > 0 && (i % (stripLength + gap + 2)) <= stripLength)
-                    {
-                        // Garis/strip setelah titik
-                        PutPixel(targetNode, x, y, color);
-                    }
-                    // Sisanya adalah gap (tidak digambar)
                     break;
-            case DrawStyle.CircleStrip:
-            case DrawStyle.CircleDotStrip:
-                // Apply gap logic based on the original index (i) divided by 8 (for 8-way symmetry)
-                if ((i / 8) % (gap + 1) == 0)  
-                {
-                    PutPixel(targetNode, x, y, color);
 
-                    if (style == DrawStyle.CircleStrip)
+                case DrawStyle.EllipseDot:
+                case DrawStyle.EllipseStrip:
+                case DrawStyle.EllipseDotStrip:
+                    // Apply gap logic based on the original index (i) divided by 4 (for 4-way symmetry)
+                    if ((i / 4) % (gap + 1) == 0)
                     {
-                        // No need for additional drawing for continuous strip
-                    }
-                    else if (style == DrawStyle.CircleDotStrip)
-                    {
-                        int halfLength = stripLength / 2;
-                        for (int j = -halfLength; j <= halfLength; j += gap + 1)
+                        PutPixel(targetNode, x, y, color);
+
+                        if (style == DrawStyle.EllipseStrip)
                         {
-                            PutPixel(targetNode, x + j, y, color);
+                            // No need for additional drawing for continuous strip
+                        }
+                        else if (style == DrawStyle.EllipseDotStrip)
+                        {
+                            int halfLength = stripLength / 2;
+                            for (int j = -halfLength; j <= halfLength; j += gap + 1)
+                            {
+                                PutPixel(targetNode, x + j, y, color);
+                            }
                         }
                     }
-                }
-                break;
+                    break;
+                case DrawStyle.DotDash: // custom
 
-            case DrawStyle.EllipseDot:
-            case DrawStyle.EllipseStrip:
-            case DrawStyle.EllipseDotStrip:
-                // Apply gap logic based on the original index (i) divided by 4 (for 4-way symmetry)
-                if ((i / 4) % (gap + 1) == 0) 
-                {
-                    PutPixel(targetNode, x, y, color);
+                    // titik
+                    PutPixel(targetNode, dot[i].X, dot[i].Y, color);
 
-                    if (style == DrawStyle.EllipseStrip)
-                    {
-                        // No need for additional drawing for continuous strip
-                    }
-                    else if (style == DrawStyle.EllipseDotStrip)
-                    {
-                        int halfLength = stripLength / 2;
-                        for (int j = -halfLength; j <= halfLength; j += gap + 1)
-                        {
-                            PutPixel(targetNode, x + j, y, color);
-                        }
-                    }
-                }
-                break;
+                    i += gap + 1;              // gap setelah titik
+                    if (i >= dot.Count) break; // mencapai ujung garis
+
+                    int dashEnd = Math.Min(i + stripLength, dot.Count);
+
+                    // Gambar pixel berikutnya dari daftar dot sebagai sebuah garis.
+                    for (int j = i; j < dashEnd; j++)
+                        PutPixel(targetNode, dot[j].X, dot[j].Y, color);
+
+                    // skip titik di gap
+                    i += stripLength + gap;
+                    break;
             }
         }
     }

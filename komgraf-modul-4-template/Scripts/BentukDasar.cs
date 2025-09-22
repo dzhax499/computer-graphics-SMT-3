@@ -58,6 +58,11 @@ public partial class BentukDasar: RefCounted, IDisposable
 		return CheckPrimitifAndCall(() => _primitif.EllipseMidpoint((int)titikAwal.X, (int)titikAwal.Y, radiusX, radiusY));
 	}
 
+	public List<Vector2> SegienamBeraturan(Vector2 center, int radius)
+	{
+		return CheckPrimitifAndCall(() => _primitif.SegienamBeraturan(center, radius));
+	}
+
 	private List<Vector2> CheckPrimitifAndCall(Func<List<Vector2>> action)
 	{
 		List<Vector2> checkResult = NodeUtils.CheckPrimitif(_primitif);

@@ -23,111 +23,114 @@ public partial class Karya1 : Node2D
     private void MyTransformations()
     {
         // Gambar koordinat sistem terlebih dahulu
-        GambarKordinat();
+        CartesianLine();
         
         // Gambar semua bentuk dengan transformasi
         GambarBentukDenganTransformasi();
     }
 
-    private void GambarKordinat()
-    {
-        // Sumbu X (horizontal) - warna merah
-        var sumbuX = _bentukDasar.SumbuX(800);
-        GraphicsUtils.PutPixelAll(this, sumbuX, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(1));
-        
-        // Sumbu Y (vertikal) - warna hijau  
-        var sumbuY = _bentukDasar.SumbuY(600);
-        GraphicsUtils.PutPixelAll(this, sumbuY, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(2));
-        
-        // Grid lines untuk referensi - warna abu-abu
-        var gridLines = _bentukDasar.GridLines(50, 200);
-        GraphicsUtils.PutPixelAll(this, gridLines, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(3));
-    }
+private void CartesianLine()
+	{
+		var xAxis = _primitif.LineBresenham(
+			ScreenUtils.MarginLeft,
+			ScreenUtils.ScreenHeight / 2,
+			ScreenUtils.MarginRight,
+			ScreenUtils.ScreenHeight / 2
+		);
+		var yAxis = _primitif.LineBresenham(
+			ScreenUtils.ScreenWidth / 2,
+			ScreenUtils.MarginTop,
+			ScreenUtils.ScreenWidth / 2,
+			ScreenUtils.MarginBottom
+		);
+		GraphicsUtils.PutPixelAll(this, xAxis, color: ColorUtils.ColorStorage(0));
+		GraphicsUtils.PutPixelAll(this, yAxis, color: ColorUtils.ColorStorage(0));
+	}
 
     private void GambarBentukDenganTransformasi()
     {
-        // KUADRAN I - BENTUK ASLI (Original Shapes)
-        GambarBentukAsli();
+        // // KUADRAN I - BENTUK ASLI (Original Shapes)
+        // GambarBentukAsli();
         
-        // KUADRAN II - TRANSLASI (Translation)
-        GambarBentukTranslasi();
+        // // KUADRAN II - TRANSLASI (Translation)
+        // GambarBentukTranslasi();
         
-        // KUADRAN III - ROTASI DAN SCALING (Rotation & Scaling)
-        GambarBentukRotasiScaling();
+        // // KUADRAN III - ROTASI DAN SCALING (Rotation & Scaling)
+        // GambarBentukRotasiScaling();
         
-        // KUADRAN IV - REFLEKSI DAN SHEARING (Reflection & Shearing)
-        GambarBentukRefleksiShearing();
+        // // KUADRAN IV - REFLEKSI DAN SHEARING (Reflection & Shearing)
+        // GambarBentukRefleksiShearing();
         
-        // TENGAH - TRANSFORMASI KOMPOSIT (Composite Transformations)
-        GambarTransformasiKomposit();
+        // // TENGAH - TRANSFORMASI KOMPOSIT (Composite Transformations)
+        // GambarTransformasiKomposit();
+
+        GambarBerbagaiTransformasiSatuBentuk();
     }
 
-    private void GambarBentukAsli()
+    private void GambarBerbagaiTransformasiSatuBentuk()
     {
-        // PERSEGI PANJANG di (120, 50) dengan panjang 60, lebar 30
-        var persegiPanjang = _bentukDasar.PersegiPanjang(120, 50, 60, 30);
-        GraphicsUtils.PutPixelAll(this, persegiPanjang, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(5));
-    }
+        // Buat satu bentuk dasar (persegi panjang) yang akan kita transformasikan
+        var bentukDasar = _bentukDasar.PersegiPanjang(0, 0, 50, 30);
+        
+        // Tampilkan bentuk dasar di Kuadran I
+        GraphicsUtils.PutPixelAll(this, bentukDasar, GraphicsUtils.DrawStyle.DotDash, ColorUtils.ColorStorage(1));
+        
+        // --- TRANSFORMASI 1: TRANSLASI ---
+        // Inisialisasi matriks identitas
+        float[,] matrix1 = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix1);
+        
+        // Terapkan translasi ke Kuadran II
+        Vector2 coord1 = Vector2.Zero;
+        _transformasi.Translation(matrix1, -150, 50, ref coord1);
+        
+        // Dapatkan titik-titik yang sudah ditransformasi
+        var transformed1 = _transformasi.GetTransformPoint(matrix1, bentukDasar);
+        
+        // Gambarlah bentuk yang sudah ditransformasi
+        GraphicsUtils.PutPixelAll(this, transformed1, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(2));
+        
+        // --- TRANSFORMASI 2: ROTASI + SCALING ---
+        // Inisialisasi matriks baru
+        float[,] matrix2 = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix2);
+        
+        // Terapkan rotasi 45 derajat berlawanan arah jarum jam
+        _transformasi.RotationCounterClockwise(matrix2, 45, Vector2.Zero);
+        
+        // Terapkan scaling 1.5x
+        _transformasi.Scaling(matrix2, 1.5f, 1.5f, Vector2.Zero);
+        
+        // Terapkan translasi ke Kuadran III
+        Vector2 coord2 = Vector2.Zero;
+        _transformasi.Translation(matrix2, -150, -120, ref coord2);
+        
+        // Dapatkan titik-titik yang sudah ditransformasi
+        var transformed2 = _transformasi.GetTransformPoint(matrix2, bentukDasar);
+        
+        // Gambarlah bentuk yang sudah ditransformasi
+        GraphicsUtils.PutPixelAll(this, transformed2, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(3));
 
-    private void GambarBentukTranslasi()
-    {
-        // PERSEGI PANJANG dengan translasi ke (-150, 50)
-        // Original: (0,0) length=60, width=30 -> Translated: (-150, 50)
-        var persegiPanjang = _bentukDasar.PersegiPanjang(0, 0, 60, 30);
-        float[,] matrixPersegiPanjang = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrixPersegiPanjang);
-        Vector2 coordPersegiPanjang = Vector2.Zero;
-        _transformasi.Translation(matrixPersegiPanjang, -150, 50,
-        ref coordPersegiPanjang);
-        var persegiPanjangTransformed = _transformasi.GetTransformPoint(matrixPersegiPanjang, persegiPanjang);
-        GraphicsUtils.PutPixelAll(this, persegiPanjangTransformed, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(5));
-    }
+        // --- TRANSFORMASI 3: REFLEKSI + SHEARING ---
+        // Inisialisasi matriks baru
+        float[,] matrix3 = new float[3, 3];
+        Transformasi.Matrix3x3Identity(matrix3);
 
-    private void GambarBentukRotasiScaling()
-    {
-        // PERSEGI PANJANG dengan rotasi 30° dan scaling 0.8x lalu translasi ke (-150, -120)
-        // Original: (0,0) length=50, width=30 -> Rotated 30° -> Scaled 0.8x -> Translated (-150, -120)
-        var persegiPanjang = _bentukDasar.PersegiPanjang(0, 0, 50, 30);
-        float[,] matrixPersegiPanjang = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrixPersegiPanjang);
-        Vector2 pivotPersegiPanjang = Vector2.Zero;
-        _transformasi.RotationCounterClockwise(matrixPersegiPanjang, 30, pivotPersegiPanjang);
-        _transformasi.Scaling(matrixPersegiPanjang, 0.8f, 0.8f, pivotPersegiPanjang);
-        Vector2 coordPersegiPanjang = Vector2.Zero;
-        _transformasi.Translation(matrixPersegiPanjang, -150, -120, ref coordPersegiPanjang);
-        var persegiPanjangTransformed = _transformasi.GetTransformPoint(matrixPersegiPanjang, persegiPanjang);
-        GraphicsUtils.PutPixelAll(this, persegiPanjangTransformed, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(5));
-    }
-
-    private void GambarBentukRefleksiShearing()
-    {
-        //PERSEGI dengan refleksi ke sumbu Y lalu translasi ke (140, 50)
-        // Original: (-15,-15) size 30x30 -> Reflect Y -> Translated (140, 50)
-        var persegi = _bentukDasar.Persegi(-15, -15, 30);
-        float[,] matrixPersegi = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrixPersegi);
-        Vector2 coordPersegi = Vector2.Zero;
-        _transformasi.ReflectionToY(matrixPersegi, ref coordPersegi);
-        _transformasi.Translation(matrixPersegi, 140, 50, ref coordPersegi);
-        var persegiTransformed = _transformasi.GetTransformPoint(matrixPersegi, persegi);
-        GraphicsUtils.PutPixelAll(this, persegiTransformed, GraphicsUtils.DrawStyle.DotDash, ColorUtils.ColorStorage(7)); 
-    }
-
-    private void GambarTransformasiKomposit()
-    {
-        //PERSEGI PANJANG dengan multiple transformations
-        // Original: (0,0) length=60, width=30 -> Shear X=0.2 -> Scale 1.5x0.5 -> Rotate 45° -> Translate (0, -150)
-        var persegiPanjang = _bentukDasar.PersegiPanjang(0, 0, 60, 30);
-        float[,] matrixPersegiPanjang = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrixPersegiPanjang);
-        Vector2 pivotPersegiPanjang = Vector2.Zero;
-        _transformasi.Shearing(matrixPersegiPanjang, 0.2f, 0.0f, pivotPersegiPanjang);
-        _transformasi.Scaling(matrixPersegiPanjang, 1.5f, 0.5f, pivotPersegiPanjang);
-        _transformasi.RotationCounterClockwise(matrixPersegiPanjang, 45, pivotPersegiPanjang);
-        Vector2 coordPersegiPanjang = Vector2.Zero;
-        _transformasi.Translation(matrixPersegiPanjang, 0, -150, ref coordPersegiPanjang);
-        var persegiPanjangTransformed = _transformasi.GetTransformPoint(matrixPersegiPanjang, persegiPanjang);
-        GraphicsUtils.PutPixelAll(this, persegiPanjangTransformed, GraphicsUtils.DrawStyle.DotDash, ColorUtils.ColorStorage(6));
+        // Terapkan refleksi terhadap sumbu X
+        Vector2 coord3 = Vector2.Zero;
+        _transformasi.ReflectionToX(matrix3, ref coord3);
+        
+        // Terapkan shearing pada sumbu Y
+        _transformasi.Shearing(matrix3, 0.0f, 0.5f, Vector2.Zero);
+        
+        // Terapkan translasi ke Kuadran IV
+        _transformasi.Translation(matrix3, 140, -100, ref coord3);
+        
+        // Dapatkan titik-titik yang sudah ditransformasi
+        var transformed3 = _transformasi.GetTransformPoint(matrix3, bentukDasar);
+        
+        // Gambarlah bentuk yang sudah ditransformasi
+        GraphicsUtils.PutPixelAll(this, transformed3, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(4));
     }
 
     private void MarginPixel()

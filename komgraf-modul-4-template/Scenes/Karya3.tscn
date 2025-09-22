@@ -10,4 +10,10 @@ script = ExtResource("1_tb080")
 text = "Back"
 script = ExtResource("2_xhmun")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = 462.0
+offset_top = 663.0
+offset_right = 882.0
+offset_bottom = 719.0
+
 [connection signal="pressed" from="BtnBack" to="BtnBack" method="_on_BtnBack_pressed"]
