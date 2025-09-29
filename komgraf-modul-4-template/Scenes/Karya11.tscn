@@ -1,16 +1,28 @@
-[gd_scene load_steps=4 format=3 uid="uid://bi12s11cu2d5t"]
+[gd_scene load_steps=8 format=3 uid="uid://s0prvrjc678"]
 
-[ext_resource type="Script" uid="uid://bhdaxfq0rb47y" path="res://Scripts/Karya1.cs" id="1_s751k"]
-[ext_resource type="Script" uid="uid://d2ae4e2iayce0" path="res://Scripts/BackBtn.cs" id="2_xhmun"]
+[ext_resource type="Script" uid="uid://dpkpbia2ycabu" path="res://Scripts/Karya1.cs" id="1_s751k"]
+[ext_resource type="PackedScene" uid="uid://b0n8eqqi4tsk0" path="res://Scenes/Buttons/btn_orange.tscn" id="2_f3b25"]
+[ext_resource type="PackedScene" uid="uid://djq027j00vy6g" path="res://Scenes/Buttons/btn_primary.tscn" id="2_uju40"]
+[ext_resource type="Script" uid="uid://cv06db8sgjkrj" path="res://Scripts/BackBtn.cs" id="2_xhmun"]
+[ext_resource type="FontFile" uid="uid://2cvit2drnqvt" path="res://Assets/fonts/CyberpunkCraftpixPixel.otf" id="3_rvd15"]
+[ext_resource type="Texture2D" uid="uid://cwssgqxjg2ide" path="res://Assets/images/gui/Frames/Frame_80.png" id="4_nards"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qejyt"]
+texture = ExtResource("4_nards")
 texture_margin_left = 10.0
 texture_margin_top = 10.0
 texture_margin_right = 10.0
 texture_margin_bottom = 10.0
 
-[node name="Node2D" type="Node2D"]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("_label", "_frameToggleCheckBtn", "_cartesianToggleCheckBtn", "_translateXSlider", "_translateYSlider", "_rotateSlider", "_scaleSlider")]
 script = ExtResource("1_s751k")
+_label = NodePath("Control/VBoxContainer/HBoxContainer/Label")
+_frameToggleCheckBtn = NodePath("Control/VBoxContainer/HBoxContainer2/MarginCheckButton")
+_cartesianToggleCheckBtn = NodePath("Control/VBoxContainer/HBoxContainer2/CartesianCheckButton")
+_translateXSlider = NodePath("Control/VBoxContainer/HBoxContainer2/HBoxContainer/TranslateXSlider")
+_translateYSlider = NodePath("Control/VBoxContainer/HBoxContainer2/HBoxContainer2/TranslateYSlider")
+_rotateSlider = NodePath("Control/VBoxContainer/HBoxContainer2/HBoxContainer3/RotateSlider")
+_scaleSlider = NodePath("Control/VBoxContainer/HBoxContainer2/HBoxContainer4/ScaleSlider")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -35,43 +47,24 @@ layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="PrevBtn" parent="Control/VBoxContainer/HBoxContainer"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
+[node name="PrevBtn" parent="Control/VBoxContainer/HBoxContainer" instance=ExtResource("2_f3b25")]
 layout_mode = 2
 text = "Prev"
-script = null
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
 texture_filter = 1
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0.0901961, 0, 0.266667, 1)
+theme_override_fonts/font = ExtResource("3_rvd15")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_qejyt")
 text = "Nama Bentuk"
 horizontal_alignment = 1
 
-[node name="NextBtn" parent="Control/VBoxContainer/HBoxContainer"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
+[node name="NextBtn" parent="Control/VBoxContainer/HBoxContainer" instance=ExtResource("2_f3b25")]
 layout_mode = 2
 text = "Next"
-script = null
 
 [node name="BlankControl" type="Control" parent="Control/VBoxContainer"]
 layout_mode = 2
@@ -81,16 +74,7 @@ size_flags_vertical = 3
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="BtnBack" parent="Control/VBoxContainer/HBoxContainer2"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
+[node name="BtnBack" parent="Control/VBoxContainer/HBoxContainer2" instance=ExtResource("2_uju40")]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 10
@@ -100,11 +84,13 @@ script = ExtResource("2_xhmun")
 [node name="MarginCheckButton" type="CheckButton" parent="Control/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 6
+theme_override_fonts/font = ExtResource("3_rvd15")
 text = "Bingkai Margin"
 
 [node name="CartesianCheckButton" type="CheckButton" parent="Control/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 6
+theme_override_fonts/font = ExtResource("3_rvd15")
 text = "Cartesian"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/HBoxContainer2"]
@@ -113,6 +99,7 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_rvd15")
 text = "Translate X"
 
 [node name="TranslateXSlider" type="HSlider" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer"]
@@ -129,6 +116,7 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer2"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_rvd15")
 text = "Translate Y"
 
 [node name="TranslateYSlider" type="HSlider" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer2"]
@@ -145,6 +133,7 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer3"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_rvd15")
 text = "Rotate"
 
 [node name="RotateSlider" type="HSlider" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer3"]
@@ -159,6 +148,7 @@ size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer4"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_rvd15")
 text = "Scale"
 
 [node name="ScaleSlider" type="HSlider" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer4"]
@@ -168,6 +158,9 @@ size_flags_vertical = 4
 max_value = 5.0
 step = 0.1
 
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer/PrevBtn" to="." method="_on_prev_btn_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer/NextBtn" to="." method="_on_next_btn_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/BtnBack" to="Control/VBoxContainer/HBoxContainer2/BtnBack" method="_on_BtnBack_pressed"]
 [connection signal="toggled" from="Control/VBoxContainer/HBoxContainer2/MarginCheckButton" to="." method="_on_margin_button_toggled"]
 [connection signal="toggled" from="Control/VBoxContainer/HBoxContainer2/CartesianCheckButton" to="." method="_on_cartesian_button_toggled"]
 [connection signal="value_changed" from="Control/VBoxContainer/HBoxContainer2/HBoxContainer/TranslateXSlider" to="." method="_on_translate_x_changed"]

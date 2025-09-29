@@ -1,148 +1,282 @@
-using System;
-
 namespace Godot;
+
+using Godot;
+using System;
+using System.Collections.Generic;
 
 public partial class Karya1 : Node2D
 {
-    private Primitif _primitif = new Primitif();
-    private BentukDasar _bentukDasar = new BentukDasar();
-    private Transformasi _transformasi = new Transformasi();
+    [Export] private Label _label;
+    [Export] private CheckButton _frameToggleCheckBtn;
+    [Export] private CheckButton _cartesianToggleCheckBtn;
+    [Export] private HSlider _translateXSlider;
+    [Export] private HSlider _translateYSlider;
+    [Export] private HSlider _rotateSlider;
+    [Export] private HSlider _scaleSlider;
+
+    private BentukDasar bentukDasar = new BentukDasar();
+    private Transformasi transformasi = new Transformasi();
+    private Primitif primitif = new Primitif();
+
+    // Shape data
+    private int currentShapeIndex = 0;
+    private List<Vector2> originalShape = new List<Vector2>();
+    private List<Vector2> transformedShape = new List<Vector2>();
+    private Vector2 shapeCenter = new Vector2(0, 0);
+    private float[,] transformMatrix = new float[3, 3];
+
+    // Transform values
+    private float translateX = 0;
+    private float translateY = 0;
+    private float rotateAngle = 0;
+    private float scaleValue = 1.0f;
+
+    // Flags
+    private bool showMargin = false;
+    private bool showCartesian = false;
+
+    // Shape definitions
+    private string[] shapeNames = {
+        "Kotak",
+        "Segitiga Siku",
+        "Persegi Panjang",
+        "Trapesium Siku",
+        "Trapesium Sama Kaki",
+        "Jajar Genjang",
+        "Segitiga Sama Kaki",
+        "Lingkaran",
+        "Elips",
+        "Segienam Beraturan",
+        "Garis"
+    };
 
     public override void _Ready()
     {
         ScreenUtils.Initialize(GetViewport());
+
+        // Initialize transform matrix
+        Transformasi.Matrix3x3Identity(transformMatrix);
+
+        // Set initial slider value for scale
+        if (_scaleSlider != null)
+            _scaleSlider.Value = 1.0;
+
+        // Load initial shape
+        LoadShape(currentShapeIndex);
+        UpdateDisplay();
+    }
+
+    private void LoadShape(int index)
+    {
+        originalShape.Clear();
+        shapeCenter = new Vector2(0, 0);
+
+        switch (index)
+        {
+            case 0: // Kotak
+                originalShape = bentukDasar.Polygon(bentukDasar.Persegi(-50, -50, 100));
+                break;
+            case 1: // Segitiga Siku
+                originalShape = bentukDasar.SegitigaSiku(new Vector2(-50, -50), 80, 80);
+                break;
+            case 2: // Persegi Panjang
+                originalShape = bentukDasar.PersegiPanjang(-60, -40, 120, 80);
+                break;
+            case 3: // Trapesium Siku
+                originalShape = bentukDasar.TrapesiumSiku(new Vector2(-50, -40), 60, 100, 80);
+                break;
+            case 4: // Trapesium Sama Kaki
+                originalShape = bentukDasar.TrapesiumSamaKaki(new Vector2(-50, -40), 60, 100, 80);
+                break;
+            case 5: // Jajar Genjang
+                originalShape = bentukDasar.JajarGenjang(new Vector2(-60, -40), 80, 80, 20);
+                break;
+            case 6: // Segitiga Sama Kaki
+                originalShape = bentukDasar.SegitigaSamaKaki(new Vector2(-50, -50), 100, 80);
+                break;
+            case 7: // Lingkaran
+                originalShape = bentukDasar.Lingkaran(new Vector2(0, 0), 50);
+                break;
+            case 8: // Elips
+                originalShape = bentukDasar.Elips(new Vector2(0, 0), 60, 40);
+                break;
+            case 9: // Segienam Beraturan
+                originalShape = bentukDasar.SegienamBeraturan(new Vector2(0, 0), 60);
+                break;
+            case 10: // Garis
+                originalShape = primitif.LineBresenham(-80, -80, 80, 80);
+                break;
+        }
+
+        // Reset transformations
+        ResetTransform();
+        ApplyTransformations();
+    }
+
+    private void ResetTransform()
+    {
+        translateX = 0;
+        translateY = 0;
+        rotateAngle = 0;
+        scaleValue = 1.0f;
+        shapeCenter = new Vector2(0, 0);
+
+        if (_translateXSlider != null) _translateXSlider.Value = 0;
+        if (_translateYSlider != null) _translateYSlider.Value = 0;
+        if (_rotateSlider != null) _rotateSlider.Value = 0;
+        if (_scaleSlider != null) _scaleSlider.Value = 1.0;
+
+        Transformasi.Matrix3x3Identity(transformMatrix);
+    }
+
+    private void ApplyTransformations()
+    {
+        // Reset matrix
+        Transformasi.Matrix3x3Identity(transformMatrix);
+
+        // Apply transformations in order: Scale -> Rotate -> Translate
+        Vector2 tempCenter = new Vector2(0, 0);
+
+        // 1. Scaling (around origin)
+        if (scaleValue != 1.0f)
+        {
+            transformasi.Scaling(transformMatrix, scaleValue, scaleValue, tempCenter);
+        }
+
+        // 2. Rotation (around origin)
+        if (rotateAngle != 0)
+        {
+            transformasi.RotationClockwise(transformMatrix, rotateAngle, tempCenter);
+        }
+
+        // 3. Translation
+        if (translateX != 0 || translateY != 0)
+        {
+            transformasi.Translation(transformMatrix, translateX, translateY, ref tempCenter);
+        }
+
+        // Apply transformation to shape
+        transformedShape = transformasi.GetTransformPoint(transformMatrix, originalShape);
+        shapeCenter = tempCenter;
+
         QueueRedraw();
+    }
+
+    private void UpdateDisplay()
+    {
+        if (_label != null)
+        {
+            _label.Text = shapeNames[currentShapeIndex];
+        }
+    }
+
+    // Signal handlers
+    private void _on_prev_btn_pressed()
+    {
+        currentShapeIndex--;
+        if (currentShapeIndex < 0)
+            currentShapeIndex = shapeNames.Length - 1;
+
+        LoadShape(currentShapeIndex);
+        UpdateDisplay();
+    }
+
+    private void _on_next_btn_pressed()
+    {
+        currentShapeIndex++;
+        if (currentShapeIndex >= shapeNames.Length)
+            currentShapeIndex = 0;
+
+        LoadShape(currentShapeIndex);
+        UpdateDisplay();
+    }
+
+    private void _on_margin_button_toggled(bool pressed)
+    {
+        showMargin = pressed;
+        QueueRedraw();
+    }
+
+    private void _on_cartesian_button_toggled(bool pressed)
+    {
+        showCartesian = pressed;
+        QueueRedraw();
+    }
+
+    private void _on_translate_x_changed(double value)
+    {
+        translateX = (float)value;
+        ApplyTransformations();
+    }
+
+    private void _on_translate_y_changed(double value)
+    {
+        translateY = (float)value;
+        ApplyTransformations();
+    }
+
+    private void _on_rotate_changed(double value)
+    {
+        rotateAngle = (float)value;
+        ApplyTransformations();
+    }
+
+    private void _on_scale_changed(double value)
+    {
+        scaleValue = (float)value;
+        ApplyTransformations();
     }
 
     public override void _Draw()
     {
-        MarginPixel();
-        MyTransformations();
-    }
+        // Draw margin frame
+        if (showMargin)
+        {
+            var margin = bentukDasar.Margin();
+            GraphicsUtils.PutPixelAll(this, margin, GraphicsUtils.DrawStyle.DotDot, Colors.Gray);
+        }
 
-    private void MyTransformations()
-    {
-        // Gambar koordinat sistem terlebih dahulu
-        CartesianLine();
-        
-        // Gambar semua bentuk dengan transformasi
-        GambarBentukDenganTransformasi();
-    }
+        // Draw Cartesian grid and axes
+        if (showCartesian)
+        {
+            // Draw grid lines
+            var grid = bentukDasar.GridLines(50, 300);
+            GraphicsUtils.PutPixelAll(this, grid, GraphicsUtils.DrawStyle.DotDot, new Color(0.3f, 0.3f, 0.3f, 0.5f));
 
-private void CartesianLine()
-	{
-		var xAxis = _primitif.LineBresenham(
-			ScreenUtils.MarginLeft,
-			ScreenUtils.ScreenHeight / 2,
-			ScreenUtils.MarginRight,
-			ScreenUtils.ScreenHeight / 2
-		);
-		var yAxis = _primitif.LineBresenham(
-			ScreenUtils.ScreenWidth / 2,
-			ScreenUtils.MarginTop,
-			ScreenUtils.ScreenWidth / 2,
-			ScreenUtils.MarginBottom
-		);
-		GraphicsUtils.PutPixelAll(this, xAxis, color: ColorUtils.ColorStorage(0));
-		GraphicsUtils.PutPixelAll(this, yAxis, color: ColorUtils.ColorStorage(0));
-	}
+            // Draw axes
+            var axisX = bentukDasar.SumbuX(400);
+            var axisY = bentukDasar.SumbuY(300);
+            GraphicsUtils.PutPixelAll(this, axisX, GraphicsUtils.DrawStyle.DotDot, Colors.White);
+            GraphicsUtils.PutPixelAll(this, axisY, GraphicsUtils.DrawStyle.DotDot, Colors.White);
+        }
 
-    private void GambarBentukDenganTransformasi()
-    {
-        // // KUADRAN I - BENTUK ASLI (Original Shapes)
-        // GambarBentukAsli();
-        
-        // // KUADRAN II - TRANSLASI (Translation)
-        // GambarBentukTranslasi();
-        
-        // // KUADRAN III - ROTASI DAN SCALING (Rotation & Scaling)
-        // GambarBentukRotasiScaling();
-        
-        // // KUADRAN IV - REFLEKSI DAN SHEARING (Reflection & Shearing)
-        // GambarBentukRefleksiShearing();
-        
-        // // TENGAH - TRANSFORMASI KOMPOSIT (Composite Transformations)
-        // GambarTransformasiKomposit();
+        // Draw original shape (semi-transparent white)
+        if (originalShape.Count > 0)
+        {
+            GraphicsUtils.PutPixelAll(this, originalShape, GraphicsUtils.DrawStyle.DotDot,
+                new Color(1f, 1f, 1f, 0.3f));
+        }
 
-        GambarBerbagaiTransformasiSatuBentuk();
-    }
+        // Draw transformed shape (cyan)
+        if (transformedShape.Count > 0)
+        {
+            GraphicsUtils.PutPixelAll(this, transformedShape, GraphicsUtils.DrawStyle.DotDot,
+                Colors.Cyan);
+        }
 
-    private void GambarBerbagaiTransformasiSatuBentuk()
-    {
-        // Buat satu bentuk dasar (persegi panjang) yang akan kita transformasikan
-        var bentukDasar = _bentukDasar.PersegiPanjang(0, 0, 50, 30);
-        
-        // Tampilkan bentuk dasar di Kuadran I
-        GraphicsUtils.PutPixelAll(this, bentukDasar, GraphicsUtils.DrawStyle.DotDash, ColorUtils.ColorStorage(1));
-        
-        // --- TRANSFORMASI 1: TRANSLASI ---
-        // Inisialisasi matriks identitas
-        float[,] matrix1 = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrix1);
-        
-        // Terapkan translasi ke Kuadran II
-        Vector2 coord1 = Vector2.Zero;
-        _transformasi.Translation(matrix1, -150, 50, ref coord1);
-        
-        // Dapatkan titik-titik yang sudah ditransformasi
-        var transformed1 = _transformasi.GetTransformPoint(matrix1, bentukDasar);
-        
-        // Gambarlah bentuk yang sudah ditransformasi
-        GraphicsUtils.PutPixelAll(this, transformed1, GraphicsUtils.DrawStyle.StripStrip, ColorUtils.ColorStorage(2));
-        
-        // --- TRANSFORMASI 2: ROTASI + SCALING ---
-        // Inisialisasi matriks baru
-        float[,] matrix2 = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrix2);
-        
-        // Terapkan rotasi 45 derajat berlawanan arah jarum jam
-        _transformasi.RotationCounterClockwise(matrix2, 45, Vector2.Zero);
-        
-        // Terapkan scaling 1.5x
-        _transformasi.Scaling(matrix2, 1.5f, 1.5f, Vector2.Zero);
-        
-        // Terapkan translasi ke Kuadran III
-        Vector2 coord2 = Vector2.Zero;
-        _transformasi.Translation(matrix2, -150, -120, ref coord2);
-        
-        // Dapatkan titik-titik yang sudah ditransformasi
-        var transformed2 = _transformasi.GetTransformPoint(matrix2, bentukDasar);
-        
-        // Gambarlah bentuk yang sudah ditransformasi
-        GraphicsUtils.PutPixelAll(this, transformed2, GraphicsUtils.DrawStyle.DotDot, ColorUtils.ColorStorage(3));
+        // Draw center point (red)
+        Vector2 centerScreen = ScreenUtils.ToScreenCoordinate(shapeCenter.X, shapeCenter.Y);
 
-        // --- TRANSFORMASI 3: REFLEKSI + SHEARING ---
-        // Inisialisasi matriks baru
-        float[,] matrix3 = new float[3, 3];
-        Transformasi.Matrix3x3Identity(matrix3);
-
-        // Terapkan refleksi terhadap sumbu X
-        Vector2 coord3 = Vector2.Zero;
-        _transformasi.ReflectionToX(matrix3, ref coord3);
-        
-        // Terapkan shearing pada sumbu Y
-        _transformasi.Shearing(matrix3, 0.0f, 0.5f, Vector2.Zero);
-        
-        // Terapkan translasi ke Kuadran IV
-        _transformasi.Translation(matrix3, 140, -100, ref coord3);
-        
-        // Dapatkan titik-titik yang sudah ditransformasi
-        var transformed3 = _transformasi.GetTransformPoint(matrix3, bentukDasar);
-        
-        // Gambarlah bentuk yang sudah ditransformasi
-        GraphicsUtils.PutPixelAll(this, transformed3, GraphicsUtils.DrawStyle.DotStripDot, ColorUtils.ColorStorage(4));
-    }
-
-    private void MarginPixel()
-    {
-        var margin = _bentukDasar.Margin();
-        GraphicsUtils.PutPixelAll(this, margin, color: ColorUtils.ColorStorage(0));
+        // Draw a small cross for center point
+        for (int i = -3; i <= 3; i++)
+        {
+            GraphicsUtils.PutPixel(this, centerScreen.X + i, centerScreen.Y, Colors.Red);
+            GraphicsUtils.PutPixel(this, centerScreen.X, centerScreen.Y + i, Colors.Red);
+        }
     }
 
     public override void _ExitTree()
     {
-        NodeUtils.DisposeAndNull(_bentukDasar, "_bentukDasar");
-        NodeUtils.DisposeAndNull(_transformasi, "_transformasi");
-        base._ExitTree();
+        bentukDasar?.Dispose();
     }
 }
