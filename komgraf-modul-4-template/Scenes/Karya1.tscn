@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bi12s11cu2d5t"]
 
 [ext_resource type="Script" uid="uid://bhdaxfq0rb47y" path="res://Scripts/Karya1.cs" id="1_s751k"]
-[ext_resource type="Script" uid="uid://d2ae4e2iayce0" path="res://Scripts/BackBtn.cs" id="2_xhmun"]
+[ext_resource type="Script" uid="uid://d2ae4e2iayce0" path="res://Scripts/BackBtn.cs" id="2_psspp"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qejyt"]
 texture_margin_left = 10.0
@@ -35,19 +35,10 @@ layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="PrevBtn" parent="Control/VBoxContainer/HBoxContainer"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
+[node name="PrevButton" type="Button" parent="Control/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-text = "Prev"
-script = null
+text = "<"
 
 [node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer"]
 texture_filter = 1
@@ -59,19 +50,18 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_qejyt")
 text = "Nama Bentuk"
 horizontal_alignment = 1
 
-[node name="NextBtn" parent="Control/VBoxContainer/HBoxContainer"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
+[node name="NextButton" type="Button" parent="Control/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
-text = "Next"
-script = null
+text = ">"
+
+[node name="BtnBack" type="Button" parent="Control/VBoxContainer/HBoxContainer/NextButton"]
+offset_left = -824.0
+offset_top = 7.0
+offset_right = -779.0
+offset_bottom = 38.0
+text = "Back"
+script = ExtResource("2_psspp")
 
 [node name="BlankControl" type="Control" parent="Control/VBoxContainer"]
 layout_mode = 2
@@ -80,22 +70,6 @@ size_flags_vertical = 3
 [node name="HBoxContainer2" type="HBoxContainer" parent="Control/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 12
-
-[node name="BtnBack" parent="Control/VBoxContainer/HBoxContainer2"]
-_import_path = NodePath("")
-unique_name_in_owner = false
-process_mode = 0
-process_priority = 0
-process_physics_priority = 0
-process_thread_group = 0
-physics_interpolation_mode = 0
-auto_translate_mode = 0
-editor_description = ""
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 10
-text = "Back"
-script = ExtResource("2_xhmun")
 
 [node name="MarginCheckButton" type="CheckButton" parent="Control/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
@@ -164,10 +138,13 @@ text = "Scale"
 [node name="ScaleSlider" type="HSlider" parent="Control/VBoxContainer/HBoxContainer2/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4 
+size_flags_vertical = 4
 max_value = 5.0
 step = 0.1
 
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer/PrevButton" to="." method="_on_prev_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer/NextButton/BtnBack" to="Control/VBoxContainer/HBoxContainer/NextButton/BtnBack" method="_on_BtnBack_pressed"]
 [connection signal="toggled" from="Control/VBoxContainer/HBoxContainer2/MarginCheckButton" to="." method="_on_margin_button_toggled"]
 [connection signal="toggled" from="Control/VBoxContainer/HBoxContainer2/CartesianCheckButton" to="." method="_on_cartesian_button_toggled"]
 [connection signal="value_changed" from="Control/VBoxContainer/HBoxContainer2/HBoxContainer/TranslateXSlider" to="." method="_on_translate_x_changed"]

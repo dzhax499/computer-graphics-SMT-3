@@ -56,7 +56,8 @@ public partial class Karya1 : Node2D
 
         // Initialize transform matrix
         Transformasi.Matrix3x3Identity(transformMatrix);
-
+        if (_label == null)
+            _label = GetNode<Label>("Control/VBoxContainer/HBoxContainer/Label");
         // Set initial slider value for scale
         if (_scaleSlider != null)
             _scaleSlider.Value = 1.0;
@@ -66,15 +67,25 @@ public partial class Karya1 : Node2D
         UpdateDisplay();
     }
 
+    // pusat bentuk 
+    private Vector2 GetShapeCenter(List<Vector2> shape)
+    {
+        if (shape == null || shape.Count == 0) return Vector2.Zero;
+        Vector2 sum = Vector2.Zero;
+        foreach (var v in shape) sum += v;
+        return sum / shape.Count;
+    }
     private void LoadShape(int index)
     {
         originalShape.Clear();
         shapeCenter = new Vector2(0, 0);
+        //posisi tengah viewport
+        var viewportCenter = new Vector2(GetViewport().GetVisibleRect().Size.X / 2, GetViewport().GetVisibleRect().Size.Y / 2);
 
         switch (index)
         {
             case 0: // Kotak
-                originalShape = bentukDasar.Polygon(bentukDasar.Persegi(-50, -50, 100));
+                originalShape = bentukDasar.Polygon(bentukDasar.Persegi(50, 300, 100));
                 break;
             case 1: // Segitiga Siku
                 originalShape = bentukDasar.SegitigaSiku(new Vector2(-50, -50), 80, 80);
@@ -108,6 +119,11 @@ public partial class Karya1 : Node2D
                 break;
         }
 
+        // Offset semua titik ke tengah viewport
+        var center = GetShapeCenter(originalShape);
+        for (int i = 0; i < originalShape.Count; i++)
+            originalShape[i] += (viewportCenter - center);
+
         // Reset transformations
         ResetTransform();
         ApplyTransformations();
@@ -134,30 +150,29 @@ public partial class Karya1 : Node2D
         // Reset matrix
         Transformasi.Matrix3x3Identity(transformMatrix);
 
-        // Apply transformations in order: Scale -> Rotate -> Translate
-        Vector2 tempCenter = new Vector2(0, 0);
+        // Pivot di pusat bentuk (agar rotasi & scaling di tempat)
+        var pivot = GetShapeCenter(originalShape);
 
-        // 1. Scaling (around origin)
+        // Scaling di pivot
         if (scaleValue != 1.0f)
         {
-            transformasi.Scaling(transformMatrix, scaleValue, scaleValue, tempCenter);
+            transformasi.Scaling(transformMatrix, scaleValue, scaleValue, pivot);
         }
 
-        // 2. Rotation (around origin)
+        // Rotasi di pivot
         if (rotateAngle != 0)
         {
-            transformasi.RotationClockwise(transformMatrix, rotateAngle, tempCenter);
+            transformasi.RotationClockwise(transformMatrix, rotateAngle, pivot);
         }
 
-        // 3. Translation
+        // Translasi (geser dari tengah)
         if (translateX != 0 || translateY != 0)
         {
-            transformasi.Translation(transformMatrix, translateX, translateY, ref tempCenter);
+            transformasi.Translation(transformMatrix, translateX, translateY, ref pivot);
         }
 
         // Apply transformation to shape
         transformedShape = transformasi.GetTransformPoint(transformMatrix, originalShape);
-        shapeCenter = tempCenter;
 
         QueueRedraw();
     }
@@ -171,7 +186,7 @@ public partial class Karya1 : Node2D
     }
 
     // Signal handlers
-    private void _on_prev_btn_pressed()
+    private void _on_prev_button_pressed()
     {
         currentShapeIndex--;
         if (currentShapeIndex < 0)
@@ -181,7 +196,7 @@ public partial class Karya1 : Node2D
         UpdateDisplay();
     }
 
-    private void _on_next_btn_pressed()
+    private void _on_next_button_pressed()
     {
         currentShapeIndex++;
         if (currentShapeIndex >= shapeNames.Length)
@@ -244,8 +259,8 @@ public partial class Karya1 : Node2D
             GraphicsUtils.PutPixelAll(this, grid, GraphicsUtils.DrawStyle.DotDot, new Color(0.3f, 0.3f, 0.3f, 0.5f));
 
             // Draw axes
-            var axisX = bentukDasar.SumbuX(400);
-            var axisY = bentukDasar.SumbuY(300);
+            var axisX = bentukDasar.SumbuX(4000);
+            var axisY = bentukDasar.SumbuY(3000);
             GraphicsUtils.PutPixelAll(this, axisX, GraphicsUtils.DrawStyle.DotDot, Colors.White);
             GraphicsUtils.PutPixelAll(this, axisY, GraphicsUtils.DrawStyle.DotDot, Colors.White);
         }
@@ -262,16 +277,6 @@ public partial class Karya1 : Node2D
         {
             GraphicsUtils.PutPixelAll(this, transformedShape, GraphicsUtils.DrawStyle.DotDot,
                 Colors.Cyan);
-        }
-
-        // Draw center point (red)
-        Vector2 centerScreen = ScreenUtils.ToScreenCoordinate(shapeCenter.X, shapeCenter.Y);
-
-        // Draw a small cross for center point
-        for (int i = -3; i <= 3; i++)
-        {
-            GraphicsUtils.PutPixel(this, centerScreen.X + i, centerScreen.Y, Colors.Red);
-            GraphicsUtils.PutPixel(this, centerScreen.X, centerScreen.Y + i, Colors.Red);
         }
     }
 
