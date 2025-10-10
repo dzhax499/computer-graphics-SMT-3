@@ -56,6 +56,7 @@ layout_mode = 2
 text = ">"
 
 [node name="BtnBack" type="Button" parent="Control/VBoxContainer/HBoxContainer/NextButton"]
+layout_mode = 0
 offset_left = -824.0
 offset_top = 7.0
 offset_right = -779.0

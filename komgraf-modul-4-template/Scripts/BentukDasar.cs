@@ -169,7 +169,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 	public List<Vector2> GridLines(float step = 50, float maxRange = 200)
 	{
 		List<Vector2> res = new List<Vector2>();
-		
+
 		// Grid vertikal (garis sejajar sumbu Y)
 		for (float x = -maxRange; x <= maxRange; x += step)
 		{
@@ -182,7 +182,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 				}
 			}
 		}
-		
+
 		// Grid horizontal (garis sejajar sumbu X)
 		for (float y = -maxRange; y <= maxRange; y += step)
 		{
@@ -195,7 +195,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 				}
 			}
 		}
-		
+
 		return res;
 	}
 
