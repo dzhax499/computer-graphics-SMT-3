@@ -30,8 +30,20 @@ public static class ScreenUtils
     /// Konversi dari koordinat kartesian ke screen coordinate
     public static Vector2 ToScreenCoordinate(float x, float y)
     {
-        float screenX = ScreenWidth / 2 + x;
-        float screenY = ScreenHeight / 2 - y;
+        float width = ScreenWidth;
+        float height = ScreenHeight;
+        float margin = 50;
+
+        // Pusat layar
+        float centerX = width / 2;
+        float centerY = height / 2;
+
+        float screenX = centerX + x;
+        float screenY = centerY - y;
+
+        screenX = Mathf.Clamp(screenX, margin, width - margin);
+        screenY = Mathf.Clamp(screenY, margin, height - margin);
+
         return new Vector2(screenX, screenY);
     }
 

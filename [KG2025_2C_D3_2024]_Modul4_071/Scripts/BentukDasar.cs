@@ -42,6 +42,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 		return CheckPrimitifAndCall(() => _primitif.JajarGenjang(titikAwal, alas, tinggi, jarakBeda));
 	}
 
+
 	public List<Vector2> SegitigaSamaKaki(Vector2 titikAwal, int alas, int tinggi)
 	{
 		return CheckPrimitifAndCall(() => _primitif.SegitigaSamaKaki(titikAwal, alas, tinggi));
@@ -56,6 +57,11 @@ public partial class BentukDasar: RefCounted, IDisposable
 	public List<Vector2> Elips(Vector2 titikAwal, int radiusX, int radiusY)
 	{
 		return CheckPrimitifAndCall(() => _primitif.EllipseMidpoint((int)titikAwal.X, (int)titikAwal.Y, radiusX, radiusY));
+	}
+
+	public List<Vector2> SegienamBeraturan(Vector2 center, int radius)
+	{
+		return CheckPrimitifAndCall(() => _primitif.SegienamBeraturan(center, radius));
 	}
 
 	private List<Vector2> CheckPrimitifAndCall(Func<List<Vector2>> action)
@@ -164,7 +170,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 	public List<Vector2> GridLines(float step = 50, float maxRange = 200)
 	{
 		List<Vector2> res = new List<Vector2>();
-		
+
 		// Grid vertikal (garis sejajar sumbu Y)
 		for (float x = -maxRange; x <= maxRange; x += step)
 		{
@@ -177,7 +183,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 				}
 			}
 		}
-		
+
 		// Grid horizontal (garis sejajar sumbu X)
 		for (float y = -maxRange; y <= maxRange; y += step)
 		{
@@ -190,7 +196,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 				}
 			}
 		}
-		
+
 		return res;
 	}
 
