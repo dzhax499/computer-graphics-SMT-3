@@ -291,15 +291,5 @@ public partial class Primitif: RefCounted
 
 		return points;
 	}
-
-	private void CirclePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
-	{
-
-	}
-
-	private void EllipsePlotPoints(int xCenter, int yCenter, int x, int y, List<Vector2> points)
-	{
-
-	}
 	
 }

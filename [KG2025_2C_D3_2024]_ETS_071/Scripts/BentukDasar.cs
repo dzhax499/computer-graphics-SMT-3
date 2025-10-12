@@ -164,7 +164,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 	public List<Vector2> GridLines(float step = 50, float maxRange = 200)
 	{
 		List<Vector2> res = new List<Vector2>();
-		
+
 		// Grid vertikal (garis sejajar sumbu Y)
 		for (float x = -maxRange; x <= maxRange; x += step)
 		{
@@ -177,7 +177,7 @@ public partial class BentukDasar: RefCounted, IDisposable
 				}
 			}
 		}
-		
+
 		// Grid horizontal (garis sejajar sumbu X)
 		for (float y = -maxRange; y <= maxRange; y += step)
 		{
@@ -190,8 +190,30 @@ public partial class BentukDasar: RefCounted, IDisposable
 				}
 			}
 		}
-		
+
 		return res;
+	}
+
+	// BentukDasar.cs (di dalam class BentukDasar)
+	public List<Vector2> SegiN(Vector2 pusat, float radius, int sisi, float rotasiDerajat = 0f)
+	{
+		if (sisi < 3) sisi = 3;
+		var pts = new List<Vector2>();
+		float rot = Mathf.DegToRad(rotasiDerajat);
+		for (int i = 0; i < sisi; i++)
+		{
+			float t = rot + i * (Mathf.Pi * 2f / sisi);
+			float x = pusat.X + radius * Mathf.Cos(t);
+			float y = pusat.Y + radius * Mathf.Sin(t);
+			pts.Add(ScreenUtils.ToScreenCoordinate(x, y)); // ke koordinat layar
+		}
+		return Polygon(pts); // gambar sisi2nya
+	}
+
+	// helper khusus (alias)
+	public List<Vector2> Hexagon(Vector2 pusat, float radius, float rotasiDerajat = 0f)
+	{
+		return SegiN(pusat, radius, 6, rotasiDerajat);
 	}
 
 }

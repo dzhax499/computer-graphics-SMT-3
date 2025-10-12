@@ -1,44 +1,116 @@
-[gd_scene load_steps=2 format=3 uid="uid://nojcglhyeuyh"]
+[gd_scene load_steps=7 format=3 uid="uid://nojcglhyeuyh"]
 
-[ext_resource type="Script" uid="uid://j8xnoqiib7ex" path="res://Scripts/Guide.cs" id="1_l2xgk"]
+[ext_resource type="Script" uid="uid://bkc58624ogr3p" path="res://Scripts/About.cs" id="1_b07q8"]
+[ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_twpq3"]
+[ext_resource type="FontFile" uid="uid://bbyw1yc2qvqy0" path="res://Assets/font/AndreaNeat-Demo.otf" id="3_asaqc"]
+[ext_resource type="FontFile" uid="uid://sh64ru0vfjeb" path="res://Assets/font/Gunken.otf" id="4_st83v"]
 
-[node name="Guide" type="Control"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b07q8"]
+texture = ExtResource("2_twpq3")
+modulate_color = Color(0.699653, 0.699653, 0.699653, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_twpq3"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 35
+border_width_top = 15
+border_width_right = 35
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 470
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 505
+
+[node name="About" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_l2xgk")
+script = ExtResource("1_b07q8")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="Panel2" type="Panel" parent="."]
+offset_right = 1280.0
+offset_bottom = 722.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_b07q8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="BtnBack" type="Button" parent="Panel2"]
 layout_mode = 2
+offset_left = 5.0
+offset_top = 8.0
+offset_right = 158.0
+offset_bottom = 64.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_twpq3")
+text = "Back"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+offset_left = 96.0
+offset_top = 89.0
+offset_right = 685.0
+offset_bottom = 277.0
 alignment = 1
 
-[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="Title" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "Cara Kerja Karya 2D"
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 15
+theme_override_fonts/font = ExtResource("4_st83v")
+theme_override_font_sizes/font_size = 36
+text = "About Developer:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CaraKerja" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -434.5
+offset_top = -175.0
+offset_right = 434.5
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+alignment = 1
+
+[node name="LabelIdentitas" type="Label" parent="HBoxContainer"]
 layout_mode = 2
-text = "1. Jalankan Aplikasi 
-2. Jalankan Aplikasi
-3. Jalankan Aplikasi
-4. Jalankan Aplikasi
-5. Jalankan Aplikasi"
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 15
+theme_override_fonts/font = ExtResource("4_st83v")
+theme_override_font_sizes/font_size = 36
+text = "Nama: Dzakir Tsabit
+Kelas: D3 2C
+NIM: 241511071"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="BtnBack" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-text = "Back"
-
-[connection signal="pressed" from="MarginContainer/VBoxContainer/BtnBack" to="." method="_on_BtnBack_pressed"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2

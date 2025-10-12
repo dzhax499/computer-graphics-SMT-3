@@ -8,7 +8,6 @@ public partial class Guide : Control
 	public override void _Ready()
 	{
 	}
-
 	private void _on_BtnBack_pressed()
 	{
 		GetTree().ChangeSceneToFile("res://Scenes/Welcome.tscn");

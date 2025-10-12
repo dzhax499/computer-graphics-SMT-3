@@ -1,0 +1,85 @@
+[gd_scene load_steps=7 format=3 uid="uid://cw6haloffe58c"]
+
+[ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_3i6j8"]
+[ext_resource type="Script" uid="uid://cac5tu3mb4hne" path="res://Scripts/Scenes/Easy.cs" id="3"]
+[ext_resource type="FontFile" uid="uid://bbyw1yc2qvqy0" path="res://Assets/font/AndreaNeat-Demo.otf" id="3_em561"]
+[ext_resource type="FontFile" uid="uid://4coyytbu8b0s" path="res://Assets/font/Apex Regular.otf" id="4_em561"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pikqf"]
+texture = ExtResource("2_3i6j8")
+modulate_color = Color(0.699653, 0.699653, 0.699653, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6h4vp"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 35
+border_width_top = 15
+border_width_right = 35
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 470
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 505
+
+[node name="ChallengeEasy" type="Node2D"]
+script = ExtResource("3")
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 1280.0
+offset_bottom = 722.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_pikqf")
+
+[node name="BtnBack" type="Button" parent="Panel"]
+layout_mode = 2
+offset_left = 5.0
+offset_top = 8.0
+offset_right = 158.0
+offset_bottom = 64.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("3_em561")
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_6h4vp")
+text = "Back"
+
+[node name="Outline" type="Node2D" parent="."]
+
+[node name="Title" type="Label" parent="."]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 562.0
+offset_top = 12.0
+offset_right = 708.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("4_em561")
+theme_override_font_sizes/font_size = 30
+text = "Level easy"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="Time" type="Label" parent="Hud"]
+offset_left = 1185.0
+offset_top = 20.0
+offset_right = 1263.0
+offset_bottom = 43.0
+text = "Time: 0.0s"
+
+[node name="Fps" type="Label" parent="Hud"]
+offset_left = 1185.0
+offset_top = 50.0
+offset_right = 1230.0
+offset_bottom = 73.0
+text = "FPS: 0"
+
+[connection signal="pressed" from="Panel/BtnBack" to="." method="_on_BtnBack_pressed"]

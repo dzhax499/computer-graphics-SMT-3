@@ -9,46 +9,10 @@ public partial class Welcome: Control
 	{
 	}
 
-	private void _on_btnkarya1_pressed()
+	private void _on_btnMain_pressed()
 	{
-		GetTree().ChangeSceneToFile("res://Scenes/Karya1.tscn");
+		GetTree().ChangeSceneToFile("res://Scenes/Main.tscn");
 	}
-
-	private void _on_btnkarya2_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Karya2.tscn");
-	}
-
-	private void _on_btnkarya3_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Karya3.tscn");
-	}
-	
-	private void _on_btnkarya_4_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Karya4.tscn");
-	}
-
-	private void _on_btnkarya_5_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Karya5.tscn");
-	}
-
-	private void _on_btnkarya_6_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Karya6.tscn");
-	}
-
-	private void _on_btnquiz_1_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Quiz_1.tscn");
-	}
-
-	private void _on_btnquiz_3_pressed()
-	{
-		GetTree().ChangeSceneToFile("res://Scenes/Quiz_3.tscn");
-	}
-
 
 	private void _on_btnabout_pressed()
 	{

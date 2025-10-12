@@ -31,6 +31,27 @@ public static class GraphicsUtils
         targetNode.DrawPrimitive(points, new Godot.Color[] { actualColor }, uvs);
     }
 
+    // GraphicsUtils.cs (di dalam class GraphicsUtils)
+    public static void FillPolygon(Node2D targetNode, List<Vector2> polygonScreenPoints, Color fill)
+    {
+        if (polygonScreenPoints == null || polygonScreenPoints.Count < 3) return;
+
+        // Godot DrawPolygon menerima array of points dalam space canvas (kita sudah pakai screen coordinate)
+        targetNode.DrawPolygon(
+            polygonScreenPoints.ToArray(),
+            new Color[] { fill } // single-color fill
+        );
+    }
+
+    // Outline + Fill (opsional enak dipakai)
+    public static void FillThenOutline(Node2D node, List<Vector2> outlineDots, List<Vector2> polygonLoopPoints, Color fill, Color outline, DrawStyle outlineStyle = DrawStyle.DotDot)
+    {
+        // polygonLoopPoints = titik sudut berurutan (bukan semua dot hasil Bresenham)
+        FillPolygon(node, polygonLoopPoints, fill);
+        PutPixelAll(node, outlineDots, outlineStyle, outline);
+    }
+
+
     public static void PutPixelAll(Node2D targetNode, List<Vector2> dot, DrawStyle style = DrawStyle.DotDot, Godot.Color? color = null, int stripLength = 3, int gap = 0)
     {
         for (int i = 0; i < dot.Count; i++)
