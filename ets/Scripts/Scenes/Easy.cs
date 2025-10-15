@@ -7,9 +7,14 @@ using System.Linq;
 
 public partial class Easy : Node2D
 {
+    [Signal] public delegate void LevelCompletedEventHandler(string nextLevel);
     private BentukDasar bentukDasar;
     private Node2D outlineContainer;
     private Node2D shapesContainer;
+
+    private Button submitButton;
+    private const float POS_TOLERANCE = 8f;      // px
+    private const float ROT_TOLERANCE = 10f;     // degrees
 
     // Outline color
     private Color outlineColor = new Color(0.5f, 0.5f, 0.5f, 0.8f); // Gray
@@ -25,7 +30,7 @@ public partial class Easy : Node2D
     private Label completionLabel;
     private Button nextLevelButton;
     private Button restartButton;
-    
+    public float CurrentRotationDeg => currentRotation;
 
     public override void _Ready()
     {
@@ -95,6 +100,63 @@ public partial class Easy : Node2D
         CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
             templateCenter + new Vector2(80, 80), baseSize * 0.6f, 0);
     }
+    private bool ValidateAgainstOutlines()
+    {
+        var outlines = outlineContainer.GetChildren().OfType<OutlineShape>().ToList();
+        var shapes = shapesContainer.GetChildren().OfType<DraggableShape>().ToList();
+
+        foreach (var o in outlines)
+        {
+            // cari shape dengan tipe sama, jarak kecil, dan rotasi mendekati outline
+            var best = shapes
+                .Where(s => s.Type == o.Type)
+                .Select(s => new
+                {
+                    S = s,
+                    PosDist = s.GlobalPosition.DistanceTo(o.GlobalPosition),
+                    RotDiff = Mathf.Abs(Mathf.PosMod(s.CurrentRotationDeg - o.InitialRotation, 360f))
+                })
+                .OrderBy(x => x.PosDist)
+                .FirstOrDefault();
+
+            if (best == null) return false;
+
+            var rotDelta = Mathf.Min(best.RotDiff, 360f - best.RotDiff);
+            if (best.PosDist > POS_TOLERANCE || rotDelta > ROT_TOLERANCE)
+                return false;
+        }
+        return true;
+    }
+    private void OnSubmitPressed()
+    {
+        bool ok = ValidateAgainstOutlines();
+        if (ok)
+        {
+            completionLabel.Visible = true;
+            nextLevelButton.Visible = true;
+            restartButton.Visible = true;
+            GD.Print("Submit OK!");
+        }
+        else
+        {
+            completionLabel.Text = "Masih ada yang kurang pas 😅";
+            completionLabel.AddThemeColorOverride("font_color", Colors.OrangeRed);
+            completionLabel.Visible = true;
+            GD.Print("Submit failed: posisi/rotasi belum sesuai toleransi");
+        }
+    }
+    private void CreateSubmitButton()
+    {
+        submitButton = new Button
+        {
+            Text = "SUBMIT",
+            Position = new Vector2(20, 80),
+            Size = new Vector2(160, 40),
+        };
+        submitButton.Disabled = true;
+        submitButton.Pressed += OnSubmitPressed;
+        AddChild(submitButton);
+    }
 
     private void CreateOutlineShape(DraggableShape.ShapeType type, Vector2 position, float size, float rotation)
     {
@@ -106,7 +168,7 @@ public partial class Easy : Node2D
         outline.OutlineColor = outlineColor;
         outlineContainer.AddChild(outline);
     }
-
+    
     private void CreateDraggableShapes()
     {
         float baseSize = 50f;
@@ -184,22 +246,25 @@ public partial class Easy : Node2D
         restartButton.Pressed += OnRestartPressed;
         AddChild(restartButton);
     }
-    
-    
+
+
     public override void _Process(double delta)
     {
         if (!isGameCompleted)
         {
-            CheckGameCompletion();
+            CheckGameCompletion(); // seperti semula
+                                   // toggle enable submit jika semua snapped
+            var allSnapped = shapesContainer.GetChildren().OfType<DraggableShape>().All(s => s.IsSnapped);
+            submitButton.Disabled = !allSnapped;
         }
     }
-    
-    
+
+
     private void CheckGameCompletion()
     {
         var draggableShapes = shapesContainer.GetChildren().OfType<DraggableShape>().ToList();
         bool allPlaced = true;
-        
+
         foreach (var shape in draggableShapes)
         {
             if (!shape.IsCorrectlyPlaced())
@@ -208,7 +273,7 @@ public partial class Easy : Node2D
                 break;
             }
         }
-        
+
         if (allPlaced && !isGameCompleted)
         {
             isGameCompleted = true;
@@ -218,12 +283,11 @@ public partial class Easy : Node2D
             GD.Print("Level Easy Completed!");
         }
     }
-    
     private void OnNextLevelPressed()
     {
         GD.Print("Next Level button pressed - going to Medium");
         // Signal to parent to change level
-        EmitSignal("level_completed", "Medium");
+        EmitSignal(SignalName.LevelCompleted, "Medium");
     }
     
     private void OnRestartPressed()

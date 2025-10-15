@@ -19,7 +19,7 @@ public partial class Hard : Node2D
 
     // Shape spawn positions (on the right side)
     private Vector2 shapeSpawnStart = new Vector2(1050, 150);
-    
+    [Signal] public delegate void LevelCompletedEventHandler(string nextLevel);
     // Game state
     private bool isGameCompleted = false;
     private Label completionLabel;
@@ -238,7 +238,7 @@ public partial class Hard : Node2D
     {
         GD.Print("Back to Menu button pressed");
         // Signal to parent to go back to menu
-        EmitSignal("level_completed", "Menu");
+        EmitSignal(SignalName.LevelCompleted, "Hard");
     }
     
     private void OnRestartPressed()

@@ -10,9 +10,9 @@ config_version=5
 
 [application]
 
-config/name="[KG2025_2C_D3_2024]_Modul1_071"
+config/name="[KG2025_2C_D3_2024]_ETS_071"
 run/main_scene="res://Scenes/Welcome.tscn"
-config/features=PackedStringArray("4.5", "C#", "Forward Plus")
+config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]

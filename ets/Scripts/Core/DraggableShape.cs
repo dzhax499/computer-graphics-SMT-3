@@ -113,9 +113,121 @@ public partial class DraggableShape : Node2D
         }
 
         TransformedPoints = new List<Vector2>(OriginalPoints);
-        
+
         // Debug: Print shape info
         GD.Print($"Generated {Type} with {OriginalPoints.Count} points");
+    }
+
+    private void CheckSnap()
+    {
+        float dynThreshold = Mathf.Clamp(ShapeSize * 0.35f, 12f, 40f);
+        bool wasSnapped = IsSnapped;
+        IsSnapped = false;
+        SnappedToOutline = null;
+
+        OutlineShape bestOutline = null;
+        float bestDist = float.MaxValue;
+
+        foreach (var outline in outlineShapes)
+        {
+            if (outline.Type != Type) continue;
+
+            // Tolak bila size tak cocok (agar presisi)
+            if (Mathf.Abs(ShapeSize - outline.ShapeSize) > SIZE_TOLERANCE_PX) continue;
+
+            // Jangan pilih outline yang sudah terisi
+            bool occupied = false;
+            var shapesContainer = parent.GetNodeOrNull("ShapesContainer") as Node;
+            if (shapesContainer != null)
+            {
+                foreach (var otherShape in shapesContainer.GetChildren().OfType<DraggableShape>())
+                {
+                    if (otherShape != this && otherShape.IsSnapped && otherShape.SnappedToOutline == outline)
+                    {
+                        occupied = true;
+                        break;
+                    }
+                }
+            }
+            if (occupied) continue;
+
+            float d = GlobalPosition.DistanceTo(outline.GlobalPosition);
+            if (d < bestDist)
+            {
+                bestDist = d;
+                bestOutline = outline;
+            }
+        }
+
+        if (bestOutline != null && bestDist <= dynThreshold)
+        {
+            GlobalPosition = bestOutline.GlobalPosition;
+
+            // Rapihkan rotasi ke orientasi outline (mulai dari kelipatan 45° terdekat)
+            float snapped = Mathf.Round(currentRotation / 45f) * 45f;
+            float target = bestOutline.InitialRotation;
+            float delta = Mathf.PosMod(target - snapped, 360f);
+            if (delta > 180f) delta -= 360f;
+            currentRotation = snapped + delta;
+
+            // Jika masih berbeda lebih dari toleransi, paksa ke target
+            if (AngleDeltaDeg(currentRotation, target) > ROT_SNAP_TOLERANCE_DEG)
+                currentRotation = target;
+
+            Transformasi.Matrix3x3Identity(transformMatrix);
+            transformasi.RotationClockwise(transformMatrix, currentRotation, Vector2.Zero);
+            TransformedPoints = transformasi.GetTransformPoint(transformMatrix, OriginalPoints);
+
+            SnapPosition = bestOutline.GlobalPosition;
+            IsSnapped = true;
+            SnappedToOutline = bestOutline;
+            CanBeDeleted = true;
+            CalculateBounds();
+
+            if (!wasSnapped) EmitSignal(SignalName.ShapeSnapped, this);
+        }
+        else
+        {
+            CanBeDeleted = false;
+        }
+
+        QueueRedraw();
+    }
+
+    private const float ROT_SNAP_TOLERANCE_DEG = 8f;     // toleransi cocok rotasi saat snap & win check
+    private const float SIZE_TOLERANCE_PX = 2f;          // toleransi perbedaan size (px)
+
+    private static float AngleDeltaDeg(float a, float b)
+    {
+        // selisih sudut terkecil 0..180
+        float d = Mathf.Abs(Mathf.PosMod(a - b, 360f));
+        return Mathf.Min(d, 360f - d);
+    }
+
+    private void ValidateStaySnappedAfterRotation()
+    {
+        if (!IsSnapped || SnappedToOutline == null) return;
+
+        float rotDiff = AngleDeltaDeg(currentRotation, SnappedToOutline.InitialRotation);
+        if (rotDiff > ROT_SNAP_TOLERANCE_DEG)
+        {
+            // keluar toleransi -> unsnap
+            IsSnapped = false;
+            CanBeDeleted = false;
+            SnappedToOutline = null;
+        }
+        else
+        {
+            // dalam toleransi -> rapihkan ke rotasi & posisi outline
+            currentRotation = SnappedToOutline.InitialRotation;
+            GlobalPosition = SnappedToOutline.GlobalPosition;
+
+            Transformasi.Matrix3x3Identity(transformMatrix);
+            transformasi.RotationClockwise(transformMatrix, currentRotation, Vector2.Zero);
+            TransformedPoints = transformasi.GetTransformPoint(transformMatrix, OriginalPoints);
+            CalculateBounds();
+        }
+        QueueRedraw();
     }
 
     private void CalculateBounds()
@@ -194,28 +306,21 @@ public partial class DraggableShape : Node2D
 
     public void RotateShape()
     {
-        // Rotate by 45 degrees (360/8)
         currentRotation += 45f;
-        
-        // Keep rotation within 0-360 range
-        if (currentRotation >= 360f)
-        {
-            currentRotation -= 360f;
-        }
-        
-        // Reset matrix to identity
+        if (currentRotation >= 360f) currentRotation -= 360f;
+
         Transformasi.Matrix3x3Identity(transformMatrix);
-        
-        // Apply rotation
         transformasi.RotationClockwise(transformMatrix, currentRotation, Vector2.Zero);
         TransformedPoints = transformasi.GetTransformPoint(transformMatrix, OriginalPoints);
 
         CalculateBounds();
         QueueRedraw();
-        
         GD.Print($"Rotated {Type} to {currentRotation}°");
+
+        // Jika sedang snapped, pastikan tetap valid atau unsnap
+        ValidateStaySnappedAfterRotation();
     }
-    
+
 
     public void ResetTransformation()
     {
@@ -224,36 +329,6 @@ public partial class DraggableShape : Node2D
         TransformedPoints = new List<Vector2>(OriginalPoints);
         CalculateBounds();
         QueueRedraw();
-    }
-    
-    private void CheckSnap()
-    {
-        // Find all outline shapes in the scene
-        var parent = GetParent();
-        if (parent == null) return;
-        
-        // Look for OutlineContainer
-        var outlineContainer = parent.GetNodeOrNull("OutlineContainer");
-        if (outlineContainer == null) return;
-        
-        var outlineShapes = outlineContainer.GetChildren().OfType<OutlineShape>().ToList();
-        IsSnapped = false;
-        
-        foreach (var outline in outlineShapes)
-        {
-            if (outline.Type == Type)
-            {
-                float distance = GlobalPosition.DistanceTo(outline.GlobalPosition);
-                if (distance < snapThreshold)
-                {
-                    // Snap to outline position
-                    GlobalPosition = outline.GlobalPosition;
-                    SnapPosition = outline.GlobalPosition;
-                    IsSnapped = true;
-                    break;
-                }
-            }
-        }
     }
     
     public bool IsCorrectlyPlaced()

@@ -14,7 +14,8 @@ public partial class DraggableShape : Node2D
         SegitigaSamaKaki,
         SegitigaSiku,
         Hexagon,
-        Lingkaran
+        Lingkaran,
+        JajarGenjang
     }
 
     // Shape properties
