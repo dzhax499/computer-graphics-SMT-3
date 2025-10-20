@@ -1,0 +1,85 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctrfc1pv063nq"]
+
+[ext_resource type="Script" uid="uid://bdhkdfq7t2pgm" path="res://Scripts/Scenes/PauseMenu.cs" id="1_5w4ur"]
+[ext_resource type="FontFile" uid="uid://4coyytbu8b0s" path="res://Assets/font/Apex Regular.otf" id="2_ey1tb"]
+[ext_resource type="FontFile" uid="uid://bbyw1yc2qvqy0" path="res://Assets/font/AndreaNeat-Demo.otf" id="3_siy43"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yxrls"]
+bg_color = Color(0.155514, 0.727785, 0.841932, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gqxqw"]
+bg_color = Color(0.10748, 0.10748, 0.10748, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_5w4ur")
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 1284.0
+offset_bottom = 721.0
+
+[node name="Main-Vbox" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -199.5
+offset_top = -187.5
+offset_right = 195.5
+offset_bottom = 186.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Panel/Main-Vbox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 10
+theme_override_constants/shadow_offset_y = 5
+theme_override_fonts/font = ExtResource("2_ey1tb")
+theme_override_font_sizes/font_size = 72
+text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Panel/Main-Vbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("3_siy43")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_yxrls")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gqxqw")
+text = "RESUME"
+
+[node name="RestartButton" type="Button" parent="Panel/Main-Vbox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("3_siy43")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_yxrls")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gqxqw")
+text = "RESTART"
+
+[node name="MenuButton" type="Button" parent="Panel/Main-Vbox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("3_siy43")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/hover = SubResource("StyleBoxFlat_yxrls")
+theme_override_styles/normal = SubResource("StyleBoxFlat_gqxqw")
+text = "GO BACK MAIN MENU"

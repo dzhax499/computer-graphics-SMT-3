@@ -1,0 +1,126 @@
+[gd_scene load_steps=8 format=3 uid="uid://dxn4pvqq76s1n"]
+
+[ext_resource type="Script" uid="uid://bkc58624ogr3p" path="res://Scripts/About.cs" id="1_6oxj2"]
+[ext_resource type="FontFile" uid="uid://sh64ru0vfjeb" path="res://Assets/font/Gunken.otf" id="2_7ngfu"]
+[ext_resource type="FontFile" uid="uid://bbyw1yc2qvqy0" path="res://Assets/font/AndreaNeat-Demo.otf" id="3_ceh3k"]
+[ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="4_ceh3k"]
+[ext_resource type="Texture2D" uid="uid://dc6l57w2l6oga" path="res://Assets/img/profile1-almet.jpg" id="5_egbfi"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7ngfu"]
+texture = ExtResource("4_ceh3k")
+modulate_color = Color(0.699653, 0.699653, 0.699653, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wegk8"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 35
+border_width_top = 15
+border_width_right = 35
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 470
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 505
+
+[node name="About" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6oxj2")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 722.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_7ngfu")
+
+[node name="BtnBack" type="Button" parent="Panel"]
+layout_mode = 2
+offset_left = 5.0
+offset_top = 8.0
+offset_right = 158.0
+offset_bottom = 64.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("3_ceh3k")
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_wegk8")
+text = "Back"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+offset_left = 96.0
+offset_top = 89.0
+offset_right = 685.0
+offset_bottom = 277.0
+alignment = 1
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 15
+theme_override_fonts/font = ExtResource("2_7ngfu")
+theme_override_font_sizes/font_size = 36
+text = "About Developer:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -434.5
+offset_top = -175.0
+offset_right = 434.5
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+alignment = 1
+
+[node name="LabelIdentitas" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_constants/shadow_outline_size = 15
+theme_override_fonts/font = ExtResource("2_7ngfu")
+theme_override_font_sizes/font_size = 36
+text = "Nama: Dzakir Tsabit
+Kelas: D3 2C
+NIM: 241511071"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("5_egbfi")
+expand_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="Panel/BtnBack" to="." method="_on_BtnBack_pressed"]
