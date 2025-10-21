@@ -35,12 +35,14 @@ offset_right = 1280.0
 offset_bottom = 722.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_pikqf")
 
-[node name="Papann" type="Sprite2D" parent="Panel"]
+[node name="Outline" type="Node2D" parent="Panel"]
+
+[node name="ShapesContainer" type="Node2D" parent="Panel"]
+
+[node name="Papann" type="Sprite2D" parent="."]
 position = Vector2(493, 462)
 scale = Vector2(1.95787, 1.95787)
 texture = ExtResource("3_pikqf")
-
-[node name="Outline" type="Node2D" parent="Panel"]
 
 [node name="BtnBack" type="Button" parent="."]
 offset_left = 5.0

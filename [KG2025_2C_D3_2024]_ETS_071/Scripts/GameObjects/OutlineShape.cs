@@ -9,6 +9,12 @@ public partial class OutlineShape : Node2D
     // Shape properties
     public DraggableShape.ShapeType Type { get; set; }
     public float ShapeSize { get; set; } = 50f;
+    public float DimAlas { get; set; } = 0f;
+    public float DimTinggi { get; set; } = 0f;
+    public float DimLebar { get; set; } = 0f;
+    public float DimSkew { get; set; } = 0f;
+
+
     public float InitialRotation { get; set; } = 0f;
     public Color OutlineColor { get; set; } = new Color(0.5f, 0.5f, 0.5f, 0.8f);
 
@@ -38,48 +44,71 @@ public partial class OutlineShape : Node2D
         switch (Type)
         {
             case DraggableShape.ShapeType.Persegi:
-                shapePoints = bentukDasar.Persegi(-ShapeSize / 2, -ShapeSize / 2, ShapeSize);
+                float lebarPersegi = DimLebar > 0 ? DimLebar : ShapeSize;
+                shapePoints = bentukDasar.Persegi(-lebarPersegi / 2, -lebarPersegi / 2, lebarPersegi);
                 break;
 
             case DraggableShape.ShapeType.TrapesiumSiku:
+                float alasTrapesium = DimAlas > 0 ? DimAlas : ShapeSize;
+                float tinggiTrapesium = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.6f);
+                float sisiAtasTrapesium = DimLebar > 0 ? DimLebar : (ShapeSize * 0.6f);
+
                 shapePoints = bentukDasar.TrapesiumSiku(
-                    new Vector2(-ShapeSize / 2, -ShapeSize / 3),
-                    (int)(ShapeSize * 0.6f),
-                    (int)ShapeSize,
-                    (int)(ShapeSize * 0.6f)
+                    new Vector2(-alasTrapesium / 2, -tinggiTrapesium / 3),
+                    (int)tinggiTrapesium,
+                    (int)alasTrapesium,
+                    (int)sisiAtasTrapesium
                 );
                 break;
 
-            case DraggableShape.ShapeType.SegitigaSamaKaki:
-                shapePoints = bentukDasar.SegitigaSamaKaki(
-                    new Vector2(-ShapeSize / 2, -ShapeSize / 3),
-                    (int)ShapeSize,
-                    (int)(ShapeSize * 0.8f)
-                );
+                case DraggableShape.ShapeType.SegitigaSamaKaki:
+                float alasSegitiga = DimAlas > 0 ? DimAlas : ShapeSize;
+                float tinggiSegitiga = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.8f);
+
+                var pBawahKiri = new Vector2(-alasSegitiga / 2, tinggiSegitiga / 3);
+                var pBawahKanan = new Vector2(alasSegitiga / 2, tinggiSegitiga / 3);
+                var pPuncak = new Vector2(0, -tinggiSegitiga * 2 / 3);
+
+                shapePoints = new List<Vector2>
+                {
+                    pBawahKiri,
+                    pBawahKanan,
+                    pPuncak,
+                    pBawahKiri
+                };
                 break;
 
             case DraggableShape.ShapeType.SegitigaSiku:
+                float alasSiku = DimAlas > 0 ? DimAlas : ShapeSize;
+                float tinggiSiku = DimTinggi > 0 ? DimTinggi : ShapeSize;
+
                 shapePoints = bentukDasar.SegitigaSiku(
-                    new Vector2(-ShapeSize / 2, -ShapeSize / 2),
-                    (int)ShapeSize,
-                    (int)ShapeSize
+                    new Vector2(-alasSiku / 2, -tinggiSiku / 2),
+                    (int)alasSiku,
+                    (int)tinggiSiku
                 );
                 break;
 
             case DraggableShape.ShapeType.Hexagon:
-                shapePoints = bentukDasar.Hexagon(Vector2.Zero, ShapeSize / 2, 0);
+                float sizeHex = DimLebar > 0 ? DimLebar : ShapeSize;
+                shapePoints = bentukDasar.Hexagon(Vector2.Zero, sizeHex / 2, 0);
                 break;
 
             case DraggableShape.ShapeType.Lingkaran:
-                shapePoints = bentukDasar.Lingkaran(Vector2.Zero, (int)(ShapeSize / 2));
+                float diameter = DimLebar > 0 ? DimLebar : ShapeSize;
+                shapePoints = bentukDasar.Lingkaran(Vector2.Zero, (int)(diameter / 2));
                 break;
 
             case DraggableShape.ShapeType.JajarGenjang:
+                float alasJajar = DimAlas > 0 ? DimAlas : ShapeSize;
+                float tinggiJajar = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.6f);
+                float skewJajar = DimSkew > 0 ? DimSkew : (ShapeSize * 0.3f);
+
                 shapePoints = bentukDasar.JajarGenjang(
-                    new Vector2(-ShapeSize / 2, -ShapeSize / 4),
-                    (int)ShapeSize,
-                    (int)(ShapeSize * 0.6f),
-                    (int)(ShapeSize * 0.3f)
+                    new Vector2(-alasJajar / 2, -tinggiJajar / 4),
+                    (int)alasJajar,
+                    (int)tinggiJajar,
+                    (int)skewJajar
                 );
                 break;
         }
@@ -102,7 +131,7 @@ public partial class OutlineShape : Node2D
         if (transformedPoints == null || transformedPoints.Count == 0) return;
 
         // Draw outline (dashed style)
-        GraphicsUtils.PutPixelAll(this, transformedPoints, GraphicsUtils.DrawStyle.DotDot, OutlineColor);
+        DrawPolyline(transformedPoints.ToArray(), OutlineColor, 2.0f);
 
         // Draw center point indicator
         DrawCircle(Vector2.Zero, 3, OutlineColor);

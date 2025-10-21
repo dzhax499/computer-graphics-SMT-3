@@ -12,69 +12,65 @@ public partial class HardLevel : BaseChallengeLevel
     /// </summary>
     protected override void DefinePaletteShapes()
     {
-        // Castle membutuhkan banyak persegi dan segitiga
-        // Beri ukuran yang BERBEDA dari outline agar lebih challenging!
+        // CONTOH: Segitiga Sama Kaki Kustom
+        // Format: Type, Color, SnappingSize, Count, Alas, Tinggi
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Red,
+            80f, // Snapping Size (bisa disamakan dengan alas)
+            2,   // Count
+            80f, // DimAlas (Alas 80)
+            120f // DimTinggi (Tinggi 120)
+        );
 
-        // Main building blocks
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Gray, 120f, 1);       // Big body
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.DarkGray, 48f, 2);    // Towers
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.SlateGray, 24f, 2);   // Windows
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.LightGray, 32f, 1);   // Door
+        // CONTOH: Jajar Genjang Kustom
+        // Format: Type, Color, SnappingSize, Count, Alas, Tinggi, Lebar(0), Skew
+        AddPaletteShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            Colors.Blue,
+            100f, // Snapping Size
+            1,    // Count
+            100f, // DimAlas (Alas 100)
+            40f,  // DimTinggi (Tinggi 40)
+            0f,   // DimLebar (tidak dipakai)
+            20f   // DimSkew (Kemiringan 20)
+        );
 
-        // Roof triangles
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.Red, 100f, 1);      // Main roof
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.DarkRed, 48f, 2);   // Tower roofs
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.IndianRed, 20f, 2); // Small flags
+        // Anda masih bisa menggunakan method lama
+        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 50f, 1);
 
-        // Extra shapes untuk variasi (tidak semua akan terpakai)
-        AddPaletteShape(DraggableShape.ShapeType.TrapesiumSiku, Colors.Brown, 60f, 2);
-        AddPaletteShape(DraggableShape.ShapeType.JajarGenjang, Colors.SaddleBrown, 50f, 1);
-        AddPaletteShape(DraggableShape.ShapeType.Hexagon, Colors.Yellow, 35f, 2);
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSiku, Colors.Tan, 40f, 2);
-        AddPaletteShape(DraggableShape.ShapeType.Lingkaran, Colors.Yellow, 25f, 1);    // Sun/Moon
+        // Atau menggunakan AddPaletteShapeAuto
+        // Ini akan otomatis mengambil dimensi dari outline yang cocok
+        // AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
 
-        GD.Print("✅ Hard Level: Custom palette defined (18+ shapes - very challenging!)");
+        GD.Print("Easy Level: Custom palette defined");
     }
 
     protected override void CreateLevelOutlines()
     {
-        float baseSize = 40f;
 
-        // Castle (11 pieces) - positioned on board center
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(0, 60), baseSize * 3f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(-120, 20), baseSize * 1.2f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(120, 20), baseSize * 1.2f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(-120, -20), baseSize * 1.2f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(120, -20), baseSize * 1.2f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(0, 0), baseSize * 2.5f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(-60, 30), baseSize * 0.6f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(60, 30), baseSize * 0.6f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(0, 90), baseSize * 0.8f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(-120, -60), baseSize * 0.5f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(120, -60), baseSize * 0.5f, 0);
-
-        GD.Print("✅ Hard Level: 11 outlines created");
+        // CONTOH: Membuat Outline Segitiga Kustom
+        // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi
+        // CONTOH: Membuat Outline Jajar Genjang Kustom
+        // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi, Lebar(0), Skew
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(-120, -40),
+            80f, // Snapping Size (harus SAMA dengan palette)
+            0,   // Rotation
+            80f, // DimAlas (harus SAMA dengan palette)
+            120f // DimTinggi (harus SAMA dengan palette)
+        );
+        CreateOutlineShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            boardCenter + new Vector2(20, 40),
+            100f, // Snapping Size
+            0,    // Rotation
+            100f, // DimAlas
+            40f,  // DimTinggi
+            0f,   // DimLebar
+            20f   // DimSkew
+        );
     }
 
     protected override string GetLevelTitle()

@@ -56,44 +56,84 @@ public partial class EasyLevel : BaseChallengeLevel
     }
 
     // drag and drop
+    // protected override void DefinePaletteShapes()
+    // {
+    //     AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.Red, 60f, 2);
+    //     AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
+
+    //     GD.Print("Easy Level: Auto palette from outlines");
+    // }
+
     protected override void DefinePaletteShapes()
     {
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.Red, 60f, 2);
-        AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
+        // Segitiga Sama Kaki 
+        // Format: Type, Color, SnappingSize, Count, Alas, Tinggi
+        // Jajar Genjang
+        // Format: Type, Color, SnappingSize, Count, Alas, Tinggi, Lebar(0), Skew
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Red,
+            80f, // Snapping Size (bisa disamakan dengan alas)
+            2,   // Count
+            100f, // DimAlas (Alas 80)
+            50f // DimTinggi (Tinggi 120)
+        );
 
-        GD.Print("Easy Level: Auto palette from outlines");
+        
+        AddPaletteShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            Colors.Blue,
+            100f, // Snapping Size
+            1,    // Count
+            100f, // DimAlas (Alas 100)
+            40f,  // DimTinggi (Tinggi 40)
+            0f,   // DimLebar (tidak dipakai)
+            20f   // DimSkew (Kemiringan 20)
+        );
+
+        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 50f, 1);
+
+        // otomatis mengambil dimensi dari outline yang cocok
+        // AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
+
+        GD.Print("Easy Level: Custom palette defined");
     }
 
     protected override void CreateLevelOutlines()
     {
-        float baseSize = 50f;
 
-        // Tangram animal (7 pieces)
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(-120, -40), baseSize * 0.8f, 0);
+        // CONTOH: Membuat Outline Segitiga Kustom
+        // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi
+        // CONTOH: Membuat Outline Jajar Genjang Kustom
+        // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi, Lebar(0), Skew
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(-120, -40),
+            80f, // Snapping Size
+            0,   // Rotation
+            100f, // DimAlas
+            50f // DimTinggi
+        );
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(-120, -40),
+            80f, // Snapping Size
+            45,   // Rotation
+            100f, // DimAlas
+            50f // DimTinggi
+        );
+        CreateOutlineShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            boardCenter + new Vector2(20, 40),
+            100f, // Snapping Size
+            0,    // Rotation
+            100f, // DimAlas
+            40f,  // DimTinggi
+            0f,   // DimLebar
+            20f   // DimSkew
+        );
 
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(-80, 20), baseSize * 0.7f, 45);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(-20, -20), baseSize * 1.2f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(60, -60), baseSize * 1.0f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.JajarGenjang,
-            boardCenter + new Vector2(20, 40), baseSize * 1.0f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(100, 60), baseSize * 0.6f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(80, 80), baseSize * 0.6f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-        boardCenter + new Vector2(80, 100), baseSize * 0.6f, 0);
-
-        GD.Print("✅ Easy Level: 7 outlines created");
+        GD.Print("✅ Easy Level: Custom outlines created");
     }
 
     protected override string GetLevelTitle()

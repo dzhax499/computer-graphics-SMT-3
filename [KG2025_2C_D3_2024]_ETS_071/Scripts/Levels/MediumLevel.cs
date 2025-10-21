@@ -12,57 +12,65 @@ public partial class MediumLevel : BaseChallengeLevel
     /// </summary>
     protected override void DefinePaletteShapes()
     {
-        // Opsi 1: Gunakan auto size (ukuran sama dengan outline)
-        // AddPaletteShapeAuto(DraggableShape.ShapeType.Persegi, Colors.Red, 5);
-        // AddPaletteShapeAuto(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.Orange);
-        // AddPaletteShapeAuto(DraggableShape.ShapeType.Hexagon, Colors.Green, 2);
+        // CONTOH: Segitiga Sama Kaki Kustom
+        // Format: Type, Color, SnappingSize, Count, Alas, Tinggi
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Red,
+            80f, // Snapping Size (bisa disamakan dengan alas)
+            2,   // Count
+            80f, // DimAlas (Alas 80)
+            120f // DimTinggi (Tinggi 120)
+        );
 
-        // Opsi 2: Custom size - lebih challenging!
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Red, 125f, 1);        // Body besar
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.OrangeRed, 40f, 2);   // Windows
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.DarkRed, 30f, 2);     // Door + chimney
+        // CONTOH: Jajar Genjang Kustom
+        // Format: Type, Color, SnappingSize, Count, Alas, Tinggi, Lebar(0), Skew
+        AddPaletteShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            Colors.Blue,
+            100f, // Snapping Size
+            1,    // Count
+            100f, // DimAlas (Alas 100)
+            40f,  // DimTinggi (Tinggi 40)
+            0f,   // DimLebar (tidak dipakai)
+            20f   // DimSkew (Kemiringan 20)
+        );
 
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.Orange, 125f, 1); // Roof
+        // Anda masih bisa menggunakan method lama
+        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 50f, 1);
 
-        AddPaletteShape(DraggableShape.ShapeType.Hexagon, Colors.Green, 40f, 2);       // Trees
+        // Atau menggunakan AddPaletteShapeAuto
+        // Ini akan otomatis mengambil dimensi dari outline yang cocok
+        // AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
 
-        // Extra shapes untuk variasi
-        AddPaletteShape(DraggableShape.ShapeType.Lingkaran, Colors.Yellow, 30f, 1);    // Sun
-        AddPaletteShape(DraggableShape.ShapeType.SegitigaSiku, Colors.Brown, 40f, 2);  // Extra
-
-        GD.Print("✅ Medium Level: Custom palette defined (12 shapes)");
+        GD.Print("Easy Level: Custom palette defined");
     }
 
     protected override void CreateLevelOutlines()
     {
-        float baseSize = 50f;
 
-        // House (8 pieces) - positioned on board center
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(0, 50), baseSize * 2.5f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(0, -30), baseSize * 2.5f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(-60, 20), baseSize * 0.8f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(60, 20), baseSize * 0.8f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(0, 80), baseSize * 0.6f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Persegi,
-            boardCenter + new Vector2(80, -60), baseSize * 0.5f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Hexagon,
-            boardCenter + new Vector2(-150, 50), baseSize * 0.8f, 0);
-
-        CreateOutlineShape(DraggableShape.ShapeType.Hexagon,
-            boardCenter + new Vector2(150, 50), baseSize * 0.8f, 0);
-
-        GD.Print("✅ Medium Level: 8 outlines created");
+        // CONTOH: Membuat Outline Segitiga Kustom
+        // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi
+        // CONTOH: Membuat Outline Jajar Genjang Kustom
+        // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi, Lebar(0), Skew
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(-120, -40),
+            80f, // Snapping Size (harus SAMA dengan palette)
+            0,   // Rotation
+            80f, // DimAlas (harus SAMA dengan palette)
+            120f // DimTinggi (harus SAMA dengan palette)
+        );
+        CreateOutlineShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            boardCenter + new Vector2(20, 40),
+            100f, // Snapping Size
+            0,    // Rotation
+            100f, // DimAlas
+            40f,  // DimTinggi
+            0f,   // DimLebar
+            20f   // DimSkew
+        );
     }
 
     protected override string GetLevelTitle()

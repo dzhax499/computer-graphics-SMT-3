@@ -51,21 +51,35 @@ public abstract partial class BaseChallengeLevel : Node2D
     {
         public DraggableShape.ShapeType Type;
         public Color Color;
-        public float Size;
-        public int Count; // Jumlah shape yang tersedia
+        public float Size; 
+        public int Count;
 
-        public PaletteShapeConfig(DraggableShape.ShapeType type, Color color, float size, int count = 1)
+        public float DimAlas;
+        public float DimTinggi;
+        public float DimLebar;
+        public float DimSkew;
+
+
+        // Modifikasi constructor
+        public PaletteShapeConfig(DraggableShape.ShapeType type, Color color, float size, int count = 1,
+                                  float dimAlas = 0f, float dimTinggi = 0f, float dimLebar = 0f, float dimSkew = 0f)
         {
             Type = type;
             Color = color;
             Size = size;
             Count = count;
+
+            // TAMBAHKAN INI
+            DimAlas = dimAlas;
+            DimTinggi = dimTinggi;
+            DimLebar = dimLebar;
+            DimSkew = dimSkew;
         }
     }
 
     protected List<PaletteShapeConfig> paletteShapes = new List<PaletteShapeConfig>();
 
-    // ABSTRACT METHODS - harus diimplementasi di child class
+    // ABSTRACT METHODS - implementasi di child class
     protected abstract void CreateLevelOutlines();
     protected abstract void DefinePaletteShapes(); // NEW: Define palette shapes per level
     protected abstract string GetLevelTitle();
@@ -155,7 +169,8 @@ public abstract partial class BaseChallengeLevel : Node2D
         CreateCustomPalette();
     }
 
-    protected void CreateOutlineShape(DraggableShape.ShapeType type, Vector2 position, float size, float rotation)
+    protected void CreateOutlineShape(DraggableShape.ShapeType type, Vector2 position, float size, float rotation,
+                                  float dimAlas, float dimTinggi, float dimLebar = 0f, float dimSkew = 0f)
     {
         OutlineShape outline = new OutlineShape();
         outline.Type = type;
@@ -163,20 +178,27 @@ public abstract partial class BaseChallengeLevel : Node2D
         outline.ShapeSize = size;
         outline.InitialRotation = rotation;
         outline.OutlineColor = outlineColor;
+
+        // Set dimensi kustom
+        outline.DimAlas = dimAlas;
+        outline.DimTinggi = dimTinggi;
+        outline.DimLebar = dimLebar;
+        outline.DimSkew = dimSkew;
+
         outlineContainer.AddChild(outline);
     }
 
-    /// <summary>
-    /// Helper method untuk menambah shape ke palette
-    /// </summary>
     protected void AddPaletteShape(DraggableShape.ShapeType type, Color color, float size, int count = 1)
     {
         paletteShapes.Add(new PaletteShapeConfig(type, color, size, count));
     }
 
-    /// <summary>
-    /// Helper method dengan size otomatis dari outline
-    /// </summary>
+    protected void AddPaletteShape(DraggableShape.ShapeType type, Color color, float size, int count,
+                               float dimAlas, float dimTinggi, float dimLebar = 0f, float dimSkew = 0f)
+    {
+        paletteShapes.Add(new PaletteShapeConfig(type, color, size, count, dimAlas, dimTinggi, dimLebar, dimSkew));
+    }
+
     protected void AddPaletteShapeAuto(DraggableShape.ShapeType type, Color color, int count = 1)
     {
         // Cari outline dengan tipe yang sama untuk ambil size
@@ -187,14 +209,11 @@ public abstract partial class BaseChallengeLevel : Node2D
         paletteShapes.Add(new PaletteShapeConfig(type, color, size, count));
     }
 
-    /// <summary>
-    /// Create palette dari konfigurasi custom (DefinePaletteShapes)
-    /// </summary>
     protected void CreateCustomPalette()
     {
         if (paletteShapes.Count == 0)
         {
-            GD.PrintErr("⚠️ No palette shapes defined! Using auto-generation from outlines.");
+            GD.PrintErr("No palette shapes defined! Using auto-generation from outlines");
             CreatePaletteFromOutlines();
             return;
         }
@@ -211,8 +230,13 @@ public abstract partial class BaseChallengeLevel : Node2D
             {
                 var template = new DraggableShape();
                 template.Type = config.Type;
-                template.ShapeSize = config.Size;
+                template.ShapeSize = config.Size; 
                 template.ShapeColor = config.Color;
+
+                template.DimAlas = config.DimAlas;
+                template.DimTinggi = config.DimTinggi;
+                template.DimLebar = config.DimLebar;
+                template.DimSkew = config.DimSkew;
 
                 Vector2 spawnPos = paletteStart + new Vector2(col * spacing, row * spacing);
                 template.Position = spawnPos;
@@ -236,9 +260,6 @@ public abstract partial class BaseChallengeLevel : Node2D
         GD.Print($"✅ Created {paletteShapes.Count} custom palette templates");
     }
 
-    /// <summary>
-    /// Fallback: Auto-generate palette dari outlines (untuk backward compatibility)
-    /// </summary>
     protected void CreatePaletteFromOutlines()
     {
         float spacing = 90f;
