@@ -24,7 +24,8 @@ public partial class OutlineShape : Node2D
         transformasi = new Transformasi();
         transformMatrix = new float[3, 3];
         Transformasi.Matrix3x3Identity(transformMatrix);
-
+        SetProcessInput(false);
+        SetProcessUnhandledInput(false);
         GenerateShape();
         ApplyInitialRotation();
         QueueRedraw();

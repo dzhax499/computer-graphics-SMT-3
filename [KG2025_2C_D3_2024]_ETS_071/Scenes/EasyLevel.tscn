@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://cw6haloffe58c"]
+[gd_scene load_steps=13 format=3 uid="uid://cw6haloffe58c"]
 
 [ext_resource type="Script" uid="uid://crtl3mohhtujk" path="res://Scripts/Levels/EasyLevel.cs" id="1_bf53h"]
 [ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_3i6j8"]
@@ -9,6 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://xvcb4wrmfbm7" path="res://Assets/img/delete_closed.png" id="6_fgofq"]
 [ext_resource type="Texture2D" uid="uid://daleo2728os1e" path="res://Assets/img/undo_icon.png" id="7_2irst"]
 [ext_resource type="Texture2D" uid="uid://ryn6tkp6y54p" path="res://Assets/img/undo_pres_icon.png" id="8_bf53h"]
+[ext_resource type="PackedScene" uid="uid://ctrfc1pv063nq" path="res://Scenes/PauseMenu.tscn" id="10_wt3ij"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pikqf"]
+texture = ExtResource("2_3i6j8")
+modulate_color = Color(0.699653, 0.699653, 0.699653, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6h4vp"]
 bg_color = Color(0, 0, 0, 1)
@@ -22,12 +27,20 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 505
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pikqf"]
-texture = ExtResource("2_3i6j8")
-modulate_color = Color(0.699653, 0.699653, 0.699653, 1)
-
 [node name="ChallengeEasy" type="Node2D"]
 script = ExtResource("1_bf53h")
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 1280.0
+offset_bottom = 722.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_pikqf")
+
+[node name="Papann" type="Sprite2D" parent="Panel"]
+position = Vector2(493, 462)
+scale = Vector2(1.95787, 1.95787)
+texture = ExtResource("3_pikqf")
+
+[node name="Outline" type="Node2D" parent="Panel"]
 
 [node name="BtnBack" type="Button" parent="."]
 offset_left = 5.0
@@ -41,18 +54,6 @@ theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("StyleBoxFlat_6h4vp")
 text = "Back"
 metadata/_edit_use_anchors_ = true
-
-[node name="Panel" type="Panel" parent="."]
-offset_right = 1280.0
-offset_bottom = 722.0
-theme_override_styles/panel = SubResource("StyleBoxTexture_pikqf")
-
-[node name="Papann" type="Sprite2D" parent="Panel"]
-position = Vector2(493, 462)
-scale = Vector2(1.95787, 1.95787)
-texture = ExtResource("3_pikqf")
-
-[node name="Outline" type="Node2D" parent="Panel"]
 
 [node name="Title" type="Label" parent="."]
 anchors_preset = 13
@@ -109,15 +110,14 @@ offset_bottom = 669.0
 color = Color(0.0214346, 0.0214346, 0.0214346, 1)
 
 [node name="ColorRect2" type="ColorRect" parent="ColorRect"]
-z_index = -10
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.912
 anchor_bottom = 0.95
-offset_left = -839.0
+offset_left = -838.0
 offset_top = 50.0
 offset_right = -367.416
-offset_bottom = 25.3
+offset_bottom = 28.3
 color = Color(1, 0.929412, 0.788235, 1)
 
 [node name="ColorRect" type="ColorRect" parent="ColorRect"]
@@ -169,5 +169,7 @@ texture_normal = ExtResource("7_2irst")
 texture_pressed = ExtResource("8_bf53h")
 ignore_texture_size = true
 stretch_mode = 0
+
+[node name="CanvasLayer" parent="." instance=ExtResource("10_wt3ij")]
 
 [connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]

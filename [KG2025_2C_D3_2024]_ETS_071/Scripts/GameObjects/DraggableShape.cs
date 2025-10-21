@@ -6,7 +6,11 @@ using System.Linq;
 
 /// <summary>
 /// Draggable Shape - Pattern Block yang bisa di-drag, rotate, dan snap
-/// UPDATED: Mendukung rotasi CW (Arrow Right) dan CCW (Arrow Left)
+/// UPDATED: Multiple rotation controls
+/// - Q = Rotate CCW (Counter-Clockwise) ⟲
+/// - R = Rotate CW (Clockwise) ⟳
+/// - Arrow Left = Rotate CCW ⟲
+/// - Arrow Right = Rotate CW ⟳
 /// </summary>
 public partial class DraggableShape : Node2D
 {
@@ -295,6 +299,9 @@ public partial class DraggableShape : Node2D
                         isDragging = true;
                         dragOffset = GetGlobalMousePosition() - GlobalPosition;
 
+                        // Notify level that this shape is selected
+                        NotifyLevelShapeSelected();
+
                         // Unsnap if was snapped
                         if (IsSnapped)
                         {
@@ -318,27 +325,62 @@ public partial class DraggableShape : Node2D
             }
         }
 
-        // UPDATED: Rotation dengan Arrow Keys (CW & CCW)
+        // ROTATION CONTROLS - Hanya jika mouse hover
         if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
         {
             if (IsMouseOver())
             {
-                if (keyEvent.Keycode == Key.Right)
+                bool handled = false;
+
+                // Q = Counter-Clockwise (CCW) ⟲
+                if (keyEvent.Keycode == Key.Q)
                 {
-                    RotateShape(true); // Clockwise
-                    GetViewport().SetInputAsHandled();
+                    RotateShape(false); // CCW
+                    handled = true;
+                    GD.Print("⟲ Q - Rotate CCW");
                 }
-                else if (keyEvent.Keycode == Key.Left)
-                {
-                    RotateShape(false); // Counter-clockwise
-                    GetViewport().SetInputAsHandled();
-                }
+                // R = Clockwise (CW) ⟳
                 else if (keyEvent.Keycode == Key.R)
                 {
-                    RotateShape(true); // Backward compatibility
+                    RotateShape(true); // CW
+                    handled = true;
+                    GD.Print("⟳ R - Rotate CW");
+                }
+                // Arrow Left = CCW ⟲
+                else if (keyEvent.Keycode == Key.Left)
+                {
+                    RotateShape(false); // CCW
+                    handled = true;
+                    GD.Print("⟲ ← - Rotate CCW");
+                }
+                // Arrow Right = CW ⟳
+                else if (keyEvent.Keycode == Key.Right)
+                {
+                    RotateShape(true); // CW
+                    handled = true;
+                    GD.Print("⟳ → - Rotate CW");
+                }
+
+                if (handled)
+                {
                     GetViewport().SetInputAsHandled();
                 }
             }
+        }
+    }
+
+    private void NotifyLevelShapeSelected()
+    {
+        // Notify BaseChallengeLevel that this shape is selected
+        Node parent = GetParent();
+        while (parent != null)
+        {
+            if (parent is BaseChallengeLevel level)
+            {
+                level.NotifyShapeSelected(this);
+                break;
+            }
+            parent = parent.GetParent();
         }
     }
 
@@ -379,7 +421,7 @@ public partial class DraggableShape : Node2D
     /// <summary>
     /// Rotate shape clockwise or counter-clockwise
     /// </summary>
-    /// <param name="clockwise">True for CW, False for CCW</param>
+    /// <param name="clockwise">True for CW ⟳, False for CCW ⟲</param>
     public void RotateShape(bool clockwise = true)
     {
         if (clockwise)
@@ -406,7 +448,7 @@ public partial class DraggableShape : Node2D
         }
 
         QueueRedraw();
-        GD.Print($"Rotated {Type} to {currentRotation}° ({(clockwise ? "CW" : "CCW")})");
+        GD.Print($"🔄 Rotated {Type} to {currentRotation}° ({(clockwise ? "CW ⟳" : "CCW ⟲")})");
     }
 
     public void ResetTransformation()
@@ -428,31 +470,29 @@ public partial class DraggableShape : Node2D
 
     public void UndoToOriginalPosition()
     {
-        if (IsSnapped)
-        {
-            Position = originalPosition;
-            currentRotation = originalRotation;
-            IsSnapped = false;
-            SnappedToOutline = null;
-            CanBeDeleted = false;
+        if (IsPaletteTemplate) return;
 
-            Transformasi.Matrix3x3Identity(transformMatrix);
-            transformasi.RotationClockwise(transformMatrix, currentRotation, Vector2.Zero);
-            TransformedPoints = transformasi.GetTransformPoint(transformMatrix, OriginalPoints);
-            CalculateBounds();
-            QueueRedraw();
+        Position = originalPosition;
+        currentRotation = originalRotation;
+        IsSnapped = false;
+        SnappedToOutline = null;
+        CanBeDeleted = false;
 
-            GD.Print($"Undid {Type} to original position");
-        }
+        Transformasi.Matrix3x3Identity(transformMatrix);
+        transformasi.RotationClockwise(transformMatrix, currentRotation, Vector2.Zero);
+        TransformedPoints = transformasi.GetTransformPoint(transformMatrix, OriginalPoints);
+        CalculateBounds();
+        QueueRedraw();
+
+        GD.Print($"[UNDO] {Type} -> original position");
     }
 
     public void DeleteShape()
     {
-        if (CanBeDeleted)
-        {
-            EmitSignal(SignalName.ShapeDeleted, this);
-            QueueFree();
-        }
+        if (IsPaletteTemplate) return;
+
+        EmitSignal(SignalName.ShapeDeleted, this);
+        QueueFree();
     }
 
     public override void _Draw()

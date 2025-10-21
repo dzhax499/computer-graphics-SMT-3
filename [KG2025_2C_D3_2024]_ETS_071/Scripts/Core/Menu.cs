@@ -17,27 +17,27 @@ public partial class Menu : Node2D // <-- DIUBAH DARI CONTROL MENJADI NODE2D
     }
 
     // Button Easy -> Signal "pressed" -> _on_btn_easy_pressed
-    private void _on_btn_easy_pressed()
+    private void _on_EasyBtn_pressed()
     {
         GD.Print("🎮 Loading Easy Level...");
         // Pastikan path ini benar sesuai struktur folder Anda
-        GetTree().ChangeSceneToFile("res://Scenes/Game.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/EasyLevel.tscn");
     }
 
     // Button Medium -> Signal "pressed" -> _on_btn_medium_pressed
-    private void _on_btn_medium_pressed()
+    private void _on_MediumBtn_pressed()
     {
         GD.Print("🎮 Loading Medium Level...");
         // Ganti dengan scene medium jika sudah ada
-        // GetTree().ChangeSceneToFile("res://Scenes/MediumLevel.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/MediumLevel.tscn");
     }
 
     // Button Hard -> Signal "pressed" -> _on_btn_hard_pressed
-    private void _on_btn_hard_pressed()
+    private void _on_HardBtn_pressed()
     {
         GD.Print("🎮 Loading Hard Level...");
         // Ganti dengan scene hard jika sudah ada
-        // GetTree().ChangeSceneToFile("res://Scenes/HardLevel.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/HardLevel.tscn");
     }
 
     // Button Back -> Signal "pressed" -> _on_BtnBack_pressed

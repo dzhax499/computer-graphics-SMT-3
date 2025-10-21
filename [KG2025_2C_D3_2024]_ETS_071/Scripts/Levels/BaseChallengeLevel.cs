@@ -6,7 +6,7 @@ using System.Linq;
 
 /// <summary>
 /// Base class untuk semua challenge levels
-/// Mengandung logic umum untuk snap, win condition, UI, dll
+/// UPDATED: Support custom palette shapes per level
 /// </summary>
 public abstract partial class BaseChallengeLevel : Node2D
 {
@@ -19,6 +19,8 @@ public abstract partial class BaseChallengeLevel : Node2D
     protected BentukDasar bentukDasar;
     protected Node2D outlineContainer;
     protected Node2D shapesContainer;
+    protected DraggableShape _lastSnapped;
+    protected DraggableShape _activeShape;
 
     // UI REFERENCES
     protected Label titleLabel;
@@ -32,6 +34,7 @@ public abstract partial class BaseChallengeLevel : Node2D
     // MANAGERS
     protected PatternBlockSpawner blockSpawner;
     protected WinNotification winNotification;
+    protected PauseMenu pauseMenu;
     protected List<DraggableShape> spawnedBlocks = new List<DraggableShape>();
 
     // GAME STATE
@@ -43,8 +46,28 @@ public abstract partial class BaseChallengeLevel : Node2D
     protected Vector2 boardCenter = new Vector2(493, 462);
     protected Vector2 patternBlockStart = new Vector2(1000, 200);
 
+    // PALETTE CONFIGURATION
+    protected struct PaletteShapeConfig
+    {
+        public DraggableShape.ShapeType Type;
+        public Color Color;
+        public float Size;
+        public int Count; // Jumlah shape yang tersedia
+
+        public PaletteShapeConfig(DraggableShape.ShapeType type, Color color, float size, int count = 1)
+        {
+            Type = type;
+            Color = color;
+            Size = size;
+            Count = count;
+        }
+    }
+
+    protected List<PaletteShapeConfig> paletteShapes = new List<PaletteShapeConfig>();
+
     // ABSTRACT METHODS - harus diimplementasi di child class
     protected abstract void CreateLevelOutlines();
+    protected abstract void DefinePaletteShapes(); // NEW: Define palette shapes per level
     protected abstract string GetLevelTitle();
     protected abstract string GetNextLevelPath();
     protected abstract bool IsLastLevel();
@@ -59,6 +82,9 @@ public abstract partial class BaseChallengeLevel : Node2D
 
             // Get references from scene
             GetSceneReferences();
+
+            // Define palette shapes BEFORE setup
+            DefinePaletteShapes();
 
             // Setup level
             SetupLevel();
@@ -125,8 +151,8 @@ public abstract partial class BaseChallengeLevel : Node2D
         // Create outlines (implemented by child)
         CreateLevelOutlines();
 
-        // Create palette dari outlines
-        CreatePaletteFromOutlines();
+        // Create palette dari konfigurasi level
+        CreateCustomPalette();
     }
 
     protected void CreateOutlineShape(DraggableShape.ShapeType type, Vector2 position, float size, float rotation)
@@ -140,6 +166,79 @@ public abstract partial class BaseChallengeLevel : Node2D
         outlineContainer.AddChild(outline);
     }
 
+    /// <summary>
+    /// Helper method untuk menambah shape ke palette
+    /// </summary>
+    protected void AddPaletteShape(DraggableShape.ShapeType type, Color color, float size, int count = 1)
+    {
+        paletteShapes.Add(new PaletteShapeConfig(type, color, size, count));
+    }
+
+    /// <summary>
+    /// Helper method dengan size otomatis dari outline
+    /// </summary>
+    protected void AddPaletteShapeAuto(DraggableShape.ShapeType type, Color color, int count = 1)
+    {
+        // Cari outline dengan tipe yang sama untuk ambil size
+        var outline = outlineContainer.GetChildren().OfType<OutlineShape>()
+            .FirstOrDefault(o => o.Type == type);
+
+        float size = outline?.ShapeSize ?? 50f;
+        paletteShapes.Add(new PaletteShapeConfig(type, color, size, count));
+    }
+
+    /// <summary>
+    /// Create palette dari konfigurasi custom (DefinePaletteShapes)
+    /// </summary>
+    protected void CreateCustomPalette()
+    {
+        if (paletteShapes.Count == 0)
+        {
+            GD.PrintErr("⚠️ No palette shapes defined! Using auto-generation from outlines.");
+            CreatePaletteFromOutlines();
+            return;
+        }
+
+        float spacing = 90f;
+        int col = 0, row = 0;
+        int maxCols = 2;
+
+        Vector2 paletteStart = patternBlockStart;
+
+        foreach (var config in paletteShapes)
+        {
+            for (int i = 0; i < config.Count; i++)
+            {
+                var template = new DraggableShape();
+                template.Type = config.Type;
+                template.ShapeSize = config.Size;
+                template.ShapeColor = config.Color;
+
+                Vector2 spawnPos = paletteStart + new Vector2(col * spacing, row * spacing);
+                template.Position = spawnPos;
+                template.IsPaletteTemplate = true;
+                template.PaletteSpawnPosition = spawnPos;
+
+                shapesContainer.AddChild(template);
+
+                // Connect signal
+                template.ShapeSnapped += OnShapeSnapped;
+
+                col++;
+                if (col >= maxCols)
+                {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
+
+        GD.Print($"✅ Created {paletteShapes.Count} custom palette templates");
+    }
+
+    /// <summary>
+    /// Fallback: Auto-generate palette dari outlines (untuk backward compatibility)
+    /// </summary>
     protected void CreatePaletteFromOutlines()
     {
         float spacing = 90f;
@@ -148,7 +247,6 @@ public abstract partial class BaseChallengeLevel : Node2D
 
         var outlines = outlineContainer.GetChildren().OfType<OutlineShape>().ToList();
 
-        // Posisi spawn di dalam ColorRect (pattern block area)
         Vector2 paletteStart = patternBlockStart;
 
         foreach (var outline in outlines)
@@ -176,7 +274,7 @@ public abstract partial class BaseChallengeLevel : Node2D
             }
         }
 
-        GD.Print($"✅ Created {outlines.Count} palette templates");
+        GD.Print($"✅ Created {outlines.Count} palette templates (auto)");
     }
 
     protected Color GetColorForType(DraggableShape.ShapeType type)
@@ -184,7 +282,7 @@ public abstract partial class BaseChallengeLevel : Node2D
         return type switch
         {
             DraggableShape.ShapeType.Persegi => new Color(0.8f, 0.4f, 0.2f),
-            DraggableShape.ShapeType.SegitigaSamaKaki => new Color(1f, 0.5f, 0f),
+            DraggableShape.ShapeType.SegitigaSamaKaki => new Color(0f, 0f, 1f),
             DraggableShape.ShapeType.JajarGenjang => new Color(0f, 0f, 1f),
             DraggableShape.ShapeType.Hexagon => new Color(0.2f, 0.6f, 0.2f),
             DraggableShape.ShapeType.SegitigaSiku => new Color(0.2f, 1f, 1f),
@@ -235,8 +333,10 @@ public abstract partial class BaseChallengeLevel : Node2D
         GD.Print($"Block spawned: {block.Type}, Total: {spawnedBlocks.Count}");
     }
 
-    public void OnShapeSnapped(DraggableShape shape)
+    public virtual void OnShapeSnapped(DraggableShape shape)
     {
+        _lastSnapped = shape;
+        _activeShape = shape;
         GD.Print($"OnShapeSnapped: {shape.Type}");
         UpdateProgressDisplay();
         CheckWinCondition();
@@ -270,6 +370,13 @@ public abstract partial class BaseChallengeLevel : Node2D
     protected void OnBackToMenu()
     {
         GetTree().ChangeSceneToFile("res://Scenes/Main.tscn");
+    }
+
+    public void NotifyShapeSelected(DraggableShape shape)
+    {
+        _activeShape = shape;
+        _lastSnapped = shape;
+        GD.Print($"[SELECT] Active shape = {shape.Name}");
     }
 
     #endregion
@@ -331,7 +438,7 @@ public abstract partial class BaseChallengeLevel : Node2D
 
     protected void UpdateProgressDisplay()
     {
-        // Override di child jika perlu custom display
+        // update jika ada
     }
 
     protected void UpdateHUD()
@@ -373,6 +480,22 @@ public abstract partial class BaseChallengeLevel : Node2D
             {
                 OnBackToMenu();
                 GetViewport().SetInputAsHandled();
+            }
+            // Rotation controls untuk active shape
+            else if (_activeShape != null && !_activeShape.IsPaletteTemplate)
+            {
+                if (keyEvent.Keycode == Key.Q)
+                {
+                    _activeShape.RotateShape(false); // CCW
+                    GetViewport().SetInputAsHandled();
+                    GD.Print("⟲ Q pressed - Rotate CCW");
+                }
+                else if (keyEvent.Keycode == Key.R)
+                {
+                    _activeShape.RotateShape(true); // CW
+                    GetViewport().SetInputAsHandled();
+                    GD.Print("⟳ R pressed - Rotate CW");
+                }
             }
         }
     }
