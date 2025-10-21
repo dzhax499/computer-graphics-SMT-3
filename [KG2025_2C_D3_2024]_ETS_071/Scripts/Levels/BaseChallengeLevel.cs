@@ -69,7 +69,6 @@ public abstract partial class BaseChallengeLevel : Node2D
             Size = size;
             Count = count;
 
-            // TAMBAHKAN INI
             DimAlas = dimAlas;
             DimTinggi = dimTinggi;
             DimLebar = dimLebar;
@@ -324,7 +323,8 @@ public abstract partial class BaseChallengeLevel : Node2D
         AddChild(blockSpawner);
 
         // Win notification
-        winNotification = new WinNotification();
+        var winNotificationScene = GD.Load<PackedScene>("res://scenes/WinNotif.tscn");
+        winNotification = winNotificationScene.Instantiate<WinNotification>();
         winNotification.NextLevelRequested += OnNextLevel;
         winNotification.RestartRequested += OnRestart;
         winNotification.BackToMenuRequested += OnBackToMenu;

@@ -75,8 +75,8 @@ public partial class EasyLevel : BaseChallengeLevel
             Colors.Red,
             80f, // Snapping Size (bisa disamakan dengan alas)
             2,   // Count
-            100f, // DimAlas (Alas 80)
-            50f // DimTinggi (Tinggi 120)
+            120f, // DimAlas
+            60f // DimTinggi (Tinggi 120)
         );
 
         
@@ -108,11 +108,11 @@ public partial class EasyLevel : BaseChallengeLevel
         // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi, Lebar(0), Skew
         CreateOutlineShape(
             DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(-120, -40),
+            boardCenter + new Vector2(147, -142),
             80f, // Snapping Size
-            0,   // Rotation
-            100f, // DimAlas
-            50f // DimTinggi
+            180,   // Rotation
+            120f, // DimAlas
+            60f // DimTinggi
         );
         CreateOutlineShape(
             DraggableShape.ShapeType.SegitigaSamaKaki,

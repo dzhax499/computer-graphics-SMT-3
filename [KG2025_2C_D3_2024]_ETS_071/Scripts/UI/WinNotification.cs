@@ -5,12 +5,14 @@ using System;
 
 public partial class WinNotification : Control
 {
+    
     private Label winLabel;
     private Button nextLevelButton;
     private Button restartButton;
     private Button backToMenuButton;
     private VBoxContainer container;
     private ColorRect background;
+    
 
     [Signal] public delegate void NextLevelRequestedEventHandler();
     [Signal] public delegate void RestartRequestedEventHandler();
@@ -18,64 +20,25 @@ public partial class WinNotification : Control
 
     public override void _Ready()
     {
-        CreateUI();
-        Visible = false;
-    }
+        background = GetNodeOrNull<ColorRect>("Background");
+        container = GetNodeOrNull<VBoxContainer>("Container");
+        winLabel = GetNodeOrNull<Label>("Container/WinLabel");
+        nextLevelButton = GetNodeOrNull<Button>("Container/NextLevelButton");
+        restartButton = GetNodeOrNull<Button>("Container/RestartButton");
+        backToMenuButton = GetNodeOrNull<Button>("Container/BackToMenuButton");
 
-    private void CreateUI()
-    {
-        // Create semi-transparent background
-        background = new ColorRect();
-        background.Color = new Color(0, 0, 0, 0.7f);
-        background.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
-        AddChild(background);
-
-        // Create main container
-        container = new VBoxContainer();
-        container.AddThemeConstantOverride("separation", 20);
-        container.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
-        container.Size = new Vector2(400, 300);
-        AddChild(container);
-
-        // Create win label
-        winLabel = new Label();
-        winLabel.Text = "🎉 LEVEL COMPLETED! 🎉";
-        winLabel.HorizontalAlignment = HorizontalAlignment.Center;
-        winLabel.AddThemeColorOverride("font_color", Colors.Gold);
-        winLabel.AddThemeFontSizeOverride("font_size", 36);
-        container.AddChild(winLabel);
-
-        // Create next level button
-        nextLevelButton = new Button();
-        nextLevelButton.Text = "NEXT LEVEL";
-        nextLevelButton.Size = new Vector2(300, 50);
-        nextLevelButton.AddThemeColorOverride("font_color", Colors.White);
-        nextLevelButton.AddThemeFontSizeOverride("font_size", 20);
-        nextLevelButton.Pressed += OnNextLevelPressed;
-        container.AddChild(nextLevelButton);
-
-        // Create restart button
-        restartButton = new Button();
-        restartButton.Text = "RESTART LEVEL";
-        restartButton.Size = new Vector2(300, 50);
-        restartButton.AddThemeColorOverride("font_color", Colors.White);
-        restartButton.AddThemeFontSizeOverride("font_size", 20);
-        restartButton.Pressed += OnRestartPressed;
-        container.AddChild(restartButton);
-
-        // Create back to menu button
-        backToMenuButton = new Button();
-        backToMenuButton.Text = "BACK TO MENU";
-        backToMenuButton.Size = new Vector2(300, 50);
-        backToMenuButton.AddThemeColorOverride("font_color", Colors.White);
-        backToMenuButton.AddThemeFontSizeOverride("font_size", 20);
-        backToMenuButton.Pressed += OnBackToMenuPressed;
-        container.AddChild(backToMenuButton);
+        // 3. Pindahkan koneksi sinyal ke _Ready()
+        if (nextLevelButton != null)
+            nextLevelButton.Pressed += OnNextLevelPressed;
+        if (restartButton != null)
+            restartButton.Pressed += OnRestartPressed;
+        if (backToMenuButton != null)
+            backToMenuButton.Pressed += OnBackToMenuPressed;
     }
 
     public void ShowWin(string levelName, bool isLastLevel = false)
     {
-        winLabel.Text = $"🎉 {levelName.ToUpper()} COMPLETED! 🎉";
+        winLabel.Text = $" {levelName.ToUpper()} COMPLETED!";
 
         // Show/hide appropriate buttons
         nextLevelButton.Visible = !isLastLevel;
