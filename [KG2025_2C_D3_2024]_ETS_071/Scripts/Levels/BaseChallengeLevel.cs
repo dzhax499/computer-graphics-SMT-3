@@ -44,7 +44,7 @@ public abstract partial class BaseChallengeLevel : Node2D
 
     // POSITIONS (disesuaikan dengan Game.tscn)
     protected Vector2 boardCenter = new Vector2(493, 462);
-    protected Vector2 patternBlockStart = new Vector2(1000, 200);
+    protected Vector2 patternBlockStart = new Vector2(1030, 200);
 
     // PALETTE CONFIGURATION
     protected struct PaletteShapeConfig
@@ -80,7 +80,7 @@ public abstract partial class BaseChallengeLevel : Node2D
 
     // ABSTRACT METHODS - implementasi di child class
     protected abstract void CreateLevelOutlines();
-    protected abstract void DefinePaletteShapes(); // NEW: Define palette shapes per level
+    protected abstract void DefinePaletteShapes();
     protected abstract string GetLevelTitle();
     protected abstract string GetNextLevelPath();
     protected abstract bool IsLastLevel();
@@ -217,7 +217,7 @@ public abstract partial class BaseChallengeLevel : Node2D
             return;
         }
 
-        float spacing = 90f;
+        float spacing = 130f;
         int col = 0, row = 0;
         int maxCols = 2;
 

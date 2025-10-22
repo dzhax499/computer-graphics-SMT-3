@@ -178,7 +178,8 @@ public partial class DraggableShape : Node2D
 
     private void CheckSnap()
     {
-        float dynThreshold = Mathf.Clamp(ShapeSize * 0.8f, 35f, 80f);
+        // dynThreshold DIUBAH menjadi lebih KETAT
+        float dynThreshold = Mathf.Clamp(ShapeSize * 0.5f, 20f, 50f); // <-- DIUBAH
         bool wasSnapped = IsSnapped;
 
         // Reset snap state
@@ -206,9 +207,17 @@ public partial class DraggableShape : Node2D
             // 1. TYPE CHECK
             if (outline.Type != Type) continue;
 
-            // 2. SIZE CHECK
+            // 2. SIZE CHECK (Pengecekan Awal)
             float sizeDiff = Mathf.Abs(ShapeSize - outline.ShapeSize);
             if (sizeDiff > SIZE_TOLERANCE_PX) continue;
+
+            // 2B. CUSTOM DIMENSION CHECK (PENTING!) // <-- BARU
+            // Ini memastikan bentuk kustom benar-benar cocok
+            if (Mathf.Abs(DimAlas - outline.DimAlas) > SIZE_TOLERANCE_PX) continue;
+            if (Mathf.Abs(DimTinggi - outline.DimTinggi) > SIZE_TOLERANCE_PX) continue;
+            if (Mathf.Abs(DimLebar - outline.DimLebar) > SIZE_TOLERANCE_PX) continue;
+            if (Mathf.Abs(DimSkew - outline.DimSkew) > SIZE_TOLERANCE_PX) continue;
+            // <-- BATAS PENAMBAHAN DIMENSION CHECK -->
 
             // 3. CHECK IF OCCUPIED
             bool occupied = false;
@@ -228,7 +237,7 @@ public partial class DraggableShape : Node2D
             }
             if (occupied) continue;
 
-            // 4. DISTANCE CHECK
+            // 4. DISTANCE CHECK (Sekarang menggunakan dynThreshold yang lebih ketat)
             float posDist = GlobalPosition.DistanceTo(outline.GlobalPosition);
             if (posDist > dynThreshold) continue;
 
@@ -236,7 +245,7 @@ public partial class DraggableShape : Node2D
             float rotDiff = AngleDeltaDeg(currentRotation, outline.InitialRotation);
 
             // 6. CALCULATE SCORE
-            float score = posDist + (rotDiff * 2f);
+            float score = posDist + (rotDiff * 2f); // Rotasi sedikit lebih penting
 
             if (score < bestScore)
             {

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://vu30sadm78tc"]
+[gd_scene load_steps=14 format=3 uid="uid://vu30sadm78tc"]
 
 [ext_resource type="Script" uid="uid://degt66nf27cqn" path="res://Scripts/Levels/MediumLevel.cs" id="1_fi243"]
 [ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_pe7t2"]
@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://xvcb4wrmfbm7" path="res://Assets/img/delete_closed.png" id="7_3lchy"]
 [ext_resource type="Texture2D" uid="uid://daleo2728os1e" path="res://Assets/img/undo_icon.png" id="8_kymto"]
 [ext_resource type="Texture2D" uid="uid://ryn6tkp6y54p" path="res://Assets/img/undo_pres_icon.png" id="9_ir1m1"]
+[ext_resource type="PackedScene" uid="uid://ctrfc1pv063nq" path="res://Scenes/PauseMenu.tscn" id="10_pe7t2"]
+[ext_resource type="Texture2D" uid="uid://dwfxds0fhre1m" path="res://Assets/img/MotorMediumBtn_icon.png" id="11_e7mkj"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pikqf"]
 texture = ExtResource("2_pe7t2")
@@ -26,7 +28,7 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 505
 
-[node name="ChallengeEasy" type="Node2D"]
+[node name="ChallengeMedium" type="Node2D"]
 script = ExtResource("1_fi243")
 
 [node name="Panel" type="Panel" parent="."]
@@ -168,5 +170,21 @@ texture_normal = ExtResource("8_kymto")
 texture_pressed = ExtResource("9_ir1m1")
 ignore_texture_size = true
 stretch_mode = 0
+
+[node name="CanvasLayer" parent="." instance=ExtResource("10_pe7t2")]
+visible = false
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 581.0
+offset_top = 438.0
+offset_right = 621.0
+offset_bottom = 478.0
+
+[node name="MotorMediumBtnIcon" type="Sprite2D" parent="."]
+position = Vector2(202.5, 259.5)
+scale = Vector2(0.12793, 0.12793)
+texture = ExtResource("11_e7mkj")
 
 [connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]

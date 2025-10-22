@@ -55,14 +55,6 @@ public partial class EasyLevel : BaseChallengeLevel
         GD.Print("Pause button created programmatically");
     }
 
-    // drag and drop
-    // protected override void DefinePaletteShapes()
-    // {
-    //     AddPaletteShape(DraggableShape.ShapeType.SegitigaSamaKaki, Colors.Red, 60f, 2);
-    //     AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
-
-    //     GD.Print("Easy Level: Auto palette from outlines");
-    // }
 
     protected override void DefinePaletteShapes()
     {
@@ -74,24 +66,59 @@ public partial class EasyLevel : BaseChallengeLevel
             DraggableShape.ShapeType.SegitigaSamaKaki,
             Colors.Red,
             80f, // Snapping Size (bisa disamakan dengan alas)
-            2,   // Count
+            1,   // Count
             120f, // DimAlas
             60f // DimTinggi (Tinggi 120)
         );
 
-        
         AddPaletteShape(
-            DraggableShape.ShapeType.JajarGenjang,
-            Colors.Blue,
-            100f, // Snapping Size
-            1,    // Count
-            100f, // DimAlas (Alas 100)
-            40f,  // DimTinggi (Tinggi 40)
-            0f,   // DimLebar (tidak dipakai)
-            20f   // DimSkew (Kemiringan 20)
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Purple,
+            80f, // Snapping Size
+            1,   // Count
+            120f, // DimAlas
+            60f // DimTinggi (Tinggi 120)
         );
 
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 50f, 1);
+
+        AddPaletteShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            Colors.DarkBlue,
+            60f, // Snapping Size
+            1,    // count
+            60f, // DimAlas
+            30f,  // DimTinggi
+            0f,   // DimLebar
+            30f   // DimSkew (Kemiringan 20)
+        );
+
+        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 45f, 1);
+
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Yellow,
+            50f, // Snapping Size
+            1,   // Rotation
+            60f, // DimAlas
+            30f // DimTinggi (Tinggi 120)
+        );
+
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.DarkBlue,
+            50f, // Snapping Size
+            1,   // Rotation
+            60f, // DimAlas
+            30f // DimTinggi (Tinggi 120)
+        );
+        AddPaletteShape(
+                DraggableShape.ShapeType.SegitigaSamaKaki,
+                Colors.Orange,
+                80f, // Snapping Size
+                1,   
+                100f, // DimAlas
+                50f
+            );
 
         // otomatis mengambil dimensi dari outline yang cocok
         // AddPaletteShapeAuto(DraggableShape.ShapeType.JajarGenjang, Colors.Red, 1);
@@ -102,35 +129,73 @@ public partial class EasyLevel : BaseChallengeLevel
     protected override void CreateLevelOutlines()
     {
 
-        // CONTOH: Membuat Outline Segitiga Kustom
+        // Segitiga 
         // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi
-        // CONTOH: Membuat Outline Jajar Genjang Kustom
+        // Jajar Genjang 
         // Format: Type, Position, SnappingSize, Rotation, Alas, Tinggi, Lebar(0), Skew
+
+        // jok motor
         CreateOutlineShape(
             DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(147, -142),
+            boardCenter + new Vector2(47, -132),
             80f, // Snapping Size
             180,   // Rotation
             120f, // DimAlas
             60f // DimTinggi
         );
+
+        // stang motor
         CreateOutlineShape(
             DraggableShape.ShapeType.SegitigaSamaKaki,
-            boardCenter + new Vector2(-120, -40),
+            boardCenter + new Vector2(137, -142),
             80f, // Snapping Size
-            45,   // Rotation
-            100f, // DimAlas
-            50f // DimTinggi
+            0,   // Rotation
+            120f, // DimAlas
+            60f // DimTinggi
         );
+
+        //mesin motor
         CreateOutlineShape(
             DraggableShape.ShapeType.JajarGenjang,
-            boardCenter + new Vector2(20, 40),
-            100f, // Snapping Size
+            boardCenter + new Vector2(77, -98),
+            60f, // Snapping Size
             0,    // Rotation
-            100f, // DimAlas
-            40f,  // DimTinggi
+            60f, // DimAlas
+            30f,  // DimTinggi
             0f,   // DimLebar
-            20f   // DimSkew
+            30f   // DimSkew
+        );
+
+        // roda depan (segitiga ada 2)
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(137, -100),
+            50f, // Snapping Size
+            0,   // Rotation
+            60f, // DimAlas
+            30f // DimTinggi
+        );
+
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(137, -80),
+            50f, // Snapping Size
+            180,   // Rotation
+            60f, // DimAlas
+            30f // DimTinggi
+        );
+
+        // roda belakang
+        CreateOutlineShape(DraggableShape.ShapeType.Persegi, boardCenter + new Vector2(17, -93), 45, 45, 0, 0);
+
+        // penahan duduk
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            boardCenter + new Vector2(-17, -122),
+            80f, // Snapping Size
+            270,   // Rotation
+            100f, // DimAlas
+            50f // DimTinggi
         );
 
         GD.Print("✅ Easy Level: Custom outlines created");
