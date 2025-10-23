@@ -36,29 +36,85 @@ public partial class MediumLevel : BaseChallengeLevel
     {
         // CONTOH: Segitiga Sama Kaki Kustom
         // Format: Type, Color, SnappingSize, Count, Alas, Tinggi
+
+        // tangan
         AddPaletteShape(
             DraggableShape.ShapeType.SegitigaSamaKaki,
             Colors.Red,
-            80f, // Snapping Size (bisa disamakan dengan alas)
-            2,   // Count
-            80f, // DimAlas (Alas 80)
-            120f // DimTinggi (Tinggi 120)
+           60f, // Snapping Size
+            1,   // Rotation
+            70f, // DimAlas
+            35f // DimTinggi
+        );
+
+        // kaki
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Purple,
+           60f, // Snapping Size
+            1,   // count
+            70f, // DimAlas
+            35f // DimTinggi
+        );
+
+        //ban depan/belakang motor
+
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.SkyBlue,
+            80f, // Snapping Size
+            1,   // count
+            120f, // DimAlas
+            60f // DimTinggi
+        );
+
+        // ban depan/belakang motor
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Orange,
+            80f, // Snapping Size
+            1,   // count
+            120f, // DimAlas
+            60f // DimTinggi
+        );
+
+        // stang motor segitiga sama kaki
+        AddPaletteShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki,
+            Colors.Orange,
+            80f, // Snapping Size
+            1,   // Rotation
+            90f, // DimAlas
+            45f // DimTinggi
         );
 
         // CONTOH: Jajar Genjang Kustom
         // Format: Type, Color, SnappingSize, Count, Alas, Tinggi, Lebar(0), Skew
         AddPaletteShape(
             DraggableShape.ShapeType.JajarGenjang,
-            Colors.Blue,
-            100f, // Snapping Size
-            1,    // Count
-            100f, // DimAlas (Alas 100)
-            40f,  // DimTinggi (Tinggi 40)
-            0f,   // DimLebar (tidak dipakai)
-            20f   // DimSkew (Kemiringan 20)
+            Colors.Yellow,
+            60f, // Snapping Size
+            1,   // count
+            60f, // DimAlas
+            30f, // DimTinggi
+            0f,
+            25f   // DimSkew
+        );
+        AddPaletteShape(
+            DraggableShape.ShapeType.JajarGenjang,
+            Colors.Yellow,
+            60f, // Snapping Size
+            1,   // count
+            50f, // DimAlas
+            50f, // DimTinggi
+            0f,
+            50f   // DimSkew 
         );
 
-        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 50f, 1);
+        // kepala & pundak
+
+        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Green, 50f, 1,0,0);
+        AddPaletteShape(DraggableShape.ShapeType.Persegi, Colors.Blue, 50f, 1,0,0);
 
         // Atau menggunakan AddPaletteShapeAuto
         // Ini akan otomatis mengambil dimensi dari outline yang cocok
@@ -99,6 +155,7 @@ public partial class MediumLevel : BaseChallengeLevel
             90f, // DimAlas
             45f // DimTinggi
         );
+
         // ban belakang 2 segitga sama kaki
         CreateOutlineShape(
         DraggableShape.ShapeType.SegitigaSamaKaki, new Vector2(540, 528),
@@ -132,12 +189,57 @@ public partial class MediumLevel : BaseChallengeLevel
 
         //pinggang
         CreateOutlineShape(
-            DraggableShape.ShapeType.SegitigaSamaKaki, new Vector2(530, 438),
+            DraggableShape.ShapeType.SegitigaSamaKaki, new Vector2(530, 428),
             80f, // Snapping Size
             270,   // Rotation
             90f, // DimAlas
             45f // DimTinggi
         );
+
+        // punggung bawah
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki, new Vector2(547, 400),
+            60f, // Snapping Size
+            315,   // Rotation
+            70f, // DimAlas
+            35f // DimTinggi
+        );
+
+        // dudukan motor
+
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki, new Vector2(554, 459),
+            60f, // Snapping Size
+            0,   // Rotation
+            70f, // DimAlas
+            35f // DimTinggi
+        );
+        // punggung atas
+        CreateOutlineShape(
+            DraggableShape.ShapeType.SegitigaSamaKaki, new Vector2(530, 366),
+            60f, // Snapping Size
+            135,   // Rotation
+            70f, // DimAlas
+            35f // DimTinggi
+        );
+
+        // pundak
+        CreateOutlineShape(DraggableShape.ShapeType.Persegi, new Vector2(488, 359), 50, 0, 0, 0);
+
+        // kepala 
+        CreateOutlineShape(DraggableShape.ShapeType.Persegi, new Vector2(446, 317), 50, 315, 0, 0);
+
+        //lengan
+        CreateOutlineShape(DraggableShape.ShapeType.JajarGenjang, new Vector2(438, 423),
+            60f, // Snapping Size
+            0,   // Rotation
+            50f, // DimAlas
+            50f, // DimTinggi
+            0f,
+            50f
+        );
+
+
     }
 
     protected override string GetLevelTitle()
@@ -153,5 +255,11 @@ public partial class MediumLevel : BaseChallengeLevel
     protected override bool IsLastLevel()
     {
         return false;
+    }
+
+    private void _on_BtnBack_pressed()
+    {
+        GD.Print("🔙 Going back to Welcome screen");
+        GetTree().ChangeSceneToFile("res://Scenes/Welcome.tscn");
     }
 }

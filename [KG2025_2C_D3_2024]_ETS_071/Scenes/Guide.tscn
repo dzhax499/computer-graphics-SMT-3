@@ -3,11 +3,21 @@
 [ext_resource type="Script" uid="uid://bkc58624ogr3p" path="res://Scripts/About.cs" id="1_b07q8"]
 [ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_twpq3"]
 [ext_resource type="FontFile" uid="uid://bbyw1yc2qvqy0" path="res://Assets/font/AndreaNeat-Demo.otf" id="3_asaqc"]
-[ext_resource type="FontFile" uid="uid://sh64ru0vfjeb" path="res://Assets/font/Gunken.otf" id="4_st83v"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_b07q8"]
 texture = ExtResource("2_twpq3")
 modulate_color = Color(0.699653, 0.699653, 0.699653, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guide_panel"]
+bg_color = Color(0.121569, 0.121569, 0.121569, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_twpq3"]
 bg_color = Color(0, 0, 0, 1)
@@ -21,7 +31,7 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 505
 
-[node name="About" type="Control"]
+[node name="Guide" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +46,68 @@ offset_right = 1280.0
 offset_bottom = 722.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_b07q8")
 
-[node name="BtnBack" type="Button" parent="Panel2"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="GuidePanel" type="PanelContainer" parent="MarginContainer/CenterContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_guide_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/CenterContainer/GuidePanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label_Judul" type="Label" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 24
+text = "PANDUAN KONTROL"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label_Q" type="Label" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 18
+text = "Q / ← : Putar Kiri (CCW)"
+
+[node name="Label_R" type="Label" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 18
+text = "R / → : Putar Kanan (CW)"
+
+[node name="Label_F" type="Label" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 18
+text = "F : Flip (Jajar Genjang)"
+
+[node name="Label_T" type="Label" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 18
+text = "T : Toggle Rotasi (30°/45°)"
+
+[node name="Label_Undo" type="Label" parent="MarginContainer/CenterContainer/GuidePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_asaqc")
+theme_override_font_sizes/font_size = 18
+text = "Icon Kiri Bawah : Undo / Delete"
+
+[node name="BtnBack" type="Button" parent="."]
 layout_mode = 2
 offset_left = 5.0
 offset_top = 8.0
@@ -49,69 +120,6 @@ theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("StyleBoxFlat_twpq3")
 text = "Back"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-offset_left = 96.0
-offset_top = 89.0
-offset_right = 685.0
-offset_bottom = 277.0
-alignment = 1
+[node name="HUD-Guide" type="CanvasLayer" parent="."]
 
-[node name="Title" type="Label" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 5
-theme_override_constants/shadow_outline_size = 15
-theme_override_fonts/font = ExtResource("4_st83v")
-theme_override_font_sizes/font_size = 36
-text = "About Developer:"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -434.5
-offset_top = -175.0
-offset_right = 434.5
-offset_bottom = 175.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 0
-alignment = 1
-
-[node name="LabelIdentitas" type="Label" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 5
-theme_override_constants/shadow_outline_size = 15
-theme_override_fonts/font = ExtResource("4_st83v")
-theme_override_font_sizes/font_size = 36
-text = "Nama: Dzakir Tsabit
-Kelas: D3 2C
-NIM: 241511071"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -3.0
-offset_bottom = -3.0
-grow_horizontal = 2
-grow_vertical = 2
+[connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]

@@ -194,7 +194,6 @@ public partial class BentukDasar: RefCounted, IDisposable
 		return res;
 	}
 
-	// BentukDasar.cs (di dalam class BentukDasar)
 	public List<Vector2> SegiN(Vector2 pusat, float radius, int sisi, float rotasiDerajat = 0f)
 	{
 		if (sisi < 3) sisi = 3;

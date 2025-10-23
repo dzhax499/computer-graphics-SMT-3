@@ -45,13 +45,14 @@ public abstract partial class BaseChallengeLevel : Node2D
     // POSITIONS (disesuaikan dengan Game.tscn)
     protected Vector2 boardCenter = new Vector2(493, 462);
     protected Vector2 patternBlockStart = new Vector2(1030, 200);
+    protected virtual bool AllowRotationToggle => false;
 
     // PALETTE CONFIGURATION
     protected struct PaletteShapeConfig
     {
         public DraggableShape.ShapeType Type;
         public Color Color;
-        public float Size; 
+        public float Size;
         public int Count;
 
         public float DimAlas;
@@ -77,6 +78,9 @@ public abstract partial class BaseChallengeLevel : Node2D
     }
 
     protected List<PaletteShapeConfig> paletteShapes = new List<PaletteShapeConfig>();
+
+    // DEBUG LABEL
+    protected Label debugInfoLabel;
 
     // ABSTRACT METHODS - implementasi di child class
     protected abstract void CreateLevelOutlines();
@@ -218,10 +222,11 @@ public abstract partial class BaseChallengeLevel : Node2D
         }
 
         float spacing = 130f;
-        int col = 0, row = 0;
+        int col = 0, row = -1;
         int maxCols = 2;
 
         Vector2 paletteStart = patternBlockStart;
+        float levelRotationStep = GetLevelRotationStep();
 
         foreach (var config in paletteShapes)
         {
@@ -229,13 +234,15 @@ public abstract partial class BaseChallengeLevel : Node2D
             {
                 var template = new DraggableShape();
                 template.Type = config.Type;
-                template.ShapeSize = config.Size; 
+                template.ShapeSize = config.Size;
                 template.ShapeColor = config.Color;
 
                 template.DimAlas = config.DimAlas;
                 template.DimTinggi = config.DimTinggi;
                 template.DimLebar = config.DimLebar;
                 template.DimSkew = config.DimSkew;
+
+                template.RotationStep = levelRotationStep;
 
                 Vector2 spawnPos = paletteStart + new Vector2(col * spacing, row * spacing);
                 template.Position = spawnPos;
@@ -329,6 +336,7 @@ public abstract partial class BaseChallengeLevel : Node2D
         winNotification.RestartRequested += OnRestart;
         winNotification.BackToMenuRequested += OnBackToMenu;
         AddChild(winNotification);
+
     }
 
     protected virtual void SetupUI()
@@ -338,6 +346,36 @@ public abstract partial class BaseChallengeLevel : Node2D
 
         if (backButton != null)
             backButton.Pressed += OnBackToMenu;
+
+    }
+
+    protected virtual float GetLevelRotationStep()
+    {
+        return 45f;
+    }
+
+    protected void ToggleAllRotationSteps()
+    {
+        if (shapesContainer == null) return;
+
+        // Tentukan target rotasi baru. 
+        // Kita cek rotasi dari kepingan *pertama* sebagai referensi.
+        float newStep = 45f; // Default jika tidak ada shape
+        var firstShape = shapesContainer.GetChildren().OfType<DraggableShape>().FirstOrDefault();
+
+        if (firstShape != null)
+        {
+            // Toggle berdasarkan nilai kepingan pertama
+            newStep = (firstShape.RotationStep == 45f) ? 30f : 45f;
+        }
+
+        // Terapkan ke semua kepingan (termasuk di palette)
+        foreach (var shape in shapesContainer.GetChildren().OfType<DraggableShape>())
+        {
+            shape.RotationStep = newStep;
+        }
+
+        GD.Print($"🔄 Rotation Step Toggled to: {newStep}°");
     }
 
     protected virtual void ConnectSignals()
@@ -497,9 +535,11 @@ public abstract partial class BaseChallengeLevel : Node2D
     {
         if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
         {
-            if (keyEvent.Keycode == Key.Escape)
+ 
+            if (keyEvent.Keycode == Key.T && AllowRotationToggle)
             {
-                OnBackToMenu();
+                // 'T' untuk Toggle Rotasi (hanya jika level mengizinkan)
+                ToggleAllRotationSteps();
                 GetViewport().SetInputAsHandled();
             }
             // Rotation controls untuk active shape

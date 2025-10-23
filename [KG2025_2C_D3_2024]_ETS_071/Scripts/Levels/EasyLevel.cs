@@ -43,9 +43,6 @@ public partial class EasyLevel : BaseChallengeLevel
         pauseButton.Position = new Vector2(20, 20);
         pauseButton.Size = new Vector2(100, 40);
 
-        // Styling (optional)
-        pauseButton.AddThemeColorOverride("font_color", Colors.White);
-
         // Connect signal
         pauseButton.Pressed += () => pauseMenu.TogglePause();
 
@@ -214,5 +211,11 @@ public partial class EasyLevel : BaseChallengeLevel
     protected override bool IsLastLevel()
     {
         return false;
+    }
+
+    private void _on_BtnBack_pressed()
+    {
+        GD.Print("🔙 Going back to Welcome screen");
+        GetTree().ChangeSceneToFile("res://Scenes/Welcome.tscn");
     }
 }

@@ -25,7 +25,8 @@ public partial class DraggableShape : Node2D
         SegitigaSiku,
         Hexagon,
         Lingkaran,
-        JajarGenjang
+        JajarGenjang,
+        TrapesiumSamaKaki
     }
 
     // Shape properties
@@ -41,7 +42,7 @@ public partial class DraggableShape : Node2D
 
     private const float ROT_SNAP_TOLERANCE_DEG = 15f;
     private const float SIZE_TOLERANCE_PX = 3f;
-    private const float ROTATION_STEP = 45f; // Rotasi per step
+    public float RotationStep { get; set; } = 45f; // Rotasi per step
 
     // Drag properties
     private bool isDragging = false;
@@ -128,7 +129,7 @@ public partial class DraggableShape : Node2D
                     pBawahKiri,
                     pBawahKanan,
                     pPuncak,
-                    pBawahKiri // <-- TAMBAHKAN BARIS INI (kembali ke titik awal)
+                    pBawahKiri
                 };
                 break;
 
@@ -156,13 +157,26 @@ public partial class DraggableShape : Node2D
             case DraggableShape.ShapeType.JajarGenjang:
                 float alasJajar = DimAlas > 0 ? DimAlas : ShapeSize;
                 float tinggiJajar = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.6f);
-                float skewJajar = DimSkew > 0 ? DimSkew : (ShapeSize * 0.3f);
+                float skewJajar = DimSkew != 0 ? DimSkew : (ShapeSize * 0.3f);
 
                 OriginalPoints = bentukDasar.JajarGenjang(
                     new Vector2(-alasJajar / 2, -tinggiJajar / 4),
                     (int)alasJajar,
                     (int)tinggiJajar,
                     (int)skewJajar
+                );
+                break;
+
+            case DraggableShape.ShapeType.TrapesiumSamaKaki:
+                float alasIsosceles = DimAlas > 0 ? DimAlas : ShapeSize;
+                float tinggiIsosceles = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.6f);
+                float sisiAtasIsosceles = DimLebar > 0 ? DimLebar : (ShapeSize * 0.6f);
+
+                OriginalPoints = bentukDasar.TrapesiumSamaKaki(
+                    new Vector2(-alasIsosceles / 2, -tinggiIsosceles / 3),
+                    (int)tinggiIsosceles,
+                    (int)alasIsosceles,
+                    (int)sisiAtasIsosceles
                 );
                 break;
         }
@@ -245,7 +259,7 @@ public partial class DraggableShape : Node2D
             float rotDiff = AngleDeltaDeg(currentRotation, outline.InitialRotation);
 
             // 6. CALCULATE SCORE
-            float score = posDist + (rotDiff * 2f); // Rotasi sedikit lebih penting
+            float score = posDist + (rotDiff * 2f);
 
             if (score < bestScore)
             {
@@ -362,7 +376,6 @@ public partial class DraggableShape : Node2D
             }
         }
 
-        // ROTATION CONTROLS - Hanya jika mouse hover
         if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
         {
             if (IsMouseOver())
@@ -397,7 +410,26 @@ public partial class DraggableShape : Node2D
                     handled = true;
                     GD.Print("⟳ → - Rotate CW");
                 }
+                else if (keyEvent.Keycode == Key.F)
+                {
+                    // 'F' untuk Flip Horizontal (khusus JajarGenjang)
+                    if (Type == ShapeType.JajarGenjang)
+                    {
+                        this.DimSkew *= -1;  // Balikkan nilai skew
+                        GenerateShape();     // Buat ulang OriginalPoints dengan skew baru
 
+                        // Terapkan ulang rotasi yang ada ke shape yang baru di-generate
+                        Transformasi.Matrix3x3Identity(transformMatrix);
+                        transformasi.RotationClockwise(transformMatrix, currentRotation, Vector2.Zero);
+                        TransformedPoints = transformasi.GetTransformPoint(transformMatrix, OriginalPoints);
+
+                        CalculateBounds();
+                        if (!isDragging) CheckSnap();
+                        QueueRedraw();
+                        GD.Print($"↔️ Flipped JajarGenjang. New Skew: {DimSkew}");
+                        handled = true;
+                    }
+                }
                 if (handled)
                 {
                     GetViewport().SetInputAsHandled();
@@ -439,6 +471,8 @@ public partial class DraggableShape : Node2D
         clone.DimLebar = this.DimLebar;
         clone.DimSkew = this.DimSkew;
 
+        clone.RotationStep = this.RotationStep;
+
         parent.AddChild(clone);
 
         // Connect signal for the clone
@@ -468,12 +502,12 @@ public partial class DraggableShape : Node2D
     {
         if (clockwise)
         {
-            currentRotation += ROTATION_STEP;
+            currentRotation += RotationStep;
             if (currentRotation >= 360f) currentRotation -= 360f;
         }
         else
         {
-            currentRotation -= ROTATION_STEP;
+            currentRotation -= RotationStep;
             if (currentRotation < 0f) currentRotation += 360f;
         }
 

@@ -102,13 +102,26 @@ public partial class OutlineShape : Node2D
             case DraggableShape.ShapeType.JajarGenjang:
                 float alasJajar = DimAlas > 0 ? DimAlas : ShapeSize;
                 float tinggiJajar = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.6f);
-                float skewJajar = DimSkew > 0 ? DimSkew : (ShapeSize * 0.3f);
+                float skewJajar = DimSkew != 0 ? DimSkew : (ShapeSize * 0.3f);
 
                 shapePoints = bentukDasar.JajarGenjang(
                     new Vector2(-alasJajar / 2, -tinggiJajar / 4),
                     (int)alasJajar,
                     (int)tinggiJajar,
                     (int)skewJajar
+                );
+                break;
+
+            case DraggableShape.ShapeType.TrapesiumSamaKaki:
+                float alasIsosceles = DimAlas > 0 ? DimAlas : ShapeSize;
+                float tinggiIsosceles = DimTinggi > 0 ? DimTinggi : (ShapeSize * 0.6f);
+                float sisiAtasIsosceles = DimLebar > 0 ? DimLebar : (ShapeSize * 0.6f);
+
+                shapePoints = bentukDasar.TrapesiumSamaKaki(
+                    new Vector2(-alasIsosceles / 2, -tinggiIsosceles / 3),
+                    (int)tinggiIsosceles,
+                    (int)alasIsosceles,
+                    (int)sisiAtasIsosceles
                 );
                 break;
         }

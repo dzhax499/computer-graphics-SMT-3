@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c0u6gfhisehmo"]
+[gd_scene load_steps=18 format=3 uid="uid://c0u6gfhisehmo"]
 
 [ext_resource type="Script" uid="uid://c2d726plftq" path="res://Scripts/Levels/HardLevel.cs" id="1_6lcqu"]
 [ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_58w7s"]
@@ -9,6 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://xvcb4wrmfbm7" path="res://Assets/img/delete_closed.png" id="7_8y5lb"]
 [ext_resource type="Texture2D" uid="uid://daleo2728os1e" path="res://Assets/img/undo_icon.png" id="8_732hr"]
 [ext_resource type="Texture2D" uid="uid://ryn6tkp6y54p" path="res://Assets/img/undo_pres_icon.png" id="9_3a8st"]
+[ext_resource type="Texture2D" uid="uid://co78sy680ylf5" path="res://Assets/img/Guide_BTN_icon.png" id="10_x5tdt"]
+[ext_resource type="Texture2D" uid="uid://brd0blsyhrvxw" path="res://Assets/img/Guide_BTN_icon_pressed.png" id="11_2idfi"]
+[ext_resource type="Texture2D" uid="uid://bm282eg74pfbc" path="res://Assets/img/TamplateHard.png" id="11_n8c6c"]
+[ext_resource type="Texture2D" uid="uid://ccuqpef6jows0" path="res://Assets/img/MotorHardBtn_icon.png" id="12_x5tdt"]
+[ext_resource type="PackedScene" uid="uid://ctrfc1pv063nq" path="res://Scenes/PauseMenu.tscn" id="14_4c1fr"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pikqf"]
 texture = ExtResource("2_58w7s")
@@ -25,6 +30,17 @@ corner_radius_top_left = 470
 corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 505
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_popup_panel"]
+bg_color = Color(0.121569, 0.121569, 0.121569, 0.784314)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="ChallengeEasy" type="Node2D"]
 script = ExtResource("1_6lcqu")
@@ -51,6 +67,7 @@ size_flags_vertical = 8
 theme_override_fonts/font = ExtResource("4_x5tdt")
 theme_override_font_sizes/font_size = 23
 theme_override_styles/normal = SubResource("StyleBoxFlat_6h4vp")
+toggle_mode = true
 text = "Back"
 metadata/_edit_use_anchors_ = true
 
@@ -79,31 +96,108 @@ vertical_alignment = 1
 [node name="Hud" type="CanvasLayer" parent="."]
 
 [node name="Time" type="Label" parent="Hud"]
-offset_left = 1182.0
-offset_top = 9.0
-offset_right = 1260.0
-offset_bottom = 32.0
+offset_left = 31.0
+offset_top = 66.0
+offset_right = 109.0
+offset_bottom = 89.0
 theme_override_fonts/font = ExtResource("4_x5tdt")
 text = "Time: 0.0s"
+metadata/_edit_use_anchors_ = true
 
 [node name="Fps" type="Label" parent="Hud"]
-offset_left = 1185.0
-offset_top = 29.0
-offset_right = 1236.0
-offset_bottom = 52.0
+offset_left = 34.0
+offset_top = 86.0
+offset_right = 85.0
+offset_bottom = 109.0
 theme_override_fonts/font = ExtResource("4_x5tdt")
 text = "FPS: 0"
+metadata/_edit_use_anchors_ = true
 
 [node name="Latency" type="Label" parent="Hud"]
-offset_left = 1157.0
-offset_top = 43.0
-offset_right = 1235.0
-offset_bottom = 66.0
+offset_left = 6.0
+offset_top = 100.0
+offset_right = 84.0
+offset_bottom = 123.0
 text = "Latency: 0"
+metadata/_edit_use_anchors_ = true
+
+[node name="GuidePopupPanel" type="PanelContainer" parent="Hud"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -140.0
+offset_right = 150.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_popup_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Hud/GuidePopupPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label_Judul" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 24
+text = "PANDUAN KONTROL"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label_Q" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 18
+text = "Q / ← : Putar Kiri (CCW)"
+
+[node name="Label_R" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 18
+text = "R / → : Putar Kanan (CW)"
+
+[node name="Label_F" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 18
+text = "F : Flip (Jajar Genjang)"
+
+[node name="Label_T" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 18
+text = "T : Toggle Rotasi (30°/45°)"
+
+[node name="Label_Undo" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 18
+text = "Icon Kiri Bawah : Undo / Delete"
+
+[node name="Space" type="Label" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_x5tdt")
+theme_override_font_sizes/font_size = 18
+text = "Space : Random Generate Shape"
+
+[node name="HSeparator2" type="HSeparator" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button_Tutup" type="Button" parent="Hud/GuidePopupPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("4_x5tdt")
+text = "Tutup"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = 973.0
-offset_top = 143.0
+offset_top = 52.0
 offset_right = 1241.0
 offset_bottom = 669.0
 color = Color(0.0214346, 0.0214346, 0.0214346, 1)
@@ -114,17 +208,17 @@ anchors_preset = -1
 anchor_right = 0.912
 anchor_bottom = 0.95
 offset_left = -838.0
-offset_top = 50.0
+offset_top = 141.0
 offset_right = -367.416
-offset_bottom = 28.3
+offset_bottom = 29.85
 color = Color(1, 0.929412, 0.788235, 1)
 
-[node name="ColorRect" type="ColorRect" parent="ColorRect"]
+[node name="ColorRect3" type="ColorRect" parent="ColorRect"]
 layout_mode = 0
 offset_left = -19.0
-offset_top = -24.0
+offset_top = -25.0
 offset_right = 249.0
-offset_bottom = 502.0
+offset_bottom = 593.0
 color = Color(0.74558, 0.74558, 0.74558, 1)
 
 [node name="DeleteBtn" type="TextureButton" parent="."]
@@ -148,7 +242,7 @@ texture_pressed = ExtResource("7_8y5lb")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="TextureButton" type="TextureButton" parent="."]
+[node name="UndoBtn" type="TextureButton" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -169,4 +263,40 @@ texture_pressed = ExtResource("9_3a8st")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="GuideBtn" type="TextureButton" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 251.0
+offset_top = 609.0
+offset_right = 310.0
+offset_bottom = 665.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 0.0174533
+pivot_offset = Vector2(30.0597, 31.2673)
+size_flags_horizontal = 4
+tooltip_text = "Guide"
+texture_normal = ExtResource("10_x5tdt")
+texture_pressed = ExtResource("11_2idfi")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="TamplateHard" type="Sprite2D" parent="."]
+position = Vector2(238, 418)
+scale = Vector2(0.316745, 0.316745)
+texture = ExtResource("11_n8c6c")
+
+[node name="MotorHardBtnIcon" type="Sprite2D" parent="."]
+position = Vector2(232, 287)
+scale = Vector2(0.185059, 0.185059)
+texture = ExtResource("12_x5tdt")
+
+[node name="CanvasLayer" parent="." instance=ExtResource("14_4c1fr")]
+visible = false
+
 [connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]
+[connection signal="pressed" from="Hud/GuidePopupPanel/VBoxContainer/Button_Tutup" to="Hud/GuidePopupPanel" method="set_visible" binds= [false]]
+[connection signal="pressed" from="GuideBtn" to="Hud/GuidePopupPanel" method="set_visible" binds= [true]]

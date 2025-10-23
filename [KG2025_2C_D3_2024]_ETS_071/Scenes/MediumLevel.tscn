@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://vu30sadm78tc"]
+[gd_scene load_steps=15 format=3 uid="uid://vu30sadm78tc"]
 
 [ext_resource type="Script" uid="uid://degt66nf27cqn" path="res://Scripts/Levels/MediumLevel.cs" id="1_fi243"]
 [ext_resource type="Texture2D" uid="uid://cysl42k2tvqdw" path="res://Assets/img/bg-menu.png" id="2_pe7t2"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://ryn6tkp6y54p" path="res://Assets/img/undo_pres_icon.png" id="9_ir1m1"]
 [ext_resource type="PackedScene" uid="uid://ctrfc1pv063nq" path="res://Scenes/PauseMenu.tscn" id="10_pe7t2"]
 [ext_resource type="Texture2D" uid="uid://dwfxds0fhre1m" path="res://Assets/img/MotorMediumBtn_icon.png" id="11_e7mkj"]
+[ext_resource type="Texture2D" uid="uid://i7ndrlk3r316" path="res://Assets/img/TamplateMedium.png" id="12_trfhd"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pikqf"]
 texture = ExtResource("2_pe7t2")
@@ -28,8 +29,36 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 505
 
-[node name="ChallengeMedium" type="Node2D"]
+[node name="MediumLevel" type="Node2D"]
 script = ExtResource("1_fi243")
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="Time" type="Label" parent="Hud"]
+offset_left = 49.0
+offset_top = 67.0
+offset_right = 127.0
+offset_bottom = 90.0
+theme_override_fonts/font = ExtResource("4_trfhd")
+text = "Time: 0.0s"
+metadata/_edit_use_anchors_ = true
+
+[node name="Fps" type="Label" parent="Hud"]
+offset_left = 52.0
+offset_top = 87.0
+offset_right = 103.0
+offset_bottom = 110.0
+theme_override_fonts/font = ExtResource("4_trfhd")
+text = "FPS: 0"
+metadata/_edit_use_anchors_ = true
+
+[node name="Latency" type="Label" parent="Hud"]
+offset_left = 24.0
+offset_top = 101.0
+offset_right = 102.0
+offset_bottom = 124.0
+text = "Latency: 0"
+metadata/_edit_use_anchors_ = true
 
 [node name="Panel" type="Panel" parent="."]
 offset_right = 1280.0
@@ -40,8 +69,6 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_pikqf")
 position = Vector2(493, 462)
 scale = Vector2(1.95787, 1.95787)
 texture = ExtResource("3_e7mkj")
-
-[node name="Outline" type="Node2D" parent="Panel"]
 
 [node name="BtnBack" type="Button" parent="."]
 offset_left = 5.0
@@ -78,37 +105,20 @@ text = "Level medium"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hud" type="CanvasLayer" parent="."]
-
-[node name="Time" type="Label" parent="Hud"]
-offset_left = 1182.0
-offset_top = 9.0
-offset_right = 1260.0
-offset_bottom = 32.0
-theme_override_fonts/font = ExtResource("4_trfhd")
-text = "Time: 0.0s"
-
-[node name="Fps" type="Label" parent="Hud"]
-offset_left = 1185.0
-offset_top = 29.0
-offset_right = 1236.0
-offset_bottom = 52.0
-theme_override_fonts/font = ExtResource("4_trfhd")
-text = "FPS: 0"
-
-[node name="Latency" type="Label" parent="Hud"]
-offset_left = 1157.0
-offset_top = 43.0
-offset_right = 1235.0
-offset_bottom = 66.0
-text = "Latency: 0"
-
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_left = 973.0
-offset_top = 143.0
+offset_top = 63.0
 offset_right = 1241.0
 offset_bottom = 669.0
 color = Color(0.0214346, 0.0214346, 0.0214346, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="ColorRect"]
+layout_mode = 0
+offset_left = -19.0
+offset_top = -20.0
+offset_right = 249.0
+offset_bottom = 582.0
+color = Color(0.74558, 0.74558, 0.74558, 1)
 
 [node name="ColorRect2" type="ColorRect" parent="ColorRect"]
 layout_mode = 1
@@ -116,18 +126,10 @@ anchors_preset = -1
 anchor_right = 0.912
 anchor_bottom = 0.95
 offset_left = -838.0
-offset_top = 50.0
+offset_top = 130.0
 offset_right = -367.416
-offset_bottom = 28.3
+offset_bottom = 26.3
 color = Color(1, 0.929412, 0.788235, 1)
-
-[node name="ColorRect" type="ColorRect" parent="ColorRect"]
-layout_mode = 0
-offset_left = -19.0
-offset_top = -24.0
-offset_right = 249.0
-offset_bottom = 502.0
-color = Color(0.74558, 0.74558, 0.74558, 1)
 
 [node name="DeleteBtn" type="TextureButton" parent="."]
 anchors_preset = 8
@@ -174,17 +176,14 @@ stretch_mode = 0
 [node name="CanvasLayer" parent="." instance=ExtResource("10_pe7t2")]
 visible = false
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 581.0
-offset_top = 438.0
-offset_right = 621.0
-offset_bottom = 478.0
-
 [node name="MotorMediumBtnIcon" type="Sprite2D" parent="."]
 position = Vector2(202.5, 259.5)
 scale = Vector2(0.12793, 0.12793)
 texture = ExtResource("11_e7mkj")
+
+[node name="TamplateMedium" type="Sprite2D" parent="."]
+position = Vector2(205, 385)
+scale = Vector2(0.317308, 0.317308)
+texture = ExtResource("12_trfhd")
 
 [connection signal="pressed" from="BtnBack" to="." method="_on_BtnBack_pressed"]

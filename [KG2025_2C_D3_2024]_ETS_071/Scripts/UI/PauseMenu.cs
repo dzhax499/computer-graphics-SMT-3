@@ -15,14 +15,12 @@ public partial class PauseMenu : CanvasLayer
 
     public override void _Ready()
     {
+        ProcessMode = ProcessModeEnum.WhenPaused;
+
         panel = GetNode<Panel>("Panel");
         resumeButton = GetNode<Button>("Panel/Main-Vbox/ResumeButton");
         restartButton = GetNode<Button>("Panel/Main-Vbox/RestartButton");
         menuButton = GetNode<Button>("Panel/Main-Vbox/MenuButton");
-
-        resumeButton.Pressed += OnResumePressed;
-        restartButton.Pressed += OnRestartPressed;
-        menuButton.Pressed += OnMenuPressed;
 
         Hide();
 
@@ -92,7 +90,7 @@ public partial class PauseMenu : CanvasLayer
     {
         // Resume first before changing scene
         GetTree().Paused = false;
-        GetTree().ChangeSceneToFile("res://Scenes/Main.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/Menu.tscn");
         GD.Print("🏠 Back to Main Menu");
     }
 }
