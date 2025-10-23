@@ -225,13 +225,11 @@ public partial class DraggableShape : Node2D
             float sizeDiff = Mathf.Abs(ShapeSize - outline.ShapeSize);
             if (sizeDiff > SIZE_TOLERANCE_PX) continue;
 
-            // 2B. CUSTOM DIMENSION CHECK (PENTING!) // <-- BARU
-            // Ini memastikan bentuk kustom benar-benar cocok
+
             if (Mathf.Abs(DimAlas - outline.DimAlas) > SIZE_TOLERANCE_PX) continue;
             if (Mathf.Abs(DimTinggi - outline.DimTinggi) > SIZE_TOLERANCE_PX) continue;
             if (Mathf.Abs(DimLebar - outline.DimLebar) > SIZE_TOLERANCE_PX) continue;
             if (Mathf.Abs(DimSkew - outline.DimSkew) > SIZE_TOLERANCE_PX) continue;
-            // <-- BATAS PENAMBAHAN DIMENSION CHECK -->
 
             // 3. CHECK IF OCCUPIED
             bool occupied = false;
@@ -494,9 +492,7 @@ public partial class DraggableShape : Node2D
         return IsPointInShape(localMousePos);
     }
 
-    /// <summary>
     /// Rotate shape clockwise or counter-clockwise
-    /// </summary>
     /// <param name="clockwise">True for CW ⟳, False for CCW ⟲</param>
     public void RotateShape(bool clockwise = true)
     {

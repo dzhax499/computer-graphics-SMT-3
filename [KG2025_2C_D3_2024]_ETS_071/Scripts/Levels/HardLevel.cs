@@ -52,7 +52,7 @@ public partial class HardLevel : BaseChallengeLevel
     {
         return 30f; //mengubah rotasi default menjadi 30 derajat
     }
-    /// untuk MENGAKTIFKAN tombol 'T' di level ini
+    /// untuk MENGAKTIFKAN tombol 'T' pada level ini
     protected override bool AllowRotationToggle => true;
     protected override void DefinePaletteShapes()
     {

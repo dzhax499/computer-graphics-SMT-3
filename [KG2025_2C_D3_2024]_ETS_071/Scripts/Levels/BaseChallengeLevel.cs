@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-/// <summary>
 /// Base class untuk semua challenge levels
-/// UPDATED: Support custom palette shapes per level
-/// </summary>
 public abstract partial class BaseChallengeLevel : Node2D
 {
     // CONSTANTS
@@ -358,8 +355,7 @@ public abstract partial class BaseChallengeLevel : Node2D
     {
         if (shapesContainer == null) return;
 
-        // Tentukan target rotasi baru. 
-        // Kita cek rotasi dari kepingan *pertama* sebagai referensi.
+        // Tentukan target rotasi baru.
         float newStep = 45f; // Default jika tidak ada shape
         var firstShape = shapesContainer.GetChildren().OfType<DraggableShape>().FirstOrDefault();
 
@@ -535,7 +531,7 @@ public abstract partial class BaseChallengeLevel : Node2D
     {
         if (@event is InputEventKey keyEvent && keyEvent.Pressed && !keyEvent.Echo)
         {
- 
+
             if (keyEvent.Keycode == Key.T && AllowRotationToggle)
             {
                 // 'T' untuk Toggle Rotasi (hanya jika level mengizinkan)
